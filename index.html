@@ -1,312 +1,469 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
+<!-- Head tag -->
 <head><meta name="generator" content="Hexo 3.8.0">
-  <meta charset="utf-8">
-  
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content>
+    <meta name="keyword" content>
+    <meta name="theme-color" content="#600090">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
+    <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
+    <title>
+        
+        
+        
+    </title>
 
-  
-  <title>Hexo</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="Hexo">
-<meta property="og:locale" content="default">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-  
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
-  
-  
-    <link rel="icon" href="/favicon.png">
-  
-  
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
-  
-  <link rel="stylesheet" href="/css/style.css">
+    <link rel="canonical" href="http://yoursite.com/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/blog-style.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
 </head>
-</html>
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
+
+<style>
+
+    header.intro-header {
+        background-image: url('')
+    }
+</style>
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="" class="animated fadeIn">
+<!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost="false" data-istags="false
+" data-ishome="true">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand animated pulse" href="/">
+                <span class="brand-logo">
+                    Hexo
+                </span>
+                's Blog
+            </a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <!-- /.navbar-collapse -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+					
+                    
+                        
+                    
+					
+					
+                </ul>
+            </div>
+        </div>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
-      </div>
-    </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
-  
-    <article id="post-深入理解netfilter的核心原理与实现-md" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/05/15/深入理解netfilter的核心原理与实现-md/" class="article-date">
-  <time datetime="2019-05-15T09:25:43.000Z" itemprop="datePublished">2019-05-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/15/深入理解netfilter的核心原理与实现-md/">深入理解netfilter的核心原理与实现.md</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>[TOC]</p>
-<h3 id="1、Iptables和Netfilter的关系"><a href="#1、Iptables和Netfilter的关系" class="headerlink" title="1、Iptables和Netfilter的关系"></a>1、Iptables和Netfilter的关系</h3><p>iptables是用户用来管理和配置防火墙规则的一种策略，但是实际解析规则并按照规则实施产生作用的是Netfilter。</p>
-<p>iptables与协议栈内有包过滤功能的hook交互来完成工作，这些内核hook构成了netfilter框架。每个进入网络系统的包（接收和发送）在经过协议栈的时候都会触发这些hook，程序可以通过<strong>注册hook函数</strong>的方式在一些关键路径上处理网络流量。iptables相关的内核模块在这些hook注册了处理函数，因此可以通过iptables规则来使得网络流量符合防火墙规则。</p>
-<h3 id="2、Netfilter-Hooks"><a href="#2、Netfilter-Hooks" class="headerlink" title="2、Netfilter Hooks"></a>2、Netfilter Hooks</h3><p>netfilter提供了5个关于IPv4的hook点，数据包经过协议栈时会触发内核模块注册在这里的处理函数。触发哪个hook取决于包的方向（接收还是接收）、包的目的地址、以及包在上一个hook点是被丢弃还accept等等。</p>
-<p>下面几个hook是内核协议栈已经定义好的：</p>
-<ul>
-<li>NF_IP_PRE_ROUTING: 接收到的包进入协议栈立即触发此个hook（刚刚进行完版本号，校验和等检测），在进行任何路由判断之前</li>
-<li>NF_IP_LOCAL_IN: 接收到的包经过路由判断，如果目的是本机，将触发此hook</li>
-<li>NF_IP_FORWARD: 接收到的包经过路由判断，如果目的是其他机器，将触发此hook</li>
-<li>NF_IP_LOCAL_OUT：本机产生的准备发送的包，在进入协议栈后立即触发此hook</li>
-<li>NF_IP_POST_ROUTING: 本机产生的准备发送的包或者转发的包，在经过路由的判断之后，将触发此hook</li>
-</ul>
-<p>注册处理函数时必须提供优先级，以便hook触发能按照优先级高低调用处理函数，这使得多个模块可以在同一个hook点注册，并且有确定的处理顺序，内核模块会依次被调用，每次返回一个结果给netfilter框架，提示该对这包做什么操作。</p>
-<h3 id="3、Hooks和Iptables-table-and-chain的关系"><a href="#3、Hooks和Iptables-table-and-chain的关系" class="headerlink" title="3、Hooks和Iptables table and chain的关系"></a>3、Hooks和Iptables table and chain的关系</h3><p>Iptable使用table来组织规则，分为以下5类table：</p>
-<ul>
-<li>Filter Table：是最常用的table之一，用于判断是否允许一个包通过。</li>
-<li>NAT Table: 用于实现网络地址转换规则。当包进入协议栈的时候，这些规则决定是否以及如何修改包的源/目的地址，以改变包被 路由时的行为。nat table通常用于将包路由到无法直接访问的网络。</li>
-<li>Mangle Table: 用于修改包的IP头。如可以修改包的TTL，增加或减少包可以经过的跳数。还可以对包打只在内核内有效的“标记”，后续的table或工具处理的时候可以用到这些标记。标记不会修改包本身，只是在包的内核表示上做标记。</li>
-<li>Raw Table：其功能非常有限，其唯一目的就是提供一个让包绕过连接跟踪的框架。</li>
-<li>Security Table：作用是给包打上SELinux标记，以此影响SELinux 或其他可以解读 SELinux 安全上下文的系统处理包的行为。这些标记可以基于单个包，也可以基于连接。</li>
-</ul>
-<p>在每个table内部，规则被进一步组织成chain，内置的chain是由内置的hook触发的。chain基本上能决定规则何时被匹配。内置的chain名字和netfilter hook名字是一一对应的：</p>
-<ul>
-<li>PREROUTING: 由 NF_IP_PRE_ROUTING hook触发 ——————&gt; raw,mangle,nat(目的)</li>
-<li>INPUT: 由 NF_IP_LOCAL_IN hook触发 ——————&gt; mangle,filter,security,nat(源)</li>
-<li>FORWARD: 由 NF_IP_FORWARD hook触发 ——————&gt; mangle,filter,security</li>
-<li>OUTPUT: 由 NF_IP_LOCAL_OUT hook触发 ——————&gt; raw,mangle,nat,filter,security,nat(源)</li>
-<li>POSTROUTING: 由 NF_IP_POST_ROUTING hook触发 ——————&gt; mangle，nat(源)</li>
-</ul>
-<p>chain使管理员可以控制在包的传输路径上哪个点应用策略。因为每个table有多个chain，因此一个 table可以在处理过程中的多个地方施加影响。特定类型的规则只在协议栈的特定点有意义，因此并不是每个table都会在内核的每个hook注册chain。可以看出raw table只有两个链prerouting和output，分别在对应的hook点发挥作用。</p>
-<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/1.jpg?raw=true" alt="image"></p>
-<h3 id="4、从IP协议栈入手"><a href="#4、从IP协议栈入手" class="headerlink" title="4、从IP协议栈入手"></a>4、从IP协议栈入手</h3><p>要想理解Netfilter的工作原理，必须从对Linux IP报文处理流程的分析开始，Netfilter正是将自己紧密地构建在这一流程之中的。</p>
-<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/2.jpg?raw=true" alt="image"></p>
-<h4 id="4-1-接收中断"><a href="#4-1-接收中断" class="headerlink" title="4.1 接收中断"></a>4.1 接收中断</h4><p>如果网卡收到一个和自己MAC地址匹配或链路层广播的以太网帧，它就会产生一个中断。此网卡的驱动程序会处理此中断做入下处理：</p>
-<ul>
-<li>从DMA/PIO或其他地方得到分组数据，写到内存里去；</li>
-<li>接着，会分配一个新的套接字缓冲区skb，并调用与协议无关的、网络设备均支持的通用网络接收处理函数netif_rx(skb)。netif_rx()函数让内核准备进一步处理skb。</li>
-<li>然后，skb会进入到达队列以便CPU处理（对于多核CPU而言，每个CPU维护一个队列）。如果FIFO队列已满，就会丢弃此分组。在skb排队后，调用__cpu_raise_softirq()标记NET_RX_SOFTIRQ 软中断，等待 CPU 执行。</li>
-<li>至此， netif_rx() 函数调用结束，返回调用者状况信息（成功还是失败等）。此时，中断上下文进程完成任务，数据分组继续被上层协议栈处理。</li>
-</ul>
-<p>流程：网卡收到一帧————&gt;引发中断————&gt;cpu调用相应的中断处理函数（指向此网卡驱动中的相应的处理函数）（把此packet读到ram中）————&gt;呼叫netif_rx函数来打上timestamp，并把此skb放入到cpu设置的队列中————&gt;标记软中断（__cpu_raise_softirq）————&gt;中断完成。 </p>
-<h4 id="4-2-softirq"><a href="#4-2-softirq" class="headerlink" title="4.2 softirq"></a>4.2 softirq</h4><p>内核2.4以后，整个协议栈不再使用bottom half，而是被软中断softirq取代。软中断 softirq优势明显，可以同时在多个CPU上执行；而bottom half一次只能在一个CPU上执行，即在多个CPU执行时严格保持串行。</p>
-<p>整个softirq机制的设计与实现中自始自终都贯彻了一个思想：“谁触发，谁执行 ”，也即触发软中断的那个CPU负责执行它所触发的软中断，而且每个CPU都由它自己的软中断触发与控制机制。这个设计思想也使得softirq机制充分利用了SMP系统的性能和特点。</p>
-<h4 id="4-3-NET-RX-SOFTIRQ-网络接收软中断"><a href="#4-3-NET-RX-SOFTIRQ-网络接收软中断" class="headerlink" title="4.3 NET_RX_SOFTIRQ 网络接收软中断"></a>4.3 NET_RX_SOFTIRQ 网络接收软中断</h4><p>这一阶段会根据协议的不同来处理数据分组。 CPU开始处理软中断do_softirq()，接着 net_rx_action() 处理前面标记的NET_RX_SOFTIRQ ，把出对列的skb送入相应列表处理（根据协议不同到不同的列表）。比如，IP分组交给 ip_rcv()处理， ARP分组交给arp_rcv()处理等。</p>
-<h4 id="4-4-处理IPv4分组"><a href="#4-4-处理IPv4分组" class="headerlink" title="4.4 处理IPv4分组"></a>4.4 处理IPv4分组</h4><p>下面讲讲数据包到达网络层后所做的处理，整理流程如下图，从图中可以看到netfilter起作用的5个hooks。</p>
-<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/3.jpg?raw=true" alt="image"></p>
-<h5 id="4-4-1-上述处理的详细过程如下："><a href="#4-4-1-上述处理的详细过程如下：" class="headerlink" title="4.4.1 上述处理的详细过程如下："></a>4.4.1 上述处理的详细过程如下：</h5><ul>
-<li>ip_rcv()函数验证IP分组，比如目的地址是否本机地址，校验和是否正确等。若正确，<strong>则交给netfilter的NF_IP_PRE_ROUTING钩子</strong>,否则丢弃。</li>
-<li>到了ip_rcv_finish()函数，数据包就要根据skb结构的目的或路由信息各奔东西了。<strong>ip_local_deliver</strong>()处理到本机的数据分组、<strong>ip_forward</strong>()处理需要转发的数据分组、<strong>ip_mr_input</strong>()转发组播数据包。如果是转发的数据包，还需要找出出口设备和下一跳。ip_rcv_finish()函数最后执行dst_input()，决定数据包的下一步的处理。</li>
-</ul>
-<h5 id="4-4-2-转发数据包"><a href="#4-4-2-转发数据包" class="headerlink" title="4.4.2 转发数据包"></a>4.4.2 转发数据包</h5><p>转发数据包的主要流程如下：</p>
-<ul>
-<li>处理IP头选项。如果需要的话，会记录本地IP地址和时间戳；</li>
-<li>确认分组可以被转发；</li>
-<li>将TTL减一，如果TTL为0 ，则丢弃分组；</li>
-<li>根据 MTU 大小和路由信息，对数据分组进行分片，如果需要的话；</li>
-<li>将数据分组送往外出设备。</li>
-</ul>
-<p>如果由于某种原因，数据分组不能被转发，那么就回应 ICMP 消息来说明不能转发的原因。在对转发的分组进行各种检查无误后，执行 ip_forward_finish ，准备发送。然后执行dst_output(skb) 。无论是转发的分组，还是本地产生的分组，都要经过dst_output(skb) 到达目的主机。 IP 头在此时已经完成就绪。dst_output(skb) 函数要执行虚函数 output（单播的话为ip_output ，多播为ip_mc_output）。最后，ip_finish_output 进入邻居子系统。</p>
-<h5 id="4-4-3-数据包本地处理"><a href="#4-4-3-数据包本地处理" class="headerlink" title="4.4.3 数据包本地处理"></a>4.4.3 数据包本地处理</h5><p>数据包交给netfilter的IP_LOCAL_INPUT钩子,作相应处理，然后交给上层比如TCP进行下一步处理。TCP的处理过程如下：</p>
-<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/5.jpg?raw=true" alt="image"></p>
-<p>ip_queue_xmit检查socket结构体中是否含有路由信息，如果没有则执行 ip_route_output_flow查找，并存储到sk数据结构中。如果找不到，则丢弃数据包。</p>
-<p>数据最终到达驱动层，然后网卡再将数据发送出去。</p>
-<h3 id="5、Netfilter-hook深入"><a href="#5、Netfilter-hook深入" class="headerlink" title="5、Netfilter hook深入"></a>5、Netfilter hook深入</h3><p>Netfilter的主要工作其实将iptable对应的规则转换成对应nf_hoo_ops变量，然后进行注册从而发挥作用，接下来我们看一下具体过程。</p>
-<h4 id="5-1-注册和注销Netfilter-hook"><a href="#5-1-注册和注销Netfilter-hook" class="headerlink" title="5.1 注册和注销Netfilter hook"></a>5.1 注册和注销Netfilter hook</h4><p>注册一个hook函数是围绕nf_hook_ops数据结构的一个非常简单的操作，nf_hook_ops数据结构在linux/netfilter.h中定义，该数据结构的定义如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">struct nf_hook_ops &#123;                    </span><br><span class="line">        struct list_head list;  </span><br><span class="line">        /* User fills in from here down. */</span><br><span class="line">        nf_hookfn *hook;</span><br><span class="line">        struct module *owner;   </span><br><span class="line">        u_int8_t pf;    </span><br><span class="line">        unsigned int hooknum;</span><br><span class="line">        /* Hooks are ordered in ascending priority. */</span><br><span class="line">        int priority;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>该数据结构中的list成员用于维护Netfilter hook的列表，并且不是用户在注册hook时需要关心的重点。</li>
-<li>hook成员是一个指向nf_hookfn类型的函数的指针，该函数是这个hook被调用时执行的函数。nf_hookfn同样在linux/netfilter.h中定义。</li>
-<li>pf这个成员用于指定协议族。有效的协议族在linux/socket.h中列出，但对于IPv4我们希望使用协议族PF_INET。</li>
-<li>hooknum这个成员用于指定安装的这个函数对应的具体的hook类型，其值为NF_IP_PRE_ROUTING等。</li>
-<li>priority这个成员用于指定在执行的顺序中，这个hook函数应当在被放在什么地方。对于IPv4，可用的值在linux/netfilter_ipv4.h的 nf_ip_hook_priorities 枚举中定义。出于示范的目的，在后面的模块中我们将使用NF_IP_PRI_FIRST。</li>
-</ul>
-<p>注册一个Netfilter hook需要调用nf_register_hook()函数，以及用到一个nf_hook_ops数据结构。nf_register_hook()函数以一个nf_hook_ops数据结构的地址作为参数并且返回一个整型的值。以下提供的是一个示例代码，该示例代码简单的注册了一个丢弃所有到达的数据包的函数。该代码同时展示了Netfilter的返回值如何被解析。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;linux/kernel.h&gt;</span><br><span class="line">#include &lt;linux/init.h&gt;</span><br><span class="line">#include &lt;linux/module.h&gt;</span><br><span class="line">#include &lt;linux/version.h&gt;</span><br><span class="line">#include &lt;linux/skbuff.h&gt;</span><br><span class="line">#include &lt;linux/netfilter.h&gt;</span><br><span class="line">#include &lt;linux/netfilter_ipv4.h&gt;</span><br><span class="line"> </span><br><span class="line">MODULE_LICENSE(&quot;GPL&quot;);</span><br><span class="line">MODULE_AUTHOR(&quot;xsc&quot;);</span><br><span class="line"> </span><br><span class="line">static struct nf_hook_ops nfho;</span><br><span class="line"> </span><br><span class="line">unsigned int hook_func(unsigned int hooknum,</span><br><span class="line">                       struct sk_buff *skb,</span><br><span class="line">                       const struct net_device *in,</span><br><span class="line">                       const struct net_device *out,</span><br><span class="line">                       int (*okfn)(struct sk_buff *))</span><br><span class="line">&#123;</span><br><span class="line">	return NF_DROP;//丢弃所有数据包</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">static int kexec_test_init(void)</span><br><span class="line">&#123;</span><br><span class="line">    printk(&quot;kexec test start ...\n&quot;);</span><br><span class="line"> </span><br><span class="line">    nfho.hook = hook_func;</span><br><span class="line">    nfho.owner = NULL;</span><br><span class="line">    nfho.pf = PF_INET;</span><br><span class="line">    nfho.hooknum = NF_INET_LOCAL_OUT;</span><br><span class="line">    nfho.priority = NF_IP_PRI_FIRST;</span><br><span class="line">    </span><br><span class="line">    nf_register_hook(&amp;nfho);// 注册一个钩子函数</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">static void kexec_test_exit(void)</span><br><span class="line">&#123;</span><br><span class="line">    printk(&quot;kexec test exit ...\n&quot;);</span><br><span class="line">    nf_unregister_hook(&amp;nfho); //注销钩子函数</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">module_init(kexec_test_init); //初始化</span><br><span class="line">module_exit(kexec_test_exit); //退出处理</span><br></pre></td></tr></table></figure></p>
-<h4 id="5-2-hook函数实现"><a href="#5-2-hook函数实现" class="headerlink" title="5.2 hook函数实现"></a>5.2 hook函数实现</h4><p>hook函数原型在linux/netfilter.h中给出，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">typedef unsigned int nf_hookfn(unsigned int hooknum,</span><br><span class="line">                               struct sk_buff *skb,</span><br><span class="line">                               const struct net_device *in,</span><br><span class="line">                               const struct net_device *out,</span><br><span class="line">                               int (*okfn)(struct sk_buff *));</span><br></pre></td></tr></table></figure></p>
-<ul>
-<li>skb之后的两个参数是指向net_device数据结构的指针，net_device数据结构被Linux内核用于描述所有类型的网络接口。这两个参数中的第一个in，用于描述数据包到达的接口，毫无疑问，参数out用于描述数据包离开的接口。必须明白，在通常情况下，这两个参数中将只有一个被提供。例如：参数in只用于NF_IP_PRE_ROUTING和NF_IP_LOCAL_IN hook，参数out只用于NF_IP_LOCAL_OUT和NF_IP_POST_ROUTING hook。</li>
-<li>sk_buff数据结构中最有用的部分可能就是那三个描述传输层包头（例如：UDP, TCP, ICMP, SPX）、网络层包头（例如：IPv4/6, IPX, RAW）以及链路层包头（例如：以太网或者RAW）的联合(union)了。这三个联合的名字分别是h、nh以及mac。这些联合包含了几个结构，依赖于具体的数据包中使用的协议。</li>
-<li>传递给hook函数的最后一个参数是一个命名为okfn函数指针，该函数以一个sk_buff数据结构作为它唯一的参数，并且返回一个整型的值。</li>
-</ul>
-<h4 id="5-3-Netfilter报过滤技术实现"><a href="#5-3-Netfilter报过滤技术实现" class="headerlink" title="5.3 Netfilter报过滤技术实现"></a>5.3 Netfilter报过滤技术实现</h4><p>介绍几种过滤技术的实现：</p>
-<ul>
-<li><strong>基于接口进行过滤</strong>:使用相应的net_device数据结构的name这个成员，你就可以根据数据包的源接口和目的接口来选择是否丢弃它。如果想丢弃所有到达接口eth0的数据包，你需要做的仅仅是将in-&gt;name 的值与”eth0”做比较，如果名字匹配，那么hook函数简单的返回NF_DROP即可，数据包会被自动销毁。</li>
-<li><strong>基于地址进行过滤</strong>:基于数据包的源或目的IP地址进行过滤也同样可以实现， 获取一个数据包的IP头通过使用sk_buff数据结构中的网络层包头来完成。这个头位于一个联合中，可以通过sk_buff-&gt;nh.iph这样的方式来访问。如果数据包的源地址与我们设定的丢弃数据包的地址匹配，那么该数据包将被丢弃。</li>
-<li><strong>基于TCP端口进行过滤</strong>:获取一个TCP头的指针是一件简单的事情,而可以分配一个tcphdr数据结构(在linux/tcp.h中定义)的指针，并将它指向我们的数据包中IP头之后的数据。如下代码：</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">static int check_tcp_packet(struct sk_buff *skb)</span><br><span class="line">&#123;</span><br><span class="line">	struct sk_buff *sk = skb_copy(skb, 1);  </span><br><span class="line">    struct tcphdr *tcph = NULL;  </span><br><span class="line">    const struct iphdr *iph = NULL;  </span><br><span class="line">    struct iphdr *ip;  </span><br><span class="line">    __be16 dport;</span><br><span class="line">  </span><br><span class="line">    if (!skb)  </span><br><span class="line">	return NF_ACCEPT;  </span><br><span class="line">    ip = ip_hdr(sk);                                               </span><br><span class="line">    iph = ip_hdr(skb);  </span><br><span class="line"> </span><br><span class="line">    if(ip-&gt;protocol == IPPROTO_TCP)       // TCP 协议</span><br><span class="line">    &#123;           </span><br><span class="line">        tcph = (void *) iph + iph-&gt;ihl * 4;  // TCP 包头  </span><br><span class="line">        dport = tcph-&gt;dest;                  // 目标端口  </span><br><span class="line">        if(ntohs(dport) == 25 )</span><br><span class="line">        &#123;  </span><br><span class="line">            return NF_DROP;  </span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;  </span><br><span class="line">            return NF_ACCEPT;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">    return NF_ACCEPT;  		</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h3 id="6、下一步延伸"><a href="#6、下一步延伸" class="headerlink" title="6、下一步延伸"></a>6、下一步延伸</h3><p>更多更深的内容需要进一步学习linux内核，这里就不再细述了，关于Netfilter的hook攻击技术以及libpcap的通信隐藏等都挺有意思的，有时间不妨深入去实践一下。</p>
-<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p>1.<a href="https://arthurchiao.github.io/blog/deep-dive-into-iptables-and-netfilter-arch-zh/" target="_blank" rel="noopener">https://arthurchiao.github.io/blog/deep-dive-into-iptables-and-netfilter-arch-zh/</a><br>2.<a href="https://www.ibm.com/developerworks/cn/linux/l-ntflt/index.html" target="_blank" rel="noopener">https://www.ibm.com/developerworks/cn/linux/l-ntflt/index.html</a><br>3.<a href="https://blog.csdn.net/cheng_fangang/article/details/8966242" target="_blank" rel="noopener">https://blog.csdn.net/cheng_fangang/article/details/8966242</a><br>4.<a href="https://blog.csdn.net/XscKernel/article/details/8186679" target="_blank" rel="noopener">https://blog.csdn.net/XscKernel/article/details/8186679</a>    </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/05/15/深入理解netfilter的核心原理与实现-md/" data-id="cjvp13s0o0002zcjxggu7k64d" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/05/15/hello-world/" class="article-date">
-  <time datetime="2019-05-15T09:01:47.093Z" itemprop="datePublished">2019-05-15</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/15/hello-world/">Hello World</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/05/15/hello-world/" data-id="cjvp13s0j0001zcjx3mqg328w" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-
-  
-    
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archives</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">May 2019</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recent Posts</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2019/05/15/深入理解netfilter的核心原理与实现-md/">深入理解netfilter的核心原理与实现.md</a>
-          </li>
-        
-          <li>
-            <a href="/2019/05/15/hello-world/">Hello World</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2019 John Doe<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
+    <!-- /.container -->
 </nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+//    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+<!-- Main Content -->
+
+
+<style>
+
+    .custom-haojen-container .post-preview:nth-of-type(1),
+    .custom-haojen-container .post-preview-poetry:nth-of-type(1) {
+        text-align: center;
+        background-repeat: no-repeat;
+        border-radius: 3px;
+        background-size: cover;
+        padding: 0;
+        height: 300px;
+        display: table;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.16);
+    }
+
+    /*去掉诗歌的背景图片*/
+    .custom-haojen-container .post-preview-poetry:nth-of-type(1) {
+        background-image: none !important;
+        background-color: rgba(255, 248, 220, 0.5);
+    }
+
+    .custom-haojen-container .post-preview:nth-child(1) h2,
+    .custom-haojen-container .post-preview:nth-child(1) .post-meta,
+    .custom-haojen-container .post-preview:nth-child(1) .post-subtitle {
+        text-shadow: 0 0 40px rgba(0, 0, 0, 1);
+        letter-spacing: 1px;
+        color: #fff;
+        margin-top: 0;
+        padding-left: 60px;
+        padding-right: 60px;
+    }
+
+    .custom-haojen-container .post-preview:nth-child(1) .post-meta {
+        font-size: .9em;
+        font-weight: 300;
+        margin-top: 0;
+    }
+
+    .custom-haojen-container .post-preview-poetry:nth-child(1) .post-subtitle {
+        letter-spacing: 6px;
+        font-size: 18px;
+        font-family: unset;
+        font-weight: 400;
+        color: rgba(0, 0, 0, .75)
+    }
+
+    /*不显示摘要*/
+    .custom-haojen-container .post-preview:nth-child(1) .post-content-preview {
+        display: none
+    }
+
+    /*只第一个显示背景图片*/
+    .custom-haojen-container .post-preview:not(:nth-child(1)) {
+        background-image: none !important;
+    }
+
+    /*第一个分界线去掉*/
+    .custom-haojen-container hr:nth-of-type(1) {
+        display: none;
+    }
+
+    /*主题*/
+    .custom-haojen-container .post-preview:nth-of-type(1) > a {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    /*诗词标题*/
+    .custom-haojen-container .post-preview-poetry:nth-child(1) h2 {
+        font-size: 35px;
+        font-family: STKaiti;
+        color: rgba(0, 0, 0, .8);
+    }
+
+    .custom-haojen-container .post-preview-poetry:nth-of-type(1) .post-meta {
+        color: #0e2231;
+    }
+
+    @media (max-width: 768px) {
+        .custom-haojen-container .post-preview:nth-child(1) {
+            height: 240px;
+        }
+
+        .custom-haojen-container .post-preview-poetry:nth-child(1) h2 {
+            font-size: 28px !important;
+            margin-top: 0;
+        }
+
+        .custom-haojen-container .post-preview:nth-child(1) .post-subtitle {
+            font-size: 18px;
+            font-weight: 400;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        .custom-haojen-container .post-preview:nth-of-type(1) > a {
+            padding: 20px
+        }
+    }
+
+    /*手机屏幕*/
+    @media (max-width: 400px) {
+        .custom-haojen-container .post-preview:nth-child(1) {
+            height: 195px;
+        }
+
+        .custom-haojen-container .post-preview-poetry:nth-child(1) h2 {
+            font-size: 20px !important;
+        }
+
+        .custom-haojen-container .post-preview:nth-child(1) .post-subtitle {
+            font-size: 16px;
+        }
+
+        .custom-haojen-container .post-preview:nth-child(1) a {
+            padding: 30px 20px;
+        }
+    }
+</style>
+
+<!-- Page Header -->
+<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 visible-xs-block visible-sm-block">
+    <div class="row">
+        <header class="intro-header">
+            <div class="container">
+                <div class="site-heading text-center">
+                    <div class="about-me">
+                        <!--移动端头部显示-->
+                        <img src>
+                        <h5><a href="/about/">John Doe</a></h5>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+</div>
+<!-- Main Content -->
+<div class="container custom-haojen-container">
+    <!-- Post Container -->
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12 col-xs-12 post-container">
+            <!-- Main Content -->
+
+
+
+<div class="post-preview " style="background-image: url('')">
+    <a href="/2019/05/15/深入理解netfilter的核心原理与实现-md/">
+        <h2 class="post-title">
+            深入理解netfilter的核心原理与实现.md
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-05-15
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                [TOC]
+1、Iptables和Netfilter的关系iptables是用户用来管理和配置防火墙规则的一种策略，但是实际解析规则并按照规则实施产生作用的是Netfilter。
+iptables与协议栈内有包过滤功能的hook交互来完成工作，这些内核hook构成了netfilter框架。每个进..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+<div class="post-preview " style="background-image: url('')">
+    <a href="/2019/05/15/hello-world/">
+        <h2 class="post-title">
+            Hello World
+        </h2>
+        <p class="post-meta">
+            <i class="fa fa-calendar" aria-hidden="true"></i> 2019-05-15
+        </p>
+        
+        <div class="post-content-preview">
+            <p>
+                Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer i..
+            </p>
+        </div>
+    </a>
+
+</div>
+
+<hr>
+
+
+
+
+<!-- 翻页 pager -->
+
+<ul class="pager">
     
-
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+    
+</ul>
 
 
-<script src="/js/script.js"></script>
+        </div>
+        <!-- Sidebar Container -->
+        <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
+
+            <!-- About Me -->
+            <section class="visible-md visible-lg" style="padding: 0 18px">
+                <div class="short-about">
+                    <!--侧边栏头像-->
+                    
+                    <h5><a href="/about/">John Doe</a></h5>
+                    
+                    <hr>
+                    <!-- SNS Link 社交 -->
+                    <ul class="list-inline">
+                        
+                        
+                        
+
+                        
+
+                        
+
+                        
+
+                        
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Featured Tags  标签 -->
+            
+
+            
+
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <br>
+                <ul class="list-inline text-center">
+                
+                
+                
+
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Hexo 2019
+                    <br>
+                    <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
+                    <br>
+                    Theme by <a href="https://haojen.github.io/">Haojen Ma</a>
+                </p>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/blog.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
 
 
 
-  </div>
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- swiftype -->
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+  (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+  e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install','','2.0.0');
+</script>
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<!--wechat title img-->
+<img class="wechat-title-img" src="">
 </body>
+
 </html>
