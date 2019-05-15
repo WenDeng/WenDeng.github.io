@@ -6,14 +6,14 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content>
+    <meta name="description" content="我的小小知识乐园">
     <meta name="keyword" content>
     <meta name="theme-color" content="#600090">
     <meta name="msapplication-navbutton-color" content="#600090">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
     <link rel="shortcut icon" href="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-person-128.png">
-    <link rel="alternate" type="application/atom+xml" title="Hexo" href="/atom.xml">
+    <link rel="alternate" type="application/atom+xml" title="野渡" href="/atom.xml">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
@@ -22,7 +22,7 @@
         
     </title>
 
-    <link rel="canonical" href="http://yoursite.com/2019/05/15/深入理解netfilter的核心原理与实现-md/">
+    <link rel="canonical" href="http://WenDeng.github.io/2019/05/15/深入理解netfilter的核心原理与实现-md/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -56,7 +56,7 @@
             </button>
             <a class="navbar-brand animated pulse" href="/">
                 <span class="brand-logo">
-                    Hexo
+                    野渡
                 </span>
                 's Blog
             </a>
@@ -78,6 +78,30 @@
 					
                     
                         
+                    
+                        
+							
+                        <li>
+                            <a href="/Tags/">Tags</a>
+                        </li>
+							
+						
+                    
+                        
+							
+                        <li>
+                            <a href="/技术/">技术</a>
+                        </li>
+							
+						
+                    
+                        
+							
+                        <li>
+                            <a href="/生活/">生活</a>
+                        </li>
+							
+						
                     
 					
 					
@@ -121,13 +145,13 @@
 <!--only post-->
 
 
-<img class="wechat-title-img" src>
+<img class="wechat-title-img" src="undefinedhttps://github.com/WenDeng/Picture_markdown/blob/master/themes/%E9%95%BF%E5%9F%8E.jpg?raw=true">
 
 
 <style>
     
     header.intro-header {
-        background-image: url('')
+        background-image: url('https://github.com/WenDeng/Picture_markdown/blob/master/themes/%E9%95%BF%E5%9F%8E.jpg?raw=trueundefined')
     }
 
     
@@ -141,12 +165,16 @@
                     <h1>深入理解netfilter的核心原理与实现.md</h1>
                     
                     <span class="meta">
-                         作者 John Doe
+                         作者 deng wen
                         <span>
                           日期 2019-05-15
                          </span>
                     </span>
                     <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#Iptables" title="Iptables">Iptables</a>
+                        
+                        <a class="tag" href="/tags/#Netfilter" title="Netfilter">Netfilter</a>
                         
                     </div>
                 </div>
@@ -166,8 +194,7 @@
         <div class="row">
             <!-- Post Container -->
             <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
-                <p>[TOC]</p>
-<h3 id="1、Iptables和Netfilter的关系"><a href="#1、Iptables和Netfilter的关系" class="headerlink" title="1、Iptables和Netfilter的关系"></a>1、Iptables和Netfilter的关系</h3><p>iptables是用户用来管理和配置防火墙规则的一种策略，但是实际解析规则并按照规则实施产生作用的是Netfilter。</p>
+                <h3 id="1、Iptables和Netfilter的关系"><a href="#1、Iptables和Netfilter的关系" class="headerlink" title="1、Iptables和Netfilter的关系"></a>1、Iptables和Netfilter的关系</h3><p>iptables是用户用来管理和配置防火墙规则的一种策略，但是实际解析规则并按照规则实施产生作用的是Netfilter。</p>
 <p>iptables与协议栈内有包过滤功能的hook交互来完成工作，这些内核hook构成了netfilter框架。每个进入网络系统的包（接收和发送）在经过协议栈的时候都会触发这些hook，程序可以通过<strong>注册hook函数</strong>的方式在一些关键路径上处理网络流量。iptables相关的内核模块在这些hook注册了处理函数，因此可以通过iptables规则来使得网络流量符合防火墙规则。</p>
 <h3 id="2、Netfilter-Hooks"><a href="#2、Netfilter-Hooks" class="headerlink" title="2、Netfilter Hooks"></a>2、Netfilter Hooks</h3><p>netfilter提供了5个关于IPv4的hook点，数据包经过协议栈时会触发内核模块注册在这里的处理函数。触发哪个hook取决于包的方向（接收还是接收）、包的目的地址、以及包在上一个hook点是被丢弃还accept等等。</p>
 <p>下面几个hook是内核协议栈已经定义好的：</p>
@@ -333,7 +360,7 @@
 
                 </ul>
                 <p class="copyright text-muted">
-                    Copyright &copy; Hexo 2019
+                    Copyright &copy; 野渡 2019
                     <br>
                     <span id="busuanzi_container_site_pv" style="font-size: 12px;">PV: <span id="busuanzi_value_site_pv"></span> Times</span>
                     <br>
@@ -370,7 +397,7 @@
 <script>
     // only load tagcloud.js in tag.html
     if($('#tag_cloud').length !== 0){
-        async("http://yoursite.com/js/jquery.tagcloud.js",function(){
+        async("http://WenDeng.github.io/js/jquery.tagcloud.js",function(){
             $.fn.tagcloud.defaults = {
                 //size: {start: 1, end: 1, unit: 'em'},
                 color: {start: '#bbbbee', end: '#0085a1'},
