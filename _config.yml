@@ -84,8 +84,8 @@ plugins:
 #     path: sitemap.xml  # 适用于提交给 Google
 
 ## Themes: https://hexo.io/themes/
-theme: landscape
-# theme: maupassant
+# theme: landscape
+theme: maupassant
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
