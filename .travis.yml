@@ -3,6 +3,7 @@ node_js: stable # 设置相应版本
 
 install:
     - npm install # 安装hexo及插件
+    - cnpm install node-sass@latest
 
 cache:
   directories:
