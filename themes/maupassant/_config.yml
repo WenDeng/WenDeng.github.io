@@ -1,0 +1,140 @@
+disqus: ## Your disqus_shortname, e.g. username # Disqus评论 shortnam
+uyan: ## Your uyan_id. e.g. 1234567 
+livere: ## Your livere data-uid, e.g. MTAyMC8zMDAxOC78NTgz   #来必力评论 data-uid
+changyan: ## Your changyan appid, e.g. cyrALsXc8  
+changyan_conf: ## Your changyan conf, e.g. prod_d8a508c2825ab57eeb43e7c69bba0e8b  #畅言评论 appid
+
+gitment: #Gitment评论相关参数
+  enable: false ## If you want to use Gitment comment system please set the value to true.
+  owner: ## Your GitHub ID, e.g. username
+  repo: ## The repository to store your comments, make sure you're the repo's owner, e.g. imsun.github.io
+  client_id: ## GitHub client ID, e.g. 75752dafe7907a897619
+  client_secret: ## GitHub client secret, e.g. ec2fb9054972c891289640354993b662f4cccc50
+
+gitalk: #Gitalk评论相关参数
+  enable: false ## If you want to use Gitment comment system please set the value to true.
+  owner:  ## Your GitHub ID, e.g. username
+  repo:  ## The repository to store your comments, make sure you're the repo's owner, e.g. gitalk.github.io
+  client_id:  ## GitHub client ID, e.g. 75752dafe7907a897619
+  client_secret:  ## GitHub client secret, e.g. ec2fb9054972c891289640354993b662f4cccc50
+  admin:  ## Github repo owner and collaborators, only these guys can initialize github issues.
+
+valine: ## https://valine.js.org  #Valine评论相关参数
+  enable: false ## If you want to use Valine comment system, please set the value to true.
+  appid: ## Your LeanCloud application App ID, e.g. pRBBL2JR4N7kLEGojrF0MsSs-gzGzoHsz
+  appkey: ## Your LeanCloud application App Key, e.g. tjczHpDfhjYDSYddzymYK1JJ
+  notify: false ## Mail notifier, see https://github.com/xCss/Valine/wiki/Valine-评论系统中的邮件提醒设置
+  verify: false ## Validation code.
+  placeholder: Just so so ## Comment box placeholders.
+  avatar: 'mm' ## Gravatar type, see https://github.com/xCss/Valine/wiki/avatar-setting-for-valine
+  pageSize: 10 ## Number of comments per page.
+  guest_info: nick,mail,link ## Attributes of reviewers.
+
+google_search: false ## Use Google search, true/false.
+baidu_search: false ## Use Baidu search, true/false.
+swiftype: ## Your swiftype_key, e.g. m7b11ZrsT8Me7gzApciT  #Swiftype 站内搜索key
+tinysou: ## Your tinysou_key, e.g. 4ac092ad8d749fdc6293
+google_analytics: ## Your Google Analytics tracking id, e.g. UA-42425684-2
+baidu_analytics: ## Your Baidu Analytics tracking id, e.g. 8006843039519956000
+
+self_search: true ## 基于jQuery的本地搜索引擎，需要安装hexo-generator-search插件使用。
+search:
+  - path: search.xml
+  - field: post
+
+shareto: false ## 是否使用分享按鈕，需要安装hexo-helper-qrcode插件使用
+
+fancybox: true ## 是否启用Fancybox图片灯箱效果
+show_category_count: false ##是否显示侧边栏分类数目
+toc_number: false ## - 是否显示文章中目录列表自动编号
+
+busuanzi: true ## If you want to use Busuanzi page views please set the value to true.
+wordcount: true ## If you want to display the word counter and the reading time expected to spend of each post please set the value to true, and you must have hexo-wordcount installed.
+widgets_on_small_screens: false ## Set to true to enable widgets on small screens.
+
+canvas_nest: #是否使用canvas动态背景
+  enable: true ## If you want to use dynamic background please set the value to true, you can also fill the following parameters to customize the dynamic effect, or just leave them blank to keep the default effect.
+  color: "100,99,98" ## RGB value of the color, e.g. "100,99,98"
+  opacity: "0.7" ## Transparency of lines, e.g. "0.7"
+  zIndex: "-1" ## The z-index property of the background, e.g. "-1"
+  count: "150" ## Quantity of lines, e.g. "150"
+
+donate:  #是否启用捐赠按钮
+  enable: true ## If you want to display the donate button after each post, please set the value to true and fill the following items on your need. You can also enable donate button in a page by adding a "donate: true" item to the front-matter.
+  github: ## GitHub URL, e.g. https://github.com/Kaiyuan/donate-page
+  alipay_qr: ## Path of Alipay QRcode image, e.g. /img/AliPayQR.png
+  wechat_qr: ## Path of Wechat QRcode image, e.g. /img/WeChatQR.png
+  btc_qr: ## Path of Bitcoin QRcode image, e.g. /img/BTCQR.png
+  btc_key: ## Bitcoin key, e.g. 1KuK5eK2BLsqpsFVXXSBG5wbSAwZVadt6L
+  paypal_url: ## Paypal URL, e.g. https://www.paypal.me/tufu9441
+
+post_copyright:  #所有权
+  enable: true ## If you want to display the copyright info after each post, please set the value to true and fill the following items on your need.
+  author: 野渡  ## Your author name, e.g. tufu9441
+  copyright_text: 商业转载请联系作者获得授权,非商业转载请注明出处 ## Your copyright text, e.g. The author owns the copyright, please indicate the source reproduced.
+
+# Featured Tags  功能标签
+# featured-tags: true                     # whether or not using Feature-Tags
+# featured-condition-size: 1   
+
+menu:  #自定义页面及菜单，依照已有格式填写。
+  - page: home
+    directory: .
+    icon: fa-home
+  - page: archive
+    directory: archives/
+    icon: fa-book
+  - page: timeline #时间线
+    directory: timeline/
+    icon: fa-edit
+  - page: rss
+    directory: atom.xml
+    icon: fa-rss
+  - page: about
+    directory: about/
+    icon: fa-user
+
+
+widgets:  #选择和排列希望使用的侧边栏小工具。
+  - search
+  - category
+  - tag
+  - recent_posts
+  - recent_comments
+  - links
+  # - search
+  # - notification
+  # - social
+  # - category
+  # - archive
+  # - tagcloud
+  # - friends
+
+
+links:    #友情链接
+  - title: antFaiz5z's Fantastic Fertilizer
+    url: https://antfaiz5z.github.io/
+  - title: 大城小爱
+    url: http://www.example1.com/
+  - title: 大五四刘
+    url: http://www.example2.com/
+
+
+timeline:  #网站历史时间线，在页面front-matter中设置layout: timeline可显示。
+  - num: 1
+    word: 2016/05/25-开始加入github，拥抱开源环境。
+  - num: 2
+    word: 2016/05/26-创建第一个repository,开始代码开源与共享
+  - num: 3
+    word: 2017/11/22-进入公司实现，开始gitlab多人合作开发之路。
+  - num: 4
+    word: 2019/05/16-用hexo创建我的第一个博客，开始我的创作。
+  - num: 45
+    word: 2019/05/16-more....等待更多成长。
+
+# Static files  静态文件存储路径，方便设置CDN缓存。
+js: js
+css: css
+
+# Theme version  主题版本，便于静态文件更新后刷新CDN缓存
+version: 0.0.0
