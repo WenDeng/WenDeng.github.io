@@ -102,14 +102,22 @@ widgets:  #选择和排列希望使用的侧边栏小工具。
   - recent_posts
   - recent_comments
   - links
-  # - search
+  # - tagcloud
   # - notification
   # - social
-  # - category
-  # - archive
-  # - tagcloud
   # - friends
 
+## 标签云设置
+tagcloud:
+  tag3d: true
+  textColour: '#444'
+  outlineMethod: 'block'
+  outlineColour: '#FFDAB9'
+  interval: 30
+  freezeActive: true
+  frontSelect: true
+  reverse: true
+  wheelZoom: false
 
 links:    #友情链接
   - title: antFaiz5z's Fantastic Fertilizer

@@ -20,7 +20,7 @@ script:
     - hexo clean # 清除
     - hexo g # 生成
 
-after_script:
+after_script: #记得将theme下面的.git文件删除掉，要不然部署会出现layout错误
     - cd ./public
     - git init
     - git config user.name "WenDeng" # 修改name
