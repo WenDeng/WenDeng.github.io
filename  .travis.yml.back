@@ -15,7 +15,7 @@
 #     - git config user.email "201722060935@std.uestc.edu.cn" # 修改email
 #     - git add .
 #     - git commit -m "Travis CI Auto Builder"
-#     - git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" master:master # GH_TOKEN是在Travis中配置token的名称
+#     - git push --force --quiet "https://${Travis_Token}@${GH_REF}" master:master # GH_TOKEN是在Travis中配置token的名称
 
 # branches:
 #     only:
@@ -23,3 +23,46 @@
 # env:
 #     global:
 #         - GH_REF: github.com/WenDeng/WenDeng.github.io.git #设置GH_REF，注意更改yourname
+
+#第二种方式================================================================================================================
+language: node_js
+
+sudo: required
+
+node_js: stable
+
+cache:
+  directories:
+    - node_modules
+
+install:
+  - npm install 
+
+branches:
+  only:
+    - hexo-source
+
+before_install: 
+  - export TZ='Asia/Shanghai'
+  - npm install -g cnpm --registry=https://registry.npm.taobao.org
+  - cnpm install node-sass@latest
+  - cnpm install hexo-cli -g
+
+install:
+  - cnpm install
+
+script:
+  - hexo clean
+  - hexo generate
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $Travis_Token
+  local_dir: public
+  name: $GIT_NAME
+  email: $GIT_EMAIL
+  keep-history: true
+  target-branch: master
+  on:
+    branch: hexo-source
