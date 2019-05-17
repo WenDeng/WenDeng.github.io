@@ -35,9 +35,6 @@ cache:
   directories:
     - node_modules
 
-install:
-  - npm install 
-
 branches:
   only:
     - hexo-source
@@ -50,6 +47,7 @@ before_install:
 
 install:
   - cnpm install
+  - npm install 
 
 script:
   - hexo clean

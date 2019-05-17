@@ -3,11 +3,18 @@ node_js: stable # 设置相应版本
 
 install:
     - npm install # 安装hexo及插件
-    - cnpm install node-sass@latest
+    - npm install 
 
 cache:
   directories:
     - node_modules
+
+before_install: 
+  - export TZ='Asia/Shanghai'
+  - npm install -g cnpm --registry=https://registry.npm.taobao.org
+  - cnpm install node-sass@latest
+  - cnpm install hexo-cli -g
+
 
 script:
     - hexo clean # 清除
