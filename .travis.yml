@@ -18,6 +18,7 @@ branches:
 before_install: 
   - export TZ='Asia/Shanghai'
   - npm install -g cnpm --registry=https://registry.npm.taobao.org
+  - cnpm install node-sass@latest
   - cnpm install hexo-cli -g
 
 install:

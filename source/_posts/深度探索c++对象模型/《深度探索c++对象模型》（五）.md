@@ -1,6 +1,6 @@
 ---
 title: 《深度探索c++对象模型》（五）构造、析构、拷贝语意学
-date: 2019-05-20 16:44:12
+date: 2018-11-20 16:44:12
 toc: true
 comments: true
 tags:
@@ -11,13 +11,6 @@ categories:
 
 本章的的主题是构造、析构、拷贝语意学。主要是讨论如何支持class模型，探讨object的整个生命周期。
 <!--more-->
-
-
-### 前述
-> 本章的的主题是构造、析构、拷贝语意学。主要是讨论如何支持class模型，探讨object的整个生命周期。
-
-------------------------------------
-参考书籍及链接：《深度探索c\+\+对象模型》    
 
 ------------------------------------
 ## 0、基础
@@ -43,11 +36,12 @@ typedef struct{
     float x, y, z;
 }Point;
 ```
+
 * 如果以C++ 来编译这段码，理论上编译器会为Point声明一个trivial default constructor、一个trivial destructor、一个trivial copy constructor，以及一个trivial copy assignment operator。但实际上，编译器会分析这个声明，并为它贴上Plain of Data标签。
-* 对于``` Point global; ```理论上,constructor在程序起始处被调用而destructor 在程序的exit()处被调用。然而，事实上那些tirvial members要不是没被定义， 就是没被调用，程序的行为一如它在C中的表现一样。此外，C++ 的所有全局对象都被当作“初始化过的数据”来对待。
-* 对于``` Point *heap = new Point; ```会被转换为对new运算符的调用。但并没有default constructor施行与new运算符所传回的Point object身上。
-* ```*heap = local; ```理论上，这样的指定操作会触发trivial copy assignment operator进行拷贝搬运操作。然而实际上此object是一个Plain old data，所以赋值操作(assignment)将只是像C那样的纯粹位搬移操作。
-* ```delete heap; ```会被转换为对delete运算符的调用,观念上，这样的操作会触发Point的trivial destructor。但是一如我们所见，destructor要不是没有被产生就是没有被调用。
+* 对于**Point global;**理论上,constructor在程序起始处被调用而destructor 在程序的exit()处被调用。然而，事实上那些tirvial members要不是没被定义， 就是没被调用，程序的行为一如它在C中的表现一样。此外，C++ 的所有全局对象都被当作“初始化过的数据”来对待。
+* 对于**Point *heap = new Point;**会被转换为对new运算符的调用。但并没有default constructor施行与new运算符所传回的Point object身上。
+* ***heap = local;**理论上，这样的指定操作会触发trivial copy assignment operator进行拷贝搬运操作。然而实际上此object是一个Plain old data，所以赋值操作(assignment)将只是像C那样的纯粹位搬移操作。
+* **delete heap;**会被转换为对delete运算符的调用,观念上，这样的操作会触发Point的trivial destructor。但是一如我们所见，destructor要不是没有被产生就是没有被调用。
 
 #### 3.抽象数据类型(Abstract Data Type)和其相关处理
 以下是Point的第二次声明，在public接口之下多了private数据，提供完整的封装性，但是没有提供virtual function:
@@ -61,10 +55,10 @@ private:
 };
 ```
 * 对于Point，我们不需要定义一个copy constructor或copy assignment operator，因为默认的位拷贝已经足够，也不需要destructor,因为默认的内存管理方法也已经足够，如果我们不自己定义，编译器也因为判断不会用到而不会产生的函数。
-* 对于```Point global;  ```default constructor作用于其上。由于global被定义在全局范畴中，其初始化操作将延迟到程序激活时才开始，扩展调用default constructor。如果要将class中的所有成员都设定常 量初值，那么给予一个explicit initialization list会比较有效率些 。
-* 对于``` Point *heap = new Point; ```会被转换为对new运算符的调用。然后调用default Point Constructor并自行扩展。
-* ```*heap = local; ```理论上，这样的指定操作会触发trivial copy assignment operator进行拷贝搬运操作。然而并没有，只进行简单的位拷贝操作。
-* ```delete heap; ```，由于没有destrucor,同样不会被调用。
+* 对于**Point global;**default constructor作用于其上。由于global被定义在全局范畴中，其初始化操作将延迟到程序激活时才开始，扩展调用default constructor。如果要将class中的所有成员都设定常 量初值，那么给予一个explicit initialization list会比较有效率些 。
+* 对于**Point *heap = new Point;**`会被转换为对new运算符的调用。然后调用default Point Constructor并自行扩展。
+* ***heap = local;**理论上，这样的指定操作会触发trivial copy assignment operator进行拷贝搬运操作。然而并没有，只进行简单的位拷贝操作。
+* **delete heap;**，由于没有destrucor,同样不会被调用。
 
 #### 4.在上述情况中加入虚函数又将怎么处理？
 将人虚函数之后，class object除了多负担一个vptr之外，也引发编译器对Point class产生膨胀作用。例如：
@@ -104,7 +98,7 @@ inline Point* Point::Point(Point* this, const Point& rhs)
 
 ## 二、继承体系下的对象构造
 #### 1. 编译器会对constructor做什么？
-像这样```T object ```定义一个对象时,会调用constructor,其内部做的工作包括：
+像这样**T object**定义一个对象时,会调用constructor,其内部做的工作包括：
 * （1）记录在member initialization list中的data members初始化操作会被放进constructor的函数本身，并以members的声明顺序为顺序。
 * （2）如果有一个member并没有出现在member initialization list中，但它有一个default constructor，那么该default constructor必须被调用。
 * （3）在那之前，如果class object有virtual functions, 它们必须被设定初值，指向适当的virtual tables.
@@ -143,7 +137,7 @@ class Line
     //...
 };
 ```
-* （1）对于 ``` Line::Line(const Point& begin, const Point& end): _end(end), _begin(begin) {} ```,它会被编译器扩充并转换为：
+* （1）对于**Line::Line(const Point& begin, const Point& end): _end(end), _begin(begin) {}**,它会被编译器扩充并转换为：
 ```
 Line* Line::Line(Line *this, const Point& begin, const Point& end){
     this->_begin.Point::Point(begin);
@@ -151,7 +145,7 @@ Line* Line::Line(Line *this, const Point& begin, const Point& end){
     return this;
 }
 ```
-* （2）对于``` Line a;```implicit Line destructor会被合成出来(如果Line派生自Point,那么合成出来的destructor将会是virtual。然而由于Line只是内带Point objects而非继承自Point，所以被合成出来的destructor只是nontrivial而已)。在其中，它的member class objects的destructor会被调用(与其构造的相反顺序):
+* （2）对于**Line a;**implicit Line destructor会被合成出来(如果Line派生自Point,那么合成出来的destructor将会是virtual。然而由于Line只是内带Point objects而非继承自Point，所以被合成出来的destructor只是nontrivial而已)。在其中，它的member class objects的destructor会被调用(与其构造的相反顺序):
 ```
 inline Line::~Line(Line *this){
     this->_end.Point::~Point();
@@ -159,8 +153,8 @@ inline Line::~Line(Line *this){
 }
 ```
 
-* (3) 对于``` Line b=a;```implicit Line copy constructor会被合成出来，成为一个inline public member; 
-* (4) 对于``` a=b;``` 同样，implicit assignment operator会被合成出来，成为一个inline public member;
+* (3) 对于**Line b=a;**implicit Line copy constructor会被合成出来，成为一个inline public member; 
+* (4) 对于**a=b;**同样，implicit assignment operator会被合成出来，成为一个inline public member;
 
 #### 3. 虚拟继承：constructor怎么处理virtual base class的构造？
 试想下面三种类派生情况：
@@ -183,7 +177,7 @@ Point3d* Point3d::Point3d(Point3d* this, bool _most_derived, float x, float y, f
     return this;
 }
 ```
-> “virtual base class constructors的被调用”有着明确的定义：只有当一个完整的class object被定义出来时，它才会被调用；如果object只是某个完整object的subject，它就不会被调用。
+**“virtual base class constructors的被调用”有着明确的定义：只有当一个完整的class object被定义出来时，它才会被调用；如果object只是某个完整object的subject，它就不会被调用。**
 
 #### 4. vptr初始化语意学：什么时候设置vptr合适？
 constructor的执行算法通常如下：

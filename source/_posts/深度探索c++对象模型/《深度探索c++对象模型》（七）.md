@@ -1,6 +1,6 @@
 ---
 title: 《深度探索c++对象模型》（七）站在对象模型的顶端
-date: 2019-05-22 16:44:12
+date: 2018-11-22 16:44:12
 toc: true
 comments: true
 tags:
@@ -12,9 +12,6 @@ categories:
 本章的的主题是站在对象模型的尖端，套路哦三个著名的c\+\+语言扩充性质，它们都会影响c\+\+对象，他们分别是exception handling（EH）、template support、runtime type identification(RTTI)。
 <!--more-->
 
-
-### 前述
-> 本章的的主题是站在对象模型的尖端，套路哦三个著名的c\+\+语言扩充性质，它们都会影响c\+\+对象，他们分别是exception handling（EH）、template support、runtime type identification(RTTI)。
 ------------------------------------
 ## 一、Template
 这一节的焦点放在template的语意上面，我们将讨论templates在编译系统中“何时”，“为什么”以及“如何”发挥其功能。下面是有关template的三个主要讨论方向：
@@ -44,9 +41,9 @@ private:
 };
 ```
 编译器对于template class会根据type的不同而产生不同的实例class。
-* enum Status、freeList、chunkSize以及object都必须进行实例化，如```Point<double>::freeList; ```,而不能是```Point::freeList; ```。
-* 定义一个指针，指向特定的实例。例如``` Point<float> *ptr=0;```因为一个指向class object的指针，本身并不是一个class object，编译器不需要知道与该class有关的任何member的数据或object的布局数据。所以不需要实例化。
-* 定义一个reference,例如```Point<float> &refer=0; ```就需要产生一个Point的float实例。
+* enum Status、freeList、chunkSize以及object都必须进行实例化，如**Point<double>::freeList;**,而不能是**Point::freeList;**`。
+* 定义一个指针，指向特定的实例。例如**Point<float> *ptr=0;**因为一个指向class object的指针，本身并不是一个class object，编译器不需要知道与该class有关的任何member的数据或object的布局数据。所以不需要实例化。
+* 定义一个reference,例如**Point<float> &refer=0;**就需要产生一个Point的float实例。
 
 
 #### 2.member function需要实例化吗？
@@ -80,8 +77,8 @@ extern int foo(int);
 //...
 ScopeRultes<int> sr0;
 ```
-* 对于```sr0.invariant(); ```由于被用来实例化这个template的真正类型，对于 \_val的类型并没有影响。所以选中``` extern double foo(double); ```
-* 对于```sr0.type_dependent(); ```\_member与template参数有关,所以选中的foo()跟参数有关,所以选中```extern int foo(int);```。
+* 对于**sr0.invariant();**由于被用来实例化这个template的真正类型，对于 \_val的类型并没有影响。所以选中**extern double foo(double);**
+* 对于**sr0.type_dependent();**\_member与template参数有关,所以选中的foo()跟参数有关,所以选中**extern int foo(int);**。
 
 #### 5.Member function的实例化行为。
 对于template的支持，最困难的莫过于template function的实例化，目前的编译器提供了 两个策略：一个是编译时期策略，程序代码必须在program text file中备妥可用；另一个是链接时期策略，程序代码必须在meta-compliation工具可以导引编译器的实例化行为(instantiation)。       

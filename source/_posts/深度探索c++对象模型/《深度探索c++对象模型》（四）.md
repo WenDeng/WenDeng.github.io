@@ -1,6 +1,6 @@
 ---
 title: 《深度探索c++对象模型》（四）Function语意学
-date: 2019-05-19 16:44:12
+date: 2018-11-19 16:44:12
 toc: true
 comments: true
 tags:
@@ -11,12 +11,6 @@ categories:
 
 Function是c\+\+中的又一大重要部分， 本章的的主题是Function语意学，主要是探究编译器对class中的static member function、nonstatic member function和virtual member function所做的处理，并用实际测试分析其使用对代码效率的影响。同时也会进一步探究“指向member function”的指针和Inline function的原理和效率。
 <!--more-->
-
-### 前述
-> Function是c\+\+中的又一大重要部分， 本章的的主题是Function语意学，主要是探究编译器对class中的static member function、nonstatic member function和virtual member function所做的处理，并用实际测试分析其使用对代码效率的影响。同时也会进一步探究“指向member function”的指针和Inline function的原理和效率。
-
-------------------------------------
-参考书籍及链接：《深度探索c\+\+对象模型》    
 
 ------------------------------------
 ## 一、Member function的各种调用方式
@@ -207,22 +201,29 @@ inline int bar(){
     return minval;
 }
 ```
-(1) 处形参无副作用，直接展开：``` minval = val1 < val2 ? val1 : val2; ```     
-(2) 处那一行直接拥抱常量：``` minval = 1024;  ```      
+(1) 处形参无副作用，直接展开：
+``` 
+minval = val1 < val2 ? val1 : val2; 
+```     
+(2) 处那一行直接拥抱常量：
+``` 
+minval = 1024;  
+```      
 (3) 处那一行则引发参数的副作用，它需要导入一个临时对象，以避免重复求值:
 ```
 int t1;
 int t2;
-minval = (t1 = foo()), (t2 = bar() + 1),
-        t1 < t2 ? t1 : t2;
+minval = (t1 = foo()), (t2 = bar() + 1),t1 < t2 ? t1 : t2;
 ```
 #### 4.Inline Function如何处理局部变量？
 一般而言，inline函数中的每一个局部变量都必须被放在函数调用的一个封闭区段中，拥有一个独一无二的名称。
 如果inline函数以单一表达式扩展多次，则每次扩展都需要自己的一组局部变量。如果inline函数以分离的多个式子被扩展多次，那么只需一组局部变量，就可以重复使用(译注：因为它们被放在一个封闭区段中，有自己的scope)
+
 ```
 minval=min(val1,val2)+min(foo(),foo()+1);//这就是单一表达式，进行两次扩展，多出两组变量
 ```
 
 #### 5.Inline Function的缺点。
 一个inline函数如果被调用太多次，会产生大量的扩展码，使程序大小暴涨。参数带有副作用或者以一个单一表达式做多重调用、或者其本身有多个局部变量，都会产生大量局部变量，当然，编译器有可能帮你处理，也可能不会。     
-> **对于既要安全又要效率的程序，inline函数提供了一个强有力的工具。然而，与non-inline函数比起来，他们需要更加小心地处理。**
+
+**对于既要安全又要效率的程序，inline函数提供了一个强有力的工具。然而，与non-inline函数比起来，他们需要更加小心地处理。**

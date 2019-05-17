@@ -1,6 +1,6 @@
 ---
 title: 《深度探索c++对象模型》（六）执行期语意学
-date: 2019-05-21 16:44:12
+date: 2018-11-21 16:44:12
 toc: true
 comments: true
 tags:
@@ -11,11 +11,6 @@ categories:
 
 本章的的主题是执行器语意学，查看执期的某些对象模型行为。包括零时性对象的生命及其死亡，以及对new运算符和delete预算符的支持。
 <!--more-->
-
-### 前述
-> 本章的的主题是执行器语意学，查看执期的某些对象模型行为。包括零时性对象的生命及其死亡，以及对new运算符和delete预算符的支持。
-------------------------------------
-参考书籍及链接：《深度探索c\+\+对象模型》    
 
 ------------------------------------
 ## 0、基础
@@ -85,8 +80,8 @@ if(origin != 0)
 new运算符实际上总是以标准的C malloc()完成，虽然并没有规定一定得这么做不可。相同情况，delete运算符总是以标准的C free()完成。
 
 #### 3.针对数组的new语意
-* 对于像```int *p_array = new int[5];```这样的语句，vec\_new()不会真正被调用，因为它 的主要功能是把default constructor施行于class objects所组成的数组的每一个元素身上。
-* 对于```simple_aggr *p_aggr = new simple_aggr[5];```,vec\_new()也不会被调用，因为simple\_aggr并没有定义一个constructor或destructor，所以配置数组以及清除p\_aggr数组的操作，只是单纯地获得内存和释放内存而已，这些操作由new和delete运算符来完成就绰绰有余了。
+* 对于像**int *p_array = new int[5];**这样的语句，vec\_new()不会真正被调用，因为它 的主要功能是把default constructor施行于class objects所组成的数组的每一个元素身上。
+* 对于**simple_aggr *p_aggr = new simple_aggr[5];**,vec\_new()也不会被调用，因为simple\_aggr并没有定义一个constructor或destructor，所以配置数组以及清除p\_aggr数组的操作，只是单纯地获得内存和释放内存而已，这些操作由new和delete运算符来完成就绰绰有余了。
 
 然而如果class定义有一个default constructo，某些版本的vec_new()就会被调用，配置并构 造class objects所组成的数组，如第一节中所示那样。  
 * 寻找数组维度，对于delete运算符的效率带来极大的冲击，所以才导致这样的妥协：只有在中括号出现时，编译器才寻找数组的维度，否则它便假设只有单独一个objects要被删除。
@@ -97,7 +92,8 @@ new运算符实际上总是以标准的C malloc()完成，虽然并没有规定�
 Point2w *ptw = new(arena) Point2w;
 ```
 其中arena指向内存中的一个区块，用以放置新产生出来的Point2w object。这个预先定义好的placement operator new的实现方法简直是出乎意料的平凡，它只要将“获得的指针”(上例为arena)所指的地址传回。
-> 用这个的意义是什么呢？
+
+**用这个的意义是什么呢？**
 
 
 ## 三、临时性对象
