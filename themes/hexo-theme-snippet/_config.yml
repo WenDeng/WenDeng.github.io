@@ -9,20 +9,17 @@ menu:
   url: /
   icon:
 - page: 技术
-  url: /categories/前端/
+  url: /tags/技术/
   icon:
 - page: 生活
-  url: /categories/后端/
-  icon:
-- page: 工具
-  url: /categories/工具/
+  url: /tags/生活/
   icon:
 - page: 时间轴
   url: /archives/
   icon:
-
-## favicon
-favicon: /favicon.ico
+- page: 书与电影
+  url: /bookandmovie/
+  icon:
 
 ## Feed
 rss: /atom.xml
@@ -121,7 +118,11 @@ links:
 branding: 野渡's小小知识乐园
 ## 设置banner背景图片
 banner:
-    img: http://snippet.shenliyang.com/img/banner.jpg  # https://github.com/WenDeng/Picture_markdown/blob/master/themes/%E9%95%BF%E5%9F%8E.jpg?raw=true
+    # img: http://snippet.shenliyang.com/img/banner.jpg  
+    img: https://github.com/WenDeng/Picture_markdown/blob/master/themes/%E9%95%BF%E5%9F%8E.jpg?raw=true
+
+## favicon
+favicon: /favicon.ico
 
 ## 首页列表底部面板
 homePanel: true
@@ -155,7 +156,7 @@ declaration:
   enable: true
   title: '转载声明'
   tip: |-
-      商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">Snippet</a>
+      商业转载请联系作者获得授权,非商业转载请注明出处 ©
 
 ## 文章打赏
 reward:

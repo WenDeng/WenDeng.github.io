@@ -5,6 +5,7 @@ toc: true
 comments: true
 tags:
   - C++基础
+  - 技术
 categories:
   - C++基础
 ---
