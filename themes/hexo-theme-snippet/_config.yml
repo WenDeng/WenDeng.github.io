@@ -55,8 +55,8 @@ jsonContent:
 notification: |-
             <p>
                 凡的博客：<a href="hhttps://antfaiz5z.github.io/" title="fork me" target="_blank">https://antfaiz5z.github.io/</a> <br/>
-                我的GitHub：<a href="https://github.com/WenDeng" title="" target="_blank">https://github.com/WenDeng</a> <br/>
-                我的简书：<a href="https://www.jianshu.com/u/d98271abb2b1">https://www.jianshu.com/u/d98271abb2b1</a> <br/>
+                GitHub：<a href="https://github.com/WenDeng" title="" target="_blank">https://github.com/WenDeng</a> <br/>
+                简书：<a href="https://www.jianshu.com/u/d98271abb2b1">https://www.jianshu.com/u/d98271abb2b1</a> <br/>
                 我的CSDN：<a href="https://blog.csdn.net/qq_22567225">https://blog.csdn.net/qq_22567225</a>
             </p>
 
@@ -121,9 +121,6 @@ banner:
     # img: http://snippet.shenliyang.com/img/banner.jpg  
     img: https://github.com/WenDeng/Picture_markdown/blob/master/themes/%E9%95%BF%E5%9F%8E.jpg?raw=true
 
-## favicon
-favicon: /favicon.ico
-
 ## 首页列表底部面板
 homePanel: true
 
@@ -156,7 +153,7 @@ declaration:
   enable: true
   title: '转载声明'
   tip: |-
-      商业转载请联系作者获得授权,非商业转载请注明出处 ©
+      商业转载请联系作者获得授权,非商业转载请注明出处 © <a href="" target="_blank">野渡</a>
 
 ## 文章打赏
 reward:
