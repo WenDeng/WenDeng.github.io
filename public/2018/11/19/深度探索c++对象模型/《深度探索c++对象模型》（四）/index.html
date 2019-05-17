@@ -1,0 +1,455 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="C++基础">
+
+
+    <meta name="description" content="Function是c++中的又一大重要部分， 本章的的主题是Function语意学，主要是探究编译器对class中的static member function、nonstatic member...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>《深度探索c++对象模型》（四）Function语意学 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(http://snippet.shenliyang.com/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/前端/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/后端/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/工具/"><i class="fa "></i>工具</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="《深度探索c++对象模型》（四）Function语意学">
+            
+	            《深度探索c++对象模型》（四）Function语意学
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/C-基础/">C++基础</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/C-基础/">C++基础</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2018/11/19</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>Function是c++中的又一大重要部分， 本章的的主题是Function语意学，主要是探究编译器对class中的static member function、nonstatic member function和virtual member function所做的处理，并用实际测试分析其使用对代码效率的影响。同时也会进一步探究“指向member function”的指针和Inline function的原理和效率。<br><a id="more"></a></p>
+<hr>
+<h2 id="一、Member-function的各种调用方式"><a href="#一、Member-function的各种调用方式" class="headerlink" title="一、Member function的各种调用方式"></a>一、Member function的各种调用方式</h2><h4 id="1-Nonstatic-Member-Function是怎么被调用的？"><a href="#1-Nonstatic-Member-Function是怎么被调用的？" class="headerlink" title="1. Nonstatic Member Function是怎么被调用的？"></a>1. Nonstatic Member Function是怎么被调用的？</h4><p>C++的设计准则之一就是：nonstatic member function至少必须和一般的nonmember function有相同的效率。<br>在c++中，member function会被被编译器转化为nonmember function，然后执行期被调用，转化过程如下：</p>
+<ul>
+<li><ol>
+<li>改写函数原型，以安插一个额外的参数(this指针)到member function中，用以提供一个存取管道，使class object得以将此函数调用。</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>将每一个“对nonstatic data member的存取操作”改为经由this指针来存取。</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>将member function重新写成一个外部函数。将函数名称经过“mangling”处理，使它在程序中称为独一无二的词汇。</li>
+</ol>
+</li>
+</ul>
+<h4 id="2-编译器为什么要进行名称处理（name-mangling）？怎么处理？"><a href="#2-编译器为什么要进行名称处理（name-mangling）？怎么处理？" class="headerlink" title="2. 编译器为什么要进行名称处理（name mangling）？怎么处理？"></a>2. 编译器为什么要进行名称处理（name mangling）？怎么处理？</h4><p>继承所带来的重复变量名、函数的重载等都需要编译器能唯一识别，这时候就需要就需要进行名称处理。一般而言，member的名称前面会加上class的名称，形成独一无二的命名，有时候member function的名称也需要加上参数类型等。    </p>
+<h4 id="3-Virtual-Member-Functions是如何被调用的？"><a href="#3-Virtual-Member-Functions是如何被调用的？" class="headerlink" title="3. Virtual Member Functions是如何被调用的？"></a>3. Virtual Member Functions是如何被调用的？</h4><p>编译器内部会对virtual member function进行如下转换：<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ptr-&gt;f();   //f()为virtual member function</span><br><span class="line"></span><br><span class="line">（*ptr-&gt;vptr[<span class="string">1</span>](<span class="link">ptr</span>);//内部转化结果</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>vptr表示编译器产生的指针，指向virtual table。  </li>
+<li>1 是virtual table slot的索引值，关联到normalize()函数。   </li>
+<li>第二个ptr表示this指针。  </li>
+</ul>
+<h4 id="4-Static-Member-Functions有什么特性？如何被调用的？"><a href="#4-Static-Member-Functions有什么特性？如何被调用的？" class="headerlink" title="4. Static Member Functions有什么特性？如何被调用的？"></a>4. Static Member Functions有什么特性？如何被调用的？</h4><p>static member functions的主要特性是它没有this指针。以下的次要特性统统根源于其主要特性：</p>
+<ul>
+<li>它不能够直接存取其class中的nonstatic members</li>
+<li>它不能够被声明为const、volatile或virtual</li>
+<li>它不需要经由class object才被调用，虽然大部分时候它是这样被调用的。    </li>
+</ul>
+<p>如果取一个static member function的地址，获得的将是其在内存中的位置，也就是其地址。由于static member function没有this指针，所以其地址的类型并不是一个“指向class member of function的指针”，而是一个“nonmember函数指针”。</p>
+<h2 id="二、Virtual-Member-function"><a href="#二、Virtual-Member-function" class="headerlink" title="二、Virtual Member function"></a>二、Virtual Member function</h2><h4 id="1-什么是多态？"><a href="#1-什么是多态？" class="headerlink" title="1. 什么是多态？"></a>1. 什么是多态？</h4><p>C++中，多态表示以“一个public base class 的指针（或reference)，寻址出一个derived class object”。</p>
+<blockquote>
+<p>runtime type identification(RTTI)</p>
+</blockquote>
+<h4 id="2-为了能方便class指针在执行期找到对应的函数实例，就需要编译器决定是否需要给class添加额外信息，那么，到底何时才需要这份信息？"><a href="#2-为了能方便class指针在执行期找到对应的函数实例，就需要编译器决定是否需要给class添加额外信息，那么，到底何时才需要这份信息？" class="headerlink" title="2. 为了能方便class指针在执行期找到对应的函数实例，就需要编译器决定是否需要给class添加额外信息，那么，到底何时才需要这份信息？"></a>2. 为了能方便class指针在执行期找到对应的函数实例，就需要编译器决定是否需要给class添加额外信息，那么，到底何时才需要这份信息？</h4><p>答案是在必须支持某种形式之“执行期多态”的时候，要鉴定哪些classes展现多态特性，就需要额外的执行期信息。<br>识别一个class是否支持多态，唯一适当的方法就是看看它是否有任何virtual function。只要class拥有一个virtual function，它就需要这份额外的执行期信息。</p>
+<h4 id="3-什么样的额外信息是我们需要存储起来的？"><a href="#3-什么样的额外信息是我们需要存储起来的？" class="headerlink" title="3. 什么样的额外信息是我们需要存储起来的？"></a>3. 什么样的额外信息是我们需要存储起来的？</h4><p>在实现上，编译器可以做到在每一个多态对象的class object身上增加两个members:     </p>
+<ul>
+<li>一个字符串或数字，表示class的类型</li>
+<li>一个指针，指向表格，表格中带有程序的virtual function的执行期地址。</li>
+</ul>
+<h4 id="4-执行期如何找到对应的virtual-function地址？"><a href="#4-执行期如何找到对应的virtual-function地址？" class="headerlink" title="4. 执行期如何找到对应的virtual function地址？"></a>4. 执行期如何找到对应的virtual function地址？</h4><p>执行期要做的，只是在特定的virtual table slot中激活virtual function。这些active virtual function包括：</p>
+<ul>
+<li>这一class所定义的函数实例。它会改写(overriding)一个可能存在的base class virtual function函数实例。</li>
+<li>继承自base class的函数实例。这是在derived class决定不改写virtual function时才会出现的情况</li>
+<li>一个pure_virtual_called()函数实例，它既可以扮演pure virtual function的空间保卫者角色，也可以当做执行期异常处理函数(有时候会用到)。  </li>
+</ul>
+<p>每一个virtual function都被指派一个固定的索引值，这个索引在整个继承体系中保持与特定的virtual function的关系。执行期通过vptr和对应的slot获得对应的virtual function地址并进行调用。</p>
+<blockquote>
+<p>在一个单一继承体系中，virtual function机制的行为十分良好，不但有效率而且很容易塑造出模型来。但是在多重继承和虚拟继承中，对virtual function的支持就没有那么美好了。</p>
+</blockquote>
+<h4 id="5-多重继承下virtual-function编译器需要做什么？"><a href="#5-多重继承下virtual-function编译器需要做什么？" class="headerlink" title="5. 多重继承下virtual function编译器需要做什么？"></a>5. 多重继承下virtual function编译器需要做什么？</h4><p>当把一个从heap中配置而得的Derived对象的地址，指定给一个Base2指针时，编译器需要如下处理：<br><figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Base2 *pbase2 = <span class="keyword">new</span> <span class="type">Derived</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//编译器会做的处理</span></span><br><span class="line">Derived *tmp = <span class="keyword">new</span> <span class="type">Derived</span>;</span><br><span class="line">Base2 *pbase2 = tmp ? tmp + sizeof(Base1) : <span class="type">0</span>;<span class="comment">//转移以支持第二个base class</span></span><br></pre></td></tr></table></figure></p>
+<p>当要删除pbase2所指的对象时，指针必须被再一次调整，以求再一次指向Derived对象的起始处(推测它还指向Derived对象)。然而上述的offset加法却不能够在编译时期直接设定，因为pbase2所指的真正对象只有在执行期才能确定。</p>
+<h4 id="6-多重继承下virtual-function带来的负担是什么？"><a href="#6-多重继承下virtual-function带来的负担是什么？" class="headerlink" title="6. 多重继承下virtual function带来的负担是什么？"></a>6. 多重继承下virtual function带来的负担是什么？</h4><p>在多重继承之下，一个derived class内含n-1个额外的virtual tables，n表示其上一层base classes的个数(因此，单一继承将不会有额外的virtual tables)。<br>针对每一个virtual tables，Derived对象中有对应的vptr。vptrs将在constructor(s)中被设定初值。</p>
+<h4 id="7-Thunk技术是什么？用来做什么？"><a href="#7-Thunk技术是什么？用来做什么？" class="headerlink" title="7.Thunk技术是什么？用来做什么？"></a>7.Thunk技术是什么？用来做什么？</h4><p>offset的大小，以及把offset加到this指针上头的那一小段<strong>程序代码</strong>，必须经由编译器在某个地方插入。较有效率的解决办法是利用所谓的thunk。所谓thunk是以小段assembly代码，用来：</p>
+<ul>
+<li>(1) 以适当的offset值调整this指针</li>
+<li>(2) 跳到virtual function去。<br>Thunk技术允许virtual table slot继续内含一个简单的指针，因此多重继承不需要任何空间上的额外负担。Slots中的地址可以直接指向virtual function，也可以指向一个相关的thunk(如果需要调整this指针的话)。</li>
+</ul>
+<h4 id="8-哪些情况，第二或后继的base-class会影响对virtual-functions的支持？"><a href="#8-哪些情况，第二或后继的base-class会影响对virtual-functions的支持？" class="headerlink" title="8.哪些情况，第二或后继的base class会影响对virtual functions的支持？"></a>8.哪些情况，第二或后继的base class会影响对virtual functions的支持？</h4><p>有以下三种情况，第二或后继的base class会影响对virtual functions的支持。</p>
+<ul>
+<li><p>第一种情况是，通过一个”指向第二个base class”的指针，调用derived class virtual function。例如：</p>
+<figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Base2 *ptr = <span class="keyword">new</span> Derived;</span><br><span class="line"></span><br><span class="line"><span class="comment">//调用Derived::~Derived</span></span><br><span class="line"><span class="comment">//ptr指向Derived对象中的Base2 subobject；</span></span><br><span class="line"><span class="comment">//为了能够正确执行，ptr必须调整指向Derived对象的起始处。</span></span><br><span class="line"><span class="keyword">delete</span> ptr;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第二种情况是第一种情况的变化，通过一个“指向derived class”的指针，调用第二个base class中一个继承而来的virtual function。例如：</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Derived *pder = <span class="keyword">new</span> <span class="type">Derived</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//调用Base2::mumble()</span></span><br><span class="line"><span class="comment">//在此情况下，derived class指针必须再次调整，以指向第二个base subobject。</span></span><br><span class="line">pder-&gt;mumble();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>第三种情况发生于一个语言扩充性质之下：允许一个virtual function的返回值类型有所变化，可能是base type，也可能是publicly derived type。</p>
+<figure class="highlight haxe"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Base2 *pb = <span class="keyword">new</span> <span class="type">Derived</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//调用Derived * Derived::clone()</span></span><br><span class="line"><span class="comment">//当进行pb1-&gt;clone()时，pb1会被调整指向Derived对象的起始地址</span></span><br><span class="line"><span class="comment">//于是clone()的Derived版会被调用；</span></span><br><span class="line"><span class="comment">//它会传回一个指针，指向一个新的Derived对象，该对象的地址在被指定给pb2之前</span></span><br><span class="line"><span class="comment">//必须先经过调整，以指向Base2 subobject。</span></span><br><span class="line">Base2 *pb2 = pb-&gt;clone();</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="9-虚拟继承下virtual-functions呢？"><a href="#9-虚拟继承下virtual-functions呢？" class="headerlink" title="9.虚拟继承下virtual functions呢？"></a>9.虚拟继承下virtual functions呢？</h4><p>当一个virtual base class从另一个virtual base class派生而来，并且两者都支持virtual functions和nonstatic data members时，编译器对于virtual base class的支持简直就像进了迷宫一样。<strong>不要在一个virtual base class中声明nonstatic data members</strong>，否则你将距离复杂的深渊越来越近。</p>
+<h2 id="三、函数的效率"><a href="#三、函数的效率" class="headerlink" title="三、函数的效率"></a>三、函数的效率</h2><p>nonmemeber、static member或nonstatic member函数都被转换为完全相同形式，所以三者效率完全相同。<br>导入virtual function之后，class constructor将获得参数以设定virtual table指针。所以每多一层继承，就会多增加一个额外的vptr设定。</p>
+<blockquote>
+<p>constructor的额外操作在多次调用的情况下可能会拖低效率，减少常用函数中的局部对象可以在一定程度上提高效率。</p>
+</blockquote>
+<h2 id="四、指向Member-Function的指针"><a href="#四、指向Member-Function的指针" class="headerlink" title="四、指向Member Function的指针"></a>四、指向Member Function的指针</h2><h4 id="1-指向nonstatic-member-function的指针是如何工作的？"><a href="#1-指向nonstatic-member-function的指针是如何工作的？" class="headerlink" title="1.指向nonstatic member function的指针是如何工作的？"></a>1.指向nonstatic member function的指针是如何工作的？</h4><p>取一个nonstatic data member的地址，如果该函数是nonvirtual，得到的结果是它在内存中真正的地址。然而这个值也是不完全的。它也需要被绑定于某个class object的地址上，才能够通过它调用该函数。所有的nonstatic member functions都需要对象的地址(以参数this指出)。<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">double  ( <span class="symbol">Point::</span>*pmf)(); <span class="comment">//member function的指针名</span></span><br><span class="line">pmf = &amp;<span class="symbol">Point::</span>y; <span class="comment">//获得对应的member function地址</span></span><br><span class="line">(origin.*coord)(); <span class="comment">//调用方式,origin是一个object,指针(ptr-&gt;*corrd)();</span></span><br><span class="line">(coord)(<span class="variable">&amp;origin</span>); <span class="comment">//编译器内部转化</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="2-指向nonstatic-member-function的指针会带来负担吗？"><a href="#2-指向nonstatic-member-function的指针会带来负担吗？" class="headerlink" title="2.指向nonstatic member function的指针会带来负担吗？"></a>2.指向nonstatic member function的指针会带来负担吗？</h4><p>看情况，如果并不用于virtual function、多重继承、virtual base class等情况的话，并不会比使用一个“nonmember function指针”的成本高。<br>但上述三种情况对于“member function指针”的类型以及调用都太过于复杂。</p>
+<h4 id="3-虚拟机制能在使用“指向member-function的指针”的情况下运行吗？如果能，又是怎样实现的？"><a href="#3-虚拟机制能在使用“指向member-function的指针”的情况下运行吗？如果能，又是怎样实现的？" class="headerlink" title="3.虚拟机制能在使用“指向member function的指针”的情况下运行吗？如果能，又是怎样实现的？"></a>3.虚拟机制能在使用“指向member function的指针”的情况下运行吗？如果能，又是怎样实现的？</h4><p>对一个nonstatic member function取其地址，将获得该函数在内存中的地址。然而面对一个virtual function，其地址在编译时期是未知的，取其地址所能获得的只是其在virtual table中的索引值。<br><figure class="highlight zephir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&amp;Point::x();  <span class="comment">//x()为非虚函数，得其内存地址 </span></span><br><span class="line">&amp;Point::z();  <span class="comment">//z()为虚函数，得其索引值</span></span><br><span class="line"></span><br><span class="line">(*ptr-&gt;vptr[(<span class="keyword">int</span>)pmf])(ptr);<span class="comment">//pmf指向virtual函数时的调用方式</span></span><br></pre></td></tr></table></figure></p>
+<p>为了使pmf能支持上述两种情况，编译器必须定义函数指针使它能够(1)含有两种数值,(2)更重要的是其数值可以被区别代表内存地址还是virtual table中的索引值。</p>
+<h4 id="4-在多重继承下，指向Member-Functions的指针如何工作？"><a href="#4-在多重继承下，指向Member-Functions的指针如何工作？" class="headerlink" title="4.在多重继承下，指向Member Functions的指针如何工作？"></a>4.在多重继承下，指向Member Functions的指针如何工作？</h4><p>为了让指向member functions的指针也能够支持多重继承和虚拟继承，Stroustrup设计了下面一个结构体：<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">_mptr</span></span></span><br><span class="line">&#123;</span><br><span class="line">    int delta; <span class="regexp">//delta</span>字段表示this指针的offset值</span><br><span class="line">    int index; <span class="regexp">//virtual</span> table索引,不用时设为-<span class="number">1</span></span><br><span class="line">    <span class="class"><span class="keyword">union</span>&#123;</span></span><br><span class="line">        protofunc faddr; <span class="regexp">//nonvirtual</span> member function地址</span><br><span class="line">        int v_offset; <span class="regexp">//v</span>_offset字段放的是一个virtual base <span class="class"><span class="keyword">class</span>的<span class="title">vptr</span>位置。</span></span><br><span class="line">    &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">(ptr-&gt;*pmf)();<span class="regexp">//</span>原始调用</span><br><span class="line">/<span class="regexp">/ 编译器转换</span></span><br><span class="line"><span class="regexp">(pmf.index &lt; 0) ? ( *pmf.faddr )( ptr) : (* ptr-&gt;vptr[pmf.index](ptr));</span></span><br></pre></td></tr></table></figure></p>
+<p>Microsoft就供应了三种风味，以减少不必要的字段：</p>
+<ul>
+<li><ol>
+<li>一个单一继承实例(其中带有vcall thunk地址或是faddr)</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>一个多重继承实例(其中带有faddr和delta、vcall thunk地址)</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>一个虚拟继承实例(其中带有四个members)</li>
+</ol>
+</li>
+</ul>
+<h2 id="五、Inline-Functions"><a href="#五、Inline-Functions" class="headerlink" title="五、Inline Functions"></a>五、Inline Functions</h2><h4 id="1-Inline-Function有什么优点？"><a href="#1-Inline-Function有什么优点？" class="headerlink" title="1.Inline Function有什么优点？"></a>1.Inline Function有什么优点？</h4><p>为了处理类内部数据，有时候会用friend function进行操作。然而如果我们将这些函数声明为inline，我们就可以保持直接存取members 的那种高效率，同时也能兼顾函数的封装性，此外，也不用再用friend。</p>
+<h4 id="2-Inline-Function什么时候被展开？"><a href="#2-Inline-Function什么时候被展开？" class="headerlink" title="2.Inline Function什么时候被展开？"></a>2.Inline Function什么时候被展开？</h4><p>编译器会决定是否将Inline Functiong按照一个expression进行展开。处理一个inline函数，有两个阶段：</p>
+<ul>
+<li><ol>
+<li>分析函数定义，以决定函数的“intrinsic inline ability”。“intrinsic” (本质的，固有的)一词在这里意指“与编译器相关”，如果函数因其复杂度，或因其建构问题，被判断不可成为inline，它会被转为一个static函数，并在“被编译模块”内产生对应的函数语义。</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>真正的inline函数扩展操作是在调用的那一点上。这会带来参数的求值操作(evaluation)以及临时性对象的管理。<br>同样在扩展点上，编译器将决定这个调用是否“不可为inline”。</li>
+</ol>
+</li>
+</ul>
+<h4 id="3-Inline-Function如何处理形式参数？"><a href="#3-Inline-Function如何处理形式参数？" class="headerlink" title="3.Inline Function如何处理形式参数？"></a>3.Inline Function如何处理形式参数？</h4><p>扩展Inline function时，每一个形式参数都会被对应的实际参数取代。如果实际参数是一个常量表达式，我们可以在替换之前先完成其求值操作；后继的inline替换，就可以把常量直接“绑”上去。如果既不是常量表达式，也不是带有副作用的表达式，那么就直接替换之。<br>例如：<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">inline</span> <span class="keyword">int</span> bar()&#123;</span><br><span class="line">    <span class="keyword">int</span> minval;</span><br><span class="line">    <span class="keyword">int</span> val1 = <span class="number">1024</span>;</span><br><span class="line">    <span class="keyword">int</span> val2 = <span class="number">2048</span>;</span><br><span class="line">    </span><br><span class="line">    minval = <span class="built_in">min</span>(val1, val2);  <span class="comment">/*(1)*/</span> </span><br><span class="line">    minval = <span class="built_in">min</span>(<span class="number">1024</span>, <span class="number">2048</span>);  <span class="comment">/*(2)*/</span></span><br><span class="line">    minval = <span class="built_in">min</span>(foo(), bar() + <span class="number">1</span>); <span class="comment">/*(3)*/</span></span><br><span class="line">    <span class="built_in">return</span> minval;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(1) 处形参无副作用，直接展开：<br><figure class="highlight autohotkey"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">minval = val1 &lt; val2 ? val1 :</span> val2<span class="comment">; </span></span><br><span class="line">```     </span><br><span class="line">(<span class="number">2</span>) 处那一行直接拥抱常量：</span><br><span class="line">``` </span><br><span class="line">minval = <span class="number">1024</span><span class="comment">;  </span></span><br><span class="line">```      </span><br><span class="line"><span class="symbol">(3) 处那一行则引发参数的副作用，它需要导入一个临时对象，以避免重复求值:</span></span><br></pre></td></tr></table></figure></p>
+<p>int t1;<br>int t2;<br>minval = (t1 = foo()), (t2 = bar() + 1),t1 &lt; t2 ? t1 : t2;<br><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#### <span class="number">4.</span>Inline Function如何处理局部变量？</span><br><span class="line">一般而言，<span class="keyword">inline</span>函数中的每一个局部变量都必须被放在函数调用的一个封闭区段中，拥有一个独一无二的名称。</span><br><span class="line">如果<span class="keyword">inline</span>函数以单一表达式扩展多次，则每次扩展都需要自己的一组局部变量。如果<span class="keyword">inline</span>函数以分离的多个式子被扩展多次，那么只需一组局部变量，就可以重复使用(译注：因为它们被放在一个封闭区段中，有自己的scope)</span><br></pre></td></tr></table></figure></p>
+<p>minval=min(val1,val2)+min(foo(),foo()+1);//这就是单一表达式，进行两次扩展，多出两组变量<br><code>`</code></p>
+<h4 id="5-Inline-Function的缺点。"><a href="#5-Inline-Function的缺点。" class="headerlink" title="5.Inline Function的缺点。"></a>5.Inline Function的缺点。</h4><p>一个inline函数如果被调用太多次，会产生大量的扩展码，使程序大小暴涨。参数带有副作用或者以一个单一表达式做多重调用、或者其本身有多个局部变量，都会产生大量局部变量，当然，编译器有可能帮你处理，也可能不会。     </p>
+<p><strong>对于既要安全又要效率的程序，inline函数提供了一个强有力的工具。然而，与non-inline函数比起来，他们需要更加小心地处理。</strong></p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">Snippet</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../../../20/深度探索c++对象模型/《深度探索c++对象模型》（五）/" class="pre-post btn btn-default" title="《深度探索c++对象模型》（五）构造、析构、拷贝语意学">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">《深度探索c++对象模型》（五）构造、析构、拷贝语意学</span>
+        </a>
+    
+    
+        <a href="../../../18/深度探索c++对象模型/《深度探索c++对象模型》（三）/" class="next-post btn btn-default" title="《深度探索c++对象模型》（三）Data语意学">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">《深度探索c++对象模型》（三）Data语意学</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、Member-function的各种调用方式"><span class="toc-text">一、Member function的各种调用方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Nonstatic-Member-Function是怎么被调用的？"><span class="toc-text">1. Nonstatic Member Function是怎么被调用的？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-编译器为什么要进行名称处理（name-mangling）？怎么处理？"><span class="toc-text">2. 编译器为什么要进行名称处理（name mangling）？怎么处理？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Virtual-Member-Functions是如何被调用的？"><span class="toc-text">3. Virtual Member Functions是如何被调用的？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-Static-Member-Functions有什么特性？如何被调用的？"><span class="toc-text">4. Static Member Functions有什么特性？如何被调用的？</span></a></li></ol></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#二、Virtual-Member-function"><span class="toc-text">二、Virtual Member function</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-什么是多态？"><span class="toc-text">1. 什么是多态？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-为了能方便class指针在执行期找到对应的函数实例，就需要编译器决定是否需要给class添加额外信息，那么，到底何时才需要这份信息？"><span class="toc-text">2. 为了能方便class指针在执行期找到对应的函数实例，就需要编译器决定是否需要给class添加额外信息，那么，到底何时才需要这份信息？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-什么样的额外信息是我们需要存储起来的？"><span class="toc-text">3. 什么样的额外信息是我们需要存储起来的？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-执行期如何找到对应的virtual-function地址？"><span class="toc-text">4. 执行期如何找到对应的virtual function地址？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-多重继承下virtual-function编译器需要做什么？"><span class="toc-text">5. 多重继承下virtual function编译器需要做什么？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-多重继承下virtual-function带来的负担是什么？"><span class="toc-text">6. 多重继承下virtual function带来的负担是什么？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-Thunk技术是什么？用来做什么？"><span class="toc-text">7.Thunk技术是什么？用来做什么？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-哪些情况，第二或后继的base-class会影响对virtual-functions的支持？"><span class="toc-text">8.哪些情况，第二或后继的base class会影响对virtual functions的支持？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-虚拟继承下virtual-functions呢？"><span class="toc-text">9.虚拟继承下virtual functions呢？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#三、函数的效率"><span class="toc-text">三、函数的效率</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#四、指向Member-Function的指针"><span class="toc-text">四、指向Member Function的指针</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-指向nonstatic-member-function的指针是如何工作的？"><span class="toc-text">1.指向nonstatic member function的指针是如何工作的？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-指向nonstatic-member-function的指针会带来负担吗？"><span class="toc-text">2.指向nonstatic member function的指针会带来负担吗？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-虚拟机制能在使用“指向member-function的指针”的情况下运行吗？如果能，又是怎样实现的？"><span class="toc-text">3.虚拟机制能在使用“指向member function的指针”的情况下运行吗？如果能，又是怎样实现的？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-在多重继承下，指向Member-Functions的指针如何工作？"><span class="toc-text">4.在多重继承下，指向Member Functions的指针如何工作？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#五、Inline-Functions"><span class="toc-text">五、Inline Functions</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-Inline-Function有什么优点？"><span class="toc-text">1.Inline Function有什么优点？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-Inline-Function什么时候被展开？"><span class="toc-text">2.Inline Function什么时候被展开？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-Inline-Function如何处理形式参数？"><span class="toc-text">3.Inline Function如何处理形式参数？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-Inline-Function的缺点。"><span class="toc-text">5.Inline Function的缺点。</span></a></li></ol></li>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>
