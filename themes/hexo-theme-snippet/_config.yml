@@ -8,10 +8,10 @@ menu:
 - page: home
   url: /
   icon:
-- page: 前端
+- page: 技术
   url: /categories/前端/
   icon:
-- page: 后端
+- page: 生活
   url: /categories/后端/
   icon:
 - page: 工具
@@ -29,21 +29,19 @@ rss: /atom.xml
 
 ## Carousel
 carousel:
-  img: './img/head-img.jpg'
+  img:  # './img/head-img.jpg'
   url: 'javascript:'
 
 # 各个小工具的设置
-
 ## widgets
 widgets:
   - search
-  - notification
-  - social
   - category
+  - tagcloud 
   - archive
-  - tagcloud
-  - friends
-
+  - notification
+  # - friends
+  # - social
 
 ## 搜索
 jsonContent:
@@ -59,9 +57,10 @@ jsonContent:
 ## 网站公告设置
 notification: |-
             <p>
-                主题下载：<a href="https://github.com/shenliyang/hexo-theme-snippet" title="fork me" target="_blank">Snippet主题</a> <br/>
-                主题使用：<a href="https://github.com/shenliyang/hexo-theme-snippet/blob/master/README.md#常见问题" title="" target="_blank">常见使用问题</a> <br/>
-                支持主题：<a href="https://github.com/shenliyang/hexo-theme-snippet/stargazers">Star一下</a>
+                凡的博客：<a href="hhttps://antfaiz5z.github.io/" title="fork me" target="_blank">https://antfaiz5z.github.io/</a> <br/>
+                我的GitHub：<a href="https://github.com/WenDeng" title="" target="_blank">https://github.com/WenDeng</a> <br/>
+                我的简书：<a href="https://www.jianshu.com/u/d98271abb2b1">https://www.jianshu.com/u/d98271abb2b1</a> <br/>
+                我的CSDN：<a href="https://blog.csdn.net/qq_22567225">https://blog.csdn.net/qq_22567225</a>
             </p>
 
 ## 社交设置
@@ -81,9 +80,9 @@ social:
  - name: QQ群
    icon: users
    href: /
- - name: RSS
-   icon: feed
-   href: /atom.xml
+#  - name: RSS
+#    icon: feed
+#    href: /atom.xml
 
 ## 文章分类设置
 cate_config:
@@ -111,17 +110,18 @@ tagcloud:
 
 ## 友链设置
 links:
-  - Hexo官网: https://hexo.io/zh-cn/
+  - 凡的博客: https://antfaiz5z.github.io/
+  - 我的GitHub: https://github.com/WenDeng
+  - 我的简书: https://www.jianshu.com/u/d98271abb2b1
+  - 我的CSDN: https://blog.csdn.net/qq_22567225
 
 
 # 主题自定义个性化配置
-
 ## 网站宣传语
-branding:
-
+branding: 野渡's小小知识乐园
 ## 设置banner背景图片
 banner:
-    img: http://snippet.shenliyang.com/img/banner.jpg
+    img: http://snippet.shenliyang.com/img/banner.jpg  # https://github.com/WenDeng/Picture_markdown/blob/master/themes/%E9%95%BF%E5%9F%8E.jpg?raw=true
 
 ## 首页列表底部面板
 homePanel: true
@@ -222,10 +222,12 @@ uyan:
 
 ## 网站访客统计
 visit_counter:
-   site: false
-   page: false
-
+   site: true
+   page: true
+   
 ## 网站访问统计分析
+## 文章字数和阅读时间统计
+wordcount: true
 
 ### 网盟CNZZ统计
 cnzz_analytics: 1263868967
