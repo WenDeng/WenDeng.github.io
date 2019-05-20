@@ -119,7 +119,8 @@ branding: 野渡's小小知识乐园
 ## 设置banner背景图片
 banner:
     # img: http://snippet.shenliyang.com/img/banner.jpg  
-    img: https://github.com/WenDeng/Picture_markdown/blob/master/themes/%E9%95%BF%E5%9F%8E.jpg?raw=true
+    # img: https://github.com/WenDeng/Picture_markdown/blob/master/themes/%E9%95%BF%E5%9F%8E.jpg?raw=true
+    img: /banner.jpg
 
 ## 首页列表底部面板
 homePanel: true
@@ -230,7 +231,7 @@ wordcount: true
 ### 网盟CNZZ统计
 cnzz_analytics: 1263868967
 
-### 百度统计
+### 百度统计 [百度统计](https://tongji.baidu.com/)
 baidu_analytics:
 
 ### 谷歌统计
