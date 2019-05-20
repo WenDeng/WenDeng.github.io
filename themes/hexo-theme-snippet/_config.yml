@@ -145,7 +145,7 @@ fontAwesome:
 
 ## 文章过期提醒功能
 warning:
-  days: 300
+  days: 800
   text: '本文于%d天之前发表，文中内容可能已经过时。'
 
 ## 文章内声明
@@ -234,7 +234,7 @@ cnzz_analytics: 1263868967
 baidu_analytics:
 
 ### 谷歌统计
-google_analytics:
+google_analytics: UA-140405612-1
 
 ### 腾讯分析
 tencent_analytics:

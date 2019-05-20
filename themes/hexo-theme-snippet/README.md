@@ -334,7 +334,7 @@ cnzz_anaylytics:
 baidu_anaylytics:
 
 ### 谷歌统计 参考网站：[谷歌统计](https://www.google-analytics.com/)
-google_anaylytics:
+google_anaylytics: 
 
 ### 腾讯分析 参考网站：[腾讯分析](http://ta.qq.com/)
 tencent_analytics:
