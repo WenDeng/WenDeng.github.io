@@ -3,7 +3,7 @@ title: 第9章 虚拟内存之Linux内存系统
 date: 2019-5-22 00:32:12    
 toc: true   
 comments: true   
-img: https://github.com/WenDeng/Picture_markdown/blob/master/picture/25.png?raw=true   
+img: https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/25.png?raw=true   
 tags:
   - 操作系统
   - 技术   
@@ -18,7 +18,7 @@ categories:
 ### 1、Core i7 内存系统结构
 Core i7的内存系统的结构如下：
 
-![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/21.png?raw=true)
+![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/21.png?raw=true)
 
 由图可知：
 * 处理器包括4个核、所有核共享L3高速缓存和DDR3内存控制器。
@@ -29,7 +29,7 @@ Core i7的内存系统的结构如下：
 ### 2、Core i7 地址翻译过程
 翻译过程如图9-22：
 
-![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/22.png?raw=true)
+![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/22.png?raw=true)
 
 
 由图可知Core i7的地址翻译采用了TLB、高速缓存、多级页表等机制，需要注意的是：
@@ -40,7 +40,7 @@ Core i7的内存系统的结构如下：
 ### 3、第四级页表条目
 图9-24给出了第四级页表中条目的格式：
 
-![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/23.png?raw=true)
+![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/23.png?raw=true)
 
 注意一下几点：
 * PTE（page table entry）有三个权限位，控制对页的访问，分别是R/W控制读写，U/S是否能在用户模式中访问，XD（禁止执行），禁止从某些内存页取指令，防止缓冲区溢出攻击。
@@ -48,7 +48,7 @@ Core i7的内存系统的结构如下：
 
 图9-25给出Core i7如何使用四级页表来将虚拟地址翻译成物理地址的。36位VPN被划分为四个9位的片，每个片被用作到一个页表的偏移量，CR3寄存器（控制寄存器3）包含L1页表的物理地址。VPN1提供到一个L1 PTE的偏移量，这个PTE包含L2页表的基地址。VPN2提供一个到L2 PTE的偏移量，以此类推。
 
-![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/24.png?raw=true)
+![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/24.png?raw=true)
 
 **优化地址翻译**   
 当CPU需要翻译个虚拟地址时，它就发送一VPN到MMU,发送VPO到高速L1缓存。当MMU向TLB请求一个页表条目时，L1高速缓存正忙着利用VPO位查找对应的组，并读取这个组里的8个标记和相应的数据字。然后等MMU拿到PPN后直接就可以和8个标记进行匹配，决定是否取出其中的值。
@@ -58,7 +58,7 @@ Core i7的内存系统的结构如下：
 
 Linux为每个进程维护了一个单独的虚拟地址空间如图9-26：
 
-![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/25.png?raw=true)
+![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/25.png?raw=true)
 
 **进程地址空间分为内核虚拟内存和进程虚拟内存**。
 * **进程虚拟内存**包括进程的代码和数据段、堆和共享库以及栈段。
@@ -70,7 +70,7 @@ Linux将虚拟内存组织成一些区域（也叫做段）的集合。一个区
 
 每个存在虚拟页面都保存在某个区域中，而不属于某个区域的虚拟页是不存在，并且不能被进程引用。区域的概念很重要，因为它允许虚拟地址空间有间隙。内核不用记录那些不存在的虚拟页，而这样的页也不占用内存、磁盘或者内存本身中的任何额外资源。
 
-![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/26.png?raw=true)
+![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/26.png?raw=true)
 
 如上图，内核为系统中的每个进程维护一个单独的任务结构（源代码中的task_struct）。任务结构中的元素包含或者指向内核运行该进程所需要的所有信息（例如，PID，指向用户栈的指针，可执行目标文件的名字，以及程序计数器）。
 
@@ -82,7 +82,7 @@ Linux将虚拟内存组织成一些区域（也叫做段）的集合。一个区
 - （2）试图进行的内存访问是否合法？权限对吗？对应图中情况2
 - （3）如果是对合法虚拟地址的合法操作，那么就选择一个牺牲页面，如果这个牺牲页面被修改过，就将它交换出去，换入新的页面并更新页表。
 
-![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/27.png?raw=true)
+![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/27.png?raw=true)
 
 ### 5、内存映射
  **Linux通过将一个虚拟内存区域与一个磁盘上的对象关联起来，以初始化这个虚拟内存区域的内容，这个过程称为内存映射**。虚拟内存区域可以映射到两种类型的对象中的一种：
@@ -105,7 +105,7 @@ Linux将虚拟内存组织成一些区域（也叫做段）的集合。一个区
 
 一个进程试图写私有区域内的某个页面，那**么这个写操作就会触发一个保护故障**，故障处理程序会在物理内存中创建这个页面的一个新副本，更新页表条目指向这个新副本，然后恢复这个页面的可写权限，如下图所示。之后重新执行这个写指令，则写操作可以正常执行。
 
-![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/28.png?raw=true)
+![](https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/28.png?raw=true)
 
 **通过延迟私有对象中的拷贝直到最后可能的时刻，写时拷贝最充分的使用了稀有的物理存储器**。
 
