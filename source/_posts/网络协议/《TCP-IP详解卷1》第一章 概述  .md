@@ -3,7 +3,7 @@ title: 《TCP-IP详解卷1》第一章 概述
 date: 2019-05-22 17:29:12   
 toc: true   
 comments: true   
-img: https://github.com/WenDeng/Picture_markdown/blob/master/picture/27.png?raw=true        
+img: https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/27.png?raw=true        
 tags:
   - TCP/IP协议
   - 技术    
@@ -17,7 +17,7 @@ TCP/IP起源于60年代末美国政府资助的一个分组交换网络研究项
 ### 1、分层
 网络协议通常分不同层次进行开发，每一层分别负责不同的通信功能。一个协议族，比如TCP/IP，是一组不同层次上的多个协议的组合。TCP/IP通常被认为是一个四层协议系统，如下：
 
-![image](https://github.com/WenDeng/Picture_markdown/blob/master/picture/28.png?raw=true )
+![image](https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/28.png?raw=true )
 
 每一层负责不同的功能：
 - 链路层：有时也称作数据链路层或网络接口层。通常包括操作系统中的设备驱动程序和计算机中对应的网络接口卡。它们一起处理与电缆的物理接口细节。
@@ -32,7 +32,7 @@ TCP/IP起源于60年代末美国政府资助的一个分组交换网络研究项
 
 注意，历史上这些盒子称作网关（gateway）,**但现在网关这个术语只用来表示应用层网关：一个连接两种不同协议族的进程（例如TCP/IP和IBM的SNA），它为某个特定的应用程序服务（常常是电子邮件或文件传输）**。
 
-![image](https://github.com/WenDeng/Picture_markdown/blob/master/picture/29.png?raw=true )
+![image](https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/29.png?raw=true )
 
 在TCP/IP协议族中，网络层IP提供的是一种不可靠的服务。也就是说，它只是尽可能快的把分组从源结点送到目的结点，但是并不提供任何可靠性保证。而另一方面，TCP在不可靠的IP层上提供了一个可靠的运输层。为了提供这种可靠的服务，TCP采用了超时重发，发送和接受端到端的确认分组等机制。由此可见，运输层和网络层分别负责不同的功能。
 
@@ -43,7 +43,7 @@ TCP/IP起源于60年代末美国政府资助的一个分组交换网络研究项
 ### 3、TCP/IP的分层
 在TCP/IP协议族中有很多种协议，下图是TCP/IP协议族中不同层次的协议：
 
-![image](https://github.com/WenDeng/Picture_markdown/blob/master/picture/30.png?raw=true )
+![image](https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/30.png?raw=true )
 
 TCP和UDP是两种最为著名的运输层协议，二者都是用IP作为网络层协议。
 
@@ -56,7 +56,7 @@ ARP（地址解析协议）和RARP（逆地址解析协议）是某些网络接�
 ### 4、互联网的地址
 互联网上的每个接口必须有一个唯一的Internet地址（也称作IP地址）。IP地址具有一定的结构，五类不同的互连网地址格式如下图：
 
-![image](https://github.com/WenDeng/Picture_markdown/blob/master/picture/31.png?raw=true )
+![image](https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/31.png?raw=true )
 
 这些32位的地址通常写成4个十进制的数，其中每个整数对应一个字节。这种表示方法称作"点分十进制表示法"。
 
@@ -104,7 +104,7 @@ C类地址：192.168.0.0～192.168.255.255
 ### 6、封装
 当应用程序使用TCP传送数据时，数据被送入协议栈中，然后逐个通过每一层直到被当做一串比特流送入网络。其中每一层对收到的数据都要增加一些首部信息（有时还要增加尾部信息），下图描述了数据进入协议栈时的封装过程：
 
-![image](https://github.com/WenDeng/Picture_markdown/blob/master/picture/32.png?raw=true )
+![image](https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/32.png?raw=true )
 
 TCP传给IP的数据单元称作TCP报文段或简称为TCP段，IP传给网络接口层的数据单元称作IP数据报。通过以太网传输的比特流称作帧（Frame）。
 
@@ -116,7 +116,7 @@ IP在首部中存入一个长度为8位的数值，称作协议域。1表示为I
 ### 7、分用
 当目的主机接收到一个以太网数据帧时，数据就开始从协议栈中由底向上升，同时去掉各层协议加上的报文首部。每层协议盒都要去检查报文首部中的协议标识，以确定接收数据的上层协议。这个过程称作分用，如下图：
 
-![image](https://github.com/WenDeng/Picture_markdown/blob/master/picture/33.png?raw=true )
+![image](https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/33.png?raw=true )
 
 协议ICMP和IGMP定位一直是一件很棘手的事情。通常我们把它们和IP放在同一层上，因为它们是IP的附属协议。但是在这里，我们又把它们放在IP层的上面，因为ICMP和IGMP报文都被封装在IP数据报中。
 
