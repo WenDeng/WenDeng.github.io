@@ -1,6 +1,6 @@
 ---
 title: 《STL源码剖析》第5章 关联式容器     
-date: 2019-5-18 20:50:12    
+date: 2019-5-18 20:15:12    
 toc: true   
 comments: true   
 img: https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/18.png?raw=true   
@@ -138,3 +138,10 @@ map能够根据键值快速搜索元素，其底层实现机制是Rb-tree，Rb-t
 
 **hash\_multimap的特征与multimap完全相同**，唯一差别为它的底层实现机制是hashtable，故hash\_multimap的元素并不会被自动排序**。hash\_multimap和hash\_map实现上的唯一差别是**，hash\_multimap的插入操作使用底层机制hashtable中的insert\_equal()，而hahs\_map使用的是底层机制hashtable中的insert\_unique()。hash\_multimap使用方式与hash_map完全相同。
 
+### 8、总结
+在实际使用过程中，到底选择这几种容器中的哪一个？通常应该根据遵循以下原则： 
+- （1）如果需要高效的随机存取，不在乎插入和删除的效率，使用vector； 
+- （2）如果需要大量的插入和删除元素，不关心随机存取的效率，使用list； 
+- （3）如果需要随机存取，并且关心两端数据的插入和删除效率，使用deque； 
+- （4）如果打算存储数据字典，并且要求方便地根据key找到value，一对一的情况使用map，一对多的情况使用multimap； 
+- （5）如果打算查找一个元素是否存在于某集合中，唯一存在的情况使用set，不唯一存在的情况使用multiset。
