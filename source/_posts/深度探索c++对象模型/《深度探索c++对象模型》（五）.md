@@ -14,23 +14,23 @@ categories:
 <!--more-->
 
 ------------------------------------
-## 0、基础
-#### 1. class data member应该何时被初始化？
+### 一、基础
+#### 1.1 class data member应该何时被初始化？
 一般而言，class的data member应该被初始化，并且只在constructor中或是在class的其他member functions中指定初值。其他任何操作都将破坏封装性质，使class的维护和修改更加困难。
 
-#### 2. 关于纯虚函数的几点认识。
+#### 1.2 关于纯虚函数的几点认识。
 * c++中可以定义和调用(invoke)一个pure virtual function：不过它只能被**静态地调用**(用类名调用)，不能经由虚拟机制调用。
 * class设计者如果声明就一定要定义pure virtual destructor，因为每一个 derived class destructor会被编译器加以扩展，以静态调用的方式调用其“每一个virtual base class”以及“上一层base class”的destructor。因此，只要缺乏 任何一个base class destructor的定义，就会导致链接失败。**最好的方式就是不要把virtual destructor声明为pure。**
 
-#### 3. 关于虚拟机制的几点认识。
+#### 1.3 关于虚拟机制的几点认识。
 * 类中设计虚函数时应先考虑清楚，不会被derived class改写的函数最好被设计 为virtual function。总靠编译器进行优化并不是好的设计理念。
 * 决定一个virtual function是否为const需要先想清楚，不必要的地方别用。
 
-## 一、“无继承”情况下的对象构造
-#### 1.对象的生命周期。
+### 二、“无继承”情况下的对象构造
+#### 2.1 对象的生命周期。
 一个object的生命，是该object的一个执行期属性。local object的生命对应其所 在的scope。global object的生命和整个程序的生命相同。heap object的生命从 它被new运算符配置出来开始，到它被delete运算符摧毁为止。
 
-#### 2.Plain OI' Data 和其相关处理
+#### 2.2 Plain OI' Data 和其相关处理
 形如下列的结构，被C\+\+标准称为Plain OI' Data。
 ```
 typedef struct{
@@ -44,7 +44,7 @@ typedef struct{
 * ***heap = local;**理论上，这样的指定操作会触发trivial copy assignment operator进行拷贝搬运操作。然而实际上此object是一个Plain old data，所以赋值操作(assignment)将只是像C那样的纯粹位搬移操作。
 * **delete heap;**会被转换为对delete运算符的调用,观念上，这样的操作会触发Point的trivial destructor。但是一如我们所见，destructor要不是没有被产生就是没有被调用。
 
-#### 3.抽象数据类型(Abstract Data Type)和其相关处理
+#### 2.3 抽象数据类型(Abstract Data Type)和其相关处理
 以下是Point的第二次声明，在public接口之下多了private数据，提供完整的封装性，但是没有提供virtual function:
 ```
 class Point{
@@ -61,7 +61,7 @@ private:
 * ***heap = local;**理论上，这样的指定操作会触发trivial copy assignment operator进行拷贝搬运操作。然而并没有，只进行简单的位拷贝操作。
 * **delete heap;**，由于没有destrucor,同样不会被调用。
 
-#### 4.在上述情况中加入虚函数又将怎么处理？
+#### 2.4 在上述情况中加入虚函数又将怎么处理？
 将人虚函数之后，class object除了多负担一个vptr之外，也引发编译器对Point class产生膨胀作用。例如：
 ```
 class Point{
@@ -97,8 +97,8 @@ inline Point* Point::Point(Point* this, const Point& rhs)
 ```
 * 一般而言，如果你的设计之中有许多函数都需要以传值方式传回一个local class object，此时提供一个copy constructor就比较合理，它的出现会触发NRV优化。NRV 优化后就不再需要调用copy constructor，因为运算结果已经被直接置于“将被传回 的object”体内了。(有它->NRV->不用它？？？？)
 
-## 二、继承体系下的对象构造
-#### 1. 编译器会对constructor做什么？
+### 三、继承体系下的对象构造
+#### 3.1 编译器会对constructor做什么？
 像这样**T object**定义一个对象时,会调用constructor,其内部做的工作包括：
 * （1）记录在member initialization list中的data members初始化操作会被放进constructor的函数本身，并以members的声明顺序为顺序。
 * （2）如果有一个member并没有出现在member initialization list中，但它有一个default constructor，那么该default constructor必须被调用。
@@ -112,7 +112,7 @@ inline Point* Point::Point(Point* this, const Point& rhs)
 * * 此外，class中的每一个virtual base class subobject的偏移位置(offset)必须在执行期可被存取
 * * 如果class object是最底层(most-derived)的class，其constructors可能被调用，某些用以支持这一行为的机制必须被放进来。
 
-#### 2. 一个实例说明编译器在对象构造的过程中所做的操作。
+#### 3.2 一个实例说明编译器在对象构造的过程中所做的操作。
 有一个基类和其对应的派生类如下：
 ```
 class Point
@@ -157,7 +157,7 @@ inline Line::~Line(Line *this){
 * (3) 对于**Line b=a;**implicit Line copy constructor会被合成出来，成为一个inline public member; 
 * (4) 对于**a=b;**同样，implicit assignment operator会被合成出来，成为一个inline public member;
 
-#### 3. 虚拟继承：constructor怎么处理virtual base class的构造？
+#### 3.3 虚拟继承：constructor怎么处理virtual base class的构造？
 试想下面三种类派生情况：
 ```
 class Vertex : virtual public Point{ ... }
@@ -180,18 +180,18 @@ Point3d* Point3d::Point3d(Point3d* this, bool _most_derived, float x, float y, f
 ```
 **“virtual base class constructors的被调用”有着明确的定义：只有当一个完整的class object被定义出来时，它才会被调用；如果object只是某个完整object的subject，它就不会被调用。**
 
-#### 4. vptr初始化语意学：什么时候设置vptr合适？
+#### 3.4 vptr初始化语意学：什么时候设置vptr合适？
 constructor的执行算法通常如下：
 * (1) 在derived class constructor中，“所有virtual base classes”及“上一层base class”的constructors会被调用
 * (2) 上述完成之后，对象的vptrs被初始化，指向相关的virtual tables
 * (3) 如果有member initialization list的话，将在constructor体内扩展开来。这必须在vptr被设定之后才做，以免有一个virtual member function被调用。
 * (4) 最后，执行程序员所提供的代码。      
 
-## 三、对象复制语意学(Object Copy Semantics)
-#### 1. 怎样显式地拒绝将一个class object指定给另一个class object？
+### 四、对象复制语意学(Object Copy Semantics)
+#### 4.1 怎样显式地拒绝将一个class object指定给另一个class object？
 如果想要禁止将一个class object指定给另一个class object，那么只要将copy assignment operator声明为private,并且不提供其定义即可。
 
-#### 2. 关于copy assignment operator。
+#### 4.2 关于copy assignment operator。
 对于编译器来说，class如果有了bitwise copy语意，implicit copy assignment copy就会被视为无用的，从而也不会被合并出来。     
 一个class对于默认的copy assignment operator，在以下情况，不会表现出bitwise copy语意：
 * （1）当class内含一个member object，而其class有一个copy assignment operator时
@@ -202,12 +202,12 @@ constructor的执行算法通常如下：
 **书籍作者的建议是不允许virtual base class的拷贝操作，尽量不要在任何virtual base class中声明数据。**
 
 
-## 四、析构语义学(Semantics of Destruction)
-#### 1. 什么时候需要合成destructor?
+## 五、析构语义学(Semantics of Destruction)
+#### 5.1 什么时候需要合成destructor?
 如果class没有定义destructor，那么只有在class内含的member object或base class拥有destructor的情况下，编译器才会自动合成一个出来。否则，destructor被视为不需要，也就不需被合成。
 > 事实上，我们应该拒绝那种被我们称为“对称策略”的奇怪想法：“你已经定义了一个constructor,所以你应该提供一个destructor也是天经地义的事”。我们应该因为“需要”而非“感觉”来提供destructor,更不要因为你不确定是否需要一个destructor，于是就提供它。（取自作者原话）
 
-#### 2. 如果没有destructor,编译会在需要时自动合成，那如果有destructor,编译器又是怎么进行扩展的呢?
+#### 5.2 如果没有destructor,编译会在需要时自动合成，那如果有destructor,编译器又是怎么进行扩展的呢?
 一个由程序员定义的destructor被扩展的方式类似constructors被扩展的方式，但顺序相反：
 * （1） destructor的函数本体现在被执行，也就是说vptr会在程序员的代码执行前被重设(reset)
 * （2）如果object内含一个vptr，那么首先重设(reset)相关的virtual table
