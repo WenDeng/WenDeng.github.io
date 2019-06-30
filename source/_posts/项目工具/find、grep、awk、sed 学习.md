@@ -1,5 +1,5 @@
 ---
-title: find、grep、awk、sed命令学习
+title: find、grep、awk、sed 学习
 date: 2018-06-02 14:44:12
 toc: true
 comments: true
@@ -102,6 +102,7 @@ aawk -F: '{print $1":"$NF}' /etc/passwd | head -5   //$NF则是最后一列。�
 **双引号在awk里面是添加的意思**，这样就在第一列和最后一列中间加上了冒号。这里可以添加任意字符。
 
 现在进行一个简单的实例：比如ifconfig得到网卡信息如下：
+
 ![](https://pic2.zhimg.com/v2-26fa17f1404ccb8c4229c581781dde7d_b.jpg)
 
 **然后想要把ip地址192.168.1.244输出并且变为 192-169-1-244**
