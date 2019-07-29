@@ -1,0 +1,438 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="技术,git使用">
+
+
+    <meta name="description" content="最近刚开始学习git，总结一下git的各个命令，方便以后查阅。学习环境：windows10 参考链接：
+
+
+Pro Git（中文版）http://git.oschina.net/progit/
+...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>Git基本命令详解 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Git基本命令详解">
+            
+	            Git基本命令详解
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/项目工具/">项目工具</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/git使用/">git使用</a> <a class="tag-link" href="../../../../../tags/技术/">技术</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2018/06/16</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>最近刚开始学习git，总结一下git的各个命令，方便以后查阅。<br>学习环境：windows10<br> <strong>参考链接：</strong></p>
+<blockquote>
+<ul>
+<li>Pro Git（中文版）<a href="http://git.oschina.net/progit/" target="_blank" rel="noopener">http://git.oschina.net/progit/</a></li>
+<li>沉浸式学 Git<a href="http://igit.linuxtoy.org/contents.html" target="_blank" rel="noopener">http://igit.linuxtoy.org/contents.html</a></li>
+</ul>
+</blockquote>
+<h2 id="1-git的安装及初始配置"><a href="#1-git的安装及初始配置" class="headerlink" title="1. git的安装及初始配置"></a><strong>1. git的安装及初始配置</strong></h2><h3 id="1-1-git-安装"><a href="#1-1-git-安装" class="headerlink" title="1.1 git 安装"></a><strong>1.1 git 安装</strong></h3><p>&emsp; &emsp;windows下安装git很方便，github上提供了安装包，链接： <a href="http://msysgit.github.com/" target="_blank" rel="noopener">http://msysgit.github.com/</a>   </p>
+<h3 id="1-2-git-初始化配置"><a href="#1-2-git-初始化配置" class="headerlink" title="1.2 git 初始化配置"></a><strong>1.2 git 初始化配置</strong></h3><p>&emsp; &emsp; 1.2.1&emsp;配置用户名和户邮箱：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">   git<span class="built_in"> config </span>--global user.name <span class="string">"deng wen"</span> </span><br><span class="line">git<span class="built_in"> config </span>--global user.email 156XXXXXXX@163.com</span><br></pre></td></tr></table></figure></p>
+<p>&emsp; &emsp; 1.2.2&emsp;查看初始配置：<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git<span class="built_in"> config </span>--list</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-git的基础命令"><a href="#2-git的基础命令" class="headerlink" title="2.git的基础命令"></a><strong>2.git的基础命令</strong></h2><h3 id="2-1-新建仓库"><a href="#2-1-新建仓库" class="headerlink" title="2.1 新建仓库"></a><strong>2.1 新建仓库</strong></h3><p>&emsp; Git 新建项目仓库的方法有两种。分别为：<br>&emsp; &emsp;  2.1.1&emsp; 第一种：在现存的目录下，用如下命令得到一个.git仓库目录，资源对应添加到其中：<br><figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">git init</span></span><br></pre></td></tr></table></figure></p>
+<p>&emsp; &emsp;  2.1.2&emsp; 第二种：从已有的 Git 仓库克隆出一个新的镜像仓库来。[URL]       如：<a href="http://uestclab307.kmdns.net:808/dengwen/SAIC_SecMonitor.git，mygitname可省略：" target="_blank" rel="noopener">http://uestclab307.kmdns.net:808/dengwen/SAIC_SecMonitor.git，mygitname可省略：</a><br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="keyword">clone</span> <span class="title">[URL</span>] mygitname</span><br></pre></td></tr></table></figure></p>
+<h3 id="2-2-文件基本处理"><a href="#2-2-文件基本处理" class="headerlink" title="2.2 文件基本处理"></a><strong>2.2 文件基本处理</strong></h3><p>&emsp; &emsp;  2.2.1&emsp;检查当前文件状态：<br><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">    git status</span><br><span class="line">``` </span><br><span class="line"> <span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">2.2</span><span class="number">.2</span><span class="variable">&amp;emsp</span>; 将新文件或更新文件加入跟踪：</span><br></pre></td></tr></table></figure></p>
+<pre><code>git add  filename
+git add  —A //将所有新文件一次加入跟踪
+git checkout -- filename // 对所做的更改进行忽略
+git reset HEAD filename //撤销加入跟踪的文件 
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">2.2</span><span class="number">.3</span><span class="variable">&amp;emsp</span>; 文件提交：</span><br></pre></td></tr></table></figure>
+<pre><code>git commit  —m  &quot;your comment&quot; //-m表示注释
+git commit --amend //撤销刚做的提交
+git commit  —a  //所有跟踪文件一次提交
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">2.2</span><span class="number">.4</span><span class="variable">&amp;emsp</span>; 删除文件：</span><br></pre></td></tr></table></figure>
+<pre><code>git rm --cached filename //跟踪目录删除、本地不删除
+git rm -f filename //跟踪目录、本地目录皆删除：
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">2.2</span><span class="number">.5</span><span class="variable">&amp;emsp</span>; 在仓库中移动文件：</span><br></pre></td></tr></table></figure>
+<pre><code>git mv file_from file_to
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">2.2</span><span class="number">.6</span><span class="variable">&amp;emsp</span>; 查看提交历史，- -pretty按固定格式显示,--graph 选项用 ASCII 字符串形象地展示了每个提交所在的分支及其分化衍合情况：</span><br></pre></td></tr></table></figure>
+<pre><code>git log
+git log --pretty=format:&quot;%h - %an, %ar : %s&quot;
+git log --pretty=format:&quot;%h %s&quot; --graph
+</code></pre><figure class="highlight haml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&gt;**选项 说明**</span><br><span class="line"><span class="tag">    %<span class="selector-tag">H</span></span> 提交对象（commit）的完整哈希字串</span><br><span class="line"><span class="tag">    %<span class="selector-tag">h</span></span> 提交对象的简短哈希字串</span><br><span class="line"><span class="tag">    %<span class="selector-tag">T</span></span> 树对象（tree）的完整哈希字串</span><br><span class="line"><span class="tag">    %<span class="selector-tag">t</span></span> 树对象的简短哈希字串</span><br><span class="line"><span class="tag">    %<span class="selector-tag">P</span></span> 父对象（parent）的完整哈希字串</span><br><span class="line"><span class="tag">    %<span class="selector-tag">p</span></span> 父对象的简短哈希字串</span><br><span class="line"><span class="tag">    %<span class="selector-tag">an</span></span> 作者（author）的名字</span><br><span class="line"><span class="tag">    %<span class="selector-tag">ae</span></span> 作者的电子邮件地址</span><br><span class="line"><span class="tag">    %<span class="selector-tag">ad</span></span> 作者修订日期（可以用 -date= 选项定制格式）</span><br><span class="line"><span class="tag">    %<span class="selector-tag">ar</span></span> 作者修订日期，按多久以前的方式显示</span><br><span class="line"><span class="tag">    %<span class="selector-tag">cn</span></span> 提交者(committer)的名字</span><br><span class="line"><span class="tag">    %<span class="selector-tag">ce</span></span> 提交者的电子邮件地址</span><br><span class="line"><span class="tag">    %<span class="selector-tag">cd</span></span> 提交日期</span><br><span class="line"><span class="tag">    %<span class="selector-tag">cr</span></span> 提交日期，按多久以前的方式显示</span><br><span class="line"><span class="tag">    %<span class="selector-tag">s</span></span> 提交说明</span><br><span class="line">    </span><br><span class="line">### **2.3 远程仓库的使用**</span><br><span class="line"> &amp;emsp; &amp;emsp;  2.3.1&amp;emsp; 查看当前的远程库,-v 选项显示对应的克隆地址：</span><br></pre></td></tr></table></figure>
+<pre><code>git remote //查看当前仓库对应的远程库,一般为origin
+git remote -v //查看当前仓库对应的远程库及相应地址
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">2.3</span><span class="number">.2</span><span class="variable">&amp;emsp</span>;远程仓库处理：</span><br></pre></td></tr></table></figure>
+<pre><code>git remote add yourname [url] //yourname是你的本地仓库名，相当于赋值yourname为URL
+git fetch yourname  //从远程仓库抓取数据到本地，到如果要查看需要合并到当前分支
+git remote show [remote-name] //查看远程仓库信息，如显示了有哪些远端分支还没有同步到本地等
+git remote rename old-name new-name //重命名
+git remote rm paul //删除
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">### **2.4 标签**</span></span><br><span class="line"> <span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">2.4</span><span class="number">.1</span><span class="variable">&amp;emsp</span>; 新建标签：</span><br></pre></td></tr></table></figure>
+<pre><code>git tag //查看已有标签
+git tag -a yourtagname -m &apos;your comment&apos; //打标签
+git show yourtagname //查看版本信息 
+git tag -a yourtagname hist //后期加标签,hist表校验和
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">2.4</span><span class="number">.2</span><span class="variable">&amp;emsp</span>; 标签远程共享：</span><br></pre></td></tr></table></figure>
+<pre><code>git push origin yourtagname //推送标签
+git push origin --tags //推送所有标签
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">### **2.5 Git 命令别名**</span></span><br><span class="line"> <span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">2.5</span><span class="number">.1</span><span class="variable">&amp;emsp</span>; 简写git命令：</span><br></pre></td></tr></table></figure>
+<pre><code>git config --global alias.shortname gitcommandname 
+eg: git config --global alias.unstage &apos;reset HEAD&apos;
+    git unstage filename //撤销加入跟踪的文件 
+</code></pre><figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## **<span class="number">3.</span>git分支处理**</span><br><span class="line">### **<span class="number">3.1</span> Git 查看分支**</span><br><span class="line"> &amp;emsp; &amp;emsp;  <span class="number">3.1</span><span class="number">.1</span>&amp;emsp; 查看分支：</span><br></pre></td></tr></table></figure>
+<pre><code>git branch 
+git branch -a //查看所有分支，包括远程分支
+git branch -v //查看分支最后一个提交对象的信息
+git branch --merged/--no--merge //查看已经（或尚未）合并的分支
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">### **3.2 Git 分支切换、合并和删除**</span></span><br><span class="line"> <span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">3.2</span><span class="number">.1</span><span class="variable">&amp;emsp</span>; 切换分支：</span><br></pre></td></tr></table></figure>
+<pre><code>git branch branchname  //在当前分支下创建分支
+git checkout branchname //切换到已有的分支
+git checkout -b &apos;branchname&apos; //创建分支并切换
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">3.2</span><span class="number">.2</span><span class="variable">&amp;emsp</span>; 合并分支：</span><br></pre></td></tr></table></figure>
+<pre><code>git merge branchname //将分支合并到当前分支
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">3.2</span><span class="number">.3</span><span class="variable">&amp;emsp</span>; 删除分支：</span><br></pre></td></tr></table></figure>
+<pre><code>git branch -d branchname  //删除分支
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">### **3.3 Git 远程分支处理**</span></span><br><span class="line"> <span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">3.3</span><span class="number">.1</span><span class="variable">&amp;emsp</span>;跟踪远程分支：</span><br></pre></td></tr></table></figure>
+<pre><code>git checkout -b [分支名] [远程仓库名]/[分支名]  //跟踪分支是一种和某个远程分支有直接联系的本地分支
+git pull  //新建跟踪分支后用该命令直接将远程分支合并进来
+git push  //将本地跟踪分支推送到远程分支
+git push --set-upstream [远程仓库名] [分支名]  //将当前的分支设置为跟踪某个远程分支
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">3.3</span><span class="number">.2</span><span class="variable">&amp;emsp</span>;抓取和合并远程分支：</span><br></pre></td></tr></table></figure>
+<pre><code>git fetch origin  //同步远程origin/master数据到本地，指针移到它最新的位置上。
+git merge origin/remotename  //将远程分支的内容合并到当前分支，用于远程分支已同步而又不能直接访问时。
+</code></pre><figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="variable">&amp;emsp</span>; <span class="variable">&amp;emsp</span>;  <span class="number">3.3</span><span class="number">.3</span><span class="variable">&amp;emsp</span>;推送分支和删除远程分支：</span><br></pre></td></tr></table></figure>
+<pre><code>git push origin name1:name2  //把本地分支name1推送到远程分支name2中，如果远程仓库没有这个分支，会生成这样一个新的分支。用这种方式可以远程创建分支。  
+git push origin name //将本地分支推到远程同名分支。
+git push origin :remotename //把空白远程远程分支，即删除远程分支。
+</code></pre><p><code>`</code></p>
+<p><br><br><br></p>
+<p><strong><em>这些就是基本的git命令，更多待进一步学习</em></strong></p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../git之生成ssh key/" class="pre-post btn btn-default" title="Git 中的SSH key的生成">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">Git 中的SSH key的生成</span>
+        </a>
+    
+    
+        <a href="../../../02/项目工具/find、grep、awk、sed 学习/" class="next-post btn btn-default" title="find、grep、awk、sed 学习">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">find、grep、awk、sed 学习</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-git的安装及初始配置"><span class="toc-text">1. git的安装及初始配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-git-安装"><span class="toc-text">1.1 git 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-git-初始化配置"><span class="toc-text">1.2 git 初始化配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-git的基础命令"><span class="toc-text">2.git的基础命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-新建仓库"><span class="toc-text">2.1 新建仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-文件基本处理"><span class="toc-text">2.2 文件基本处理</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

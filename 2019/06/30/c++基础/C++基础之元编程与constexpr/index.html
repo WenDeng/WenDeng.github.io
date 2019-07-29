@@ -1,0 +1,388 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="C++11特性,技术">
+
+
+    <meta name="description" content="元编程（metaprogramming）是一个典型的复合词，他由前缀 meta- 和词根 programming 复合而成，有“对一个程序进行编程”的意思。换句话说，编译器先编译你的代码，得到一...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>C++基础之元编程与constexpr | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="C++基础之元编程与constexpr">
+            
+	            C++基础之元编程与constexpr
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/C-基础/">C++基础</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/C-11特性/">C++11特性</a> <a class="tag-link" href="../../../../../tags/技术/">技术</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/06/30</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p><strong>元编程</strong>（metaprogramming）是一个典型的复合词，他由前缀 meta- 和词根 programming 复合而成，有“对一个程序进行编程”的意思。换句话说，编译器先编译你的代码，得到一份新的代码，然后再编译新的代码来解决问题。</p>
+<p>模板元编程技术，即把一些可以在编译时完成的求值计算，通过模板特化的技术绑定到具体的实例化代码上，从而减少不必要的代码量，提升代码的运行效率。</p>
+<a id="more"></a>
+<h2 id="一、C-的元编程"><a href="#一、C-的元编程" class="headerlink" title="一、C++的元编程"></a>一、C++的元编程</h2><h3 id="1-1-为什么要元编程呢？"><a href="#1-1-为什么要元编程呢？" class="headerlink" title="1.1 为什么要元编程呢？"></a>1.1 为什么要元编程呢？</h3><p>前面我们知道了什么是元编程，那么为什么要有这种编写技巧呢？</p>
+<p>无外乎两点：减少重复的代码以方便后期的维护，减少重复性的工作以方便后期的优化。其本质还是在于对编码逻辑的抽象，把重复性最高的工作，用最少的代码量来完成。<strong>在编译时让编译器来展开执行，这就是元编程的目的和核心思路</strong>。</p>
+<p>在 C++ 中，关于元编程有两个门派，一个是<strong>模板元编程</strong>，主要借助的是模板特化来实现自动化编程。另一个是常量表达式门派，主要是借助 <strong>constexpr</strong> 这一关键字来实现。两者就目前而言区别不算很大，而且基本上提到 C++ 的元编程，大家都会首先想到模板元编程，所以后面的讨论主要讲解的工具也是模板元编程，特此说明一下。</p>
+<h3 id="1-2-元编程实例"><a href="#1-2-元编程实例" class="headerlink" title="1.2 元编程实例"></a>1.2 元编程实例</h3><p>多说无益，我们先从最简单的例子说起。</p>
+<h4 id="1-2-1-简单的递归"><a href="#1-2-1-简单的递归" class="headerlink" title="1.2.1 简单的递归"></a>1.2.1 简单的递归</h4><p>我们先写一个简单的普通版本的递归函数<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pow</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (b == <span class="number">0</span>) <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">if</span> (b == <span class="number">1</span>) <span class="keyword">return</span> a;</span><br><span class="line">    <span class="keyword">return</span> a * <span class="built_in">pow</span>(a, b - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="1-2-2-元编程实现上述递归"><a href="#1-2-2-元编程实现上述递归" class="headerlink" title="1.2.2 元编程实现上述递归"></a>1.2.2 元编程实现上述递归</h4><p>这个代码特化了两个终止条件，相对之特化一个终止条件的减少了一层递归调用，能提速不少。但是我们都知道，每递归调用一次，就要压一次函数堆栈，尤其是一但递归次数变多了，不仅仅是效率大打折扣，还有很大概率因为堆栈溢出而出错。<strong>那么元编程是怎么处理这个任务的呢？</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> A, <span class="keyword">int</span> B&gt; </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Pow</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">enum</span> &#123; result = A * Pow&lt;A, B - <span class="number">1</span>&gt;::result &#125;;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> A&gt; <span class="class"><span class="keyword">struct</span> <span class="title">Pow</span>&lt;A, 1&gt; &#123;</span> <span class="keyword">enum</span> &#123; result = A &#125;; &#125;;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> A&gt; <span class="class"><span class="keyword">struct</span> <span class="title">Pow</span>&lt;A, 0&gt; &#123;</span> <span class="keyword">enum</span> &#123; result = <span class="number">1</span> &#125;; &#125;;</span><br></pre></td></tr></table></figure>
+<p>和递归写法类似，我们同样特化了两个终止条件，然后用一个枚举量<strong>result</strong> 来记录结果。之所以选择枚举量，是因为枚举量是一个常量表达式的最原始的实现方法，但是现在我们有<strong>constexpr</strong>关键字了，所以也可以这样写</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> A, <span class="keyword">int</span> B&gt; </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">ConstPow</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">int</span> result = A * ConstPow&lt;A, B - <span class="number">1</span>&gt;::result;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> A&gt; <span class="class"><span class="keyword">struct</span> <span class="title">ConstPow</span>&lt;A, 1&gt; &#123;</span> <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">int</span> result = A; &#125;;</span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> A&gt; <span class="class"><span class="keyword">struct</span> <span class="title">ConstPow</span>&lt;A, 0&gt; &#123;</span> <span class="keyword">constexpr</span> <span class="keyword">static</span> <span class="keyword">int</span> result = <span class="number">1</span>; &#125;;</span><br></pre></td></tr></table></figure>
+<p>这两种写法本质上是相同的。当然有人会问为什么用struct而不是用 class，事实上，C++ 的class和struct最主要的区别就是前者可以显式修饰成员的属性，而后者只有一个public属性。那么对于这份代码，结果result显然是我们要公开出去的一个成员，所以为了节省代码量，我就偷懒写成struct了。</p>
+<h4 id="1-2-2-普通递归和元编程实现的区别"><a href="#1-2-2-普通递归和元编程实现的区别" class="headerlink" title="1.2.2 普通递归和元编程实现的区别"></a>1.2.2 普通递归和元编程实现的区别</h4><p>上述两种方式对递归的求解调用如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cout</span> &lt;&lt; <span class="built_in">pow</span>(<span class="number">2</span>, <span class="number">4</span>) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//普通递归实现</span></span><br><span class="line"><span class="built_in">cout</span> &lt;&lt; Pow&lt;<span class="number">2</span>, <span class="number">4</span>&gt;::result &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//元编程实现</span></span><br></pre></td></tr></table></figure></p>
+<p>那么这两种写法在具体调用时，有什么区别呢？</p>
+<p>区别就在于执行计算的时期不同。前者是典型的运行时展开运行时计算，也就是只有在代码真正运行的时候，才会进入函数，开始递归计算。<strong>而后者是典型的编译时展开编译时计算</strong>。实际上在编译时就会被展开写作如下形式：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Pow<span class="tag">&lt;<span class="name">2,</span> <span class="attr">4</span>&gt;</span>::result <span class="tag">&lt;<span class="name">=</span>&gt;</span> 2 * Pow<span class="tag">&lt;<span class="name">2,</span> <span class="attr">3</span>&gt;</span>::result</span><br><span class="line"><span class="tag">&lt;<span class="name">=</span>&gt;</span> 2 * 2 * Pow<span class="tag">&lt;<span class="name">2,</span> <span class="attr">2</span>&gt;</span>::result</span><br><span class="line"><span class="tag">&lt;<span class="name">=</span>&gt;</span> 2 * 2 * 2 * Pow<span class="tag">&lt;<span class="name">2,</span> <span class="attr">1</span>&gt;</span>::result</span><br><span class="line"><span class="tag">&lt;<span class="name">=</span>&gt;</span> 2 * 2 * 2 * 2</span><br><span class="line"><span class="tag">&lt;<span class="name">=</span>&gt;</span> 16</span><br></pre></td></tr></table></figure>
+<p>所以代码中的这句<strong>cout&lt;&lt;Pow&lt;2, 4&gt;::result</strong>实际上和直接写<strong>cout&lt;&lt;16</strong>是一样的，也就是说，真正的计算任务给了编译器，而运行时只是把编译时算好的答案打印出来而已。</p>
+<p>在这里，<code>Pow&amp;lt;&amp;gt;</code> 这份模板就被称为<strong>模板元编程技术，即把一些可以在编译时完成的求值计算，通过模板特化的技术绑定到具体的实例化代码上，从而减少不必要的代码量，提升代码的运行效率</strong>。</p>
+<h3 id="1-3-元编程对性能的影响"><a href="#1-3-元编程对性能的影响" class="headerlink" title="1.3 元编程对性能的影响"></a>1.3 元编程对性能的影响</h3><p>这里首先要泼一盆冷水给大家，那就是天底下没有免费的好事：模板元编程在提升了代码的运行效率的同时，必然会导致编译时的效率降低，因为你把很多本来运行时的计算前置到了编译时计算，总的计算量并没有改变。所以我们反复强调的是，提升了运行效率，而非提升了整体的性能。</p>
+<p>需要注意的是：众所周知，枚举变量，是没有地址的！是没有地址的！是没有地址的！所以是不能当做左值使用的！所以是不能当做左值使用的！所以是不能当做左值使用的！为什么要强调这个呢？</p>
+<p>比如我们有一个函数是这样的接口void foo(const int &amp;);然后你调用了一个 foo(Pow&lt;2, 5&gt;::result);这样是不可以的。因为引用传递枚举值的时候，并不会使用任何静态内存，类似于字面量一样，所以一旦你把枚举值当左值使用了，编译器自然就会报错提醒。但是如果是<strong>常量表达式</strong>，就不会有这种问题，因为常量表达式的第一个前提是，它是变量，所以他有物理地址，所以可以foo(Pow&lt;2, 5&gt;::result);。</p>
+<h2 id="二、试试稍复杂的模板元编程"><a href="#二、试试稍复杂的模板元编程" class="headerlink" title="二、试试稍复杂的模板元编程"></a>二、试试稍复杂的模板元编程</h2><p>最后我们实现一个稍微复杂的例子：计算两个向量的一般数学意义上的内积，即比如我们有两个三维向量a[]和b[]，其内积的定义为a[0]*b[0]+a[1]*b[1]+a[2]*b[2]。</p>
+<p>我们先考虑最简单的模板函数的实现方式，不妨假设我们的向量是通过容器T[]储存的，那么我们可以用递归方式这样写：</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">template &lt;<span class="keyword">class</span> T&gt; T dot_re(<span class="built_in">int</span> <span class="built_in">dim</span>, T *a, T *b)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">dim</span> == <span class="number">1</span>) <span class="keyword">return</span> (*a) * (*b);</span><br><span class="line">    <span class="keyword">return</span> (*a) * (*b) + dot_re(<span class="built_in">dim</span> - <span class="number">1</span>, a + <span class="number">1</span>, b + <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我们试试把它改成元编程版本：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> DIM, <span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt; </span></span><br><span class="line"><span class="class"><span class="title">class</span> __<span class="title">Dot</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> T <span class="title">result</span><span class="params">(T *a, T *b)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (*a) * (*b) + __Dot&lt;DIM - <span class="number">1</span>, T&gt;::result(a + <span class="number">1</span>, b + <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt; </span></span><br><span class="line"><span class="class"><span class="title">class</span> __<span class="title">Dot</span>&lt;1, T&gt;</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> T <span class="title">result</span><span class="params">(T *a, T *b)</span> </span>&#123; <span class="keyword">return</span> (*a) * (*b); &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">int</span> DIM, <span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">T</span> <span class="title">dot_meta</span>(<span class="title">T</span> *<span class="title">a</span>, <span class="title">T</span> *<span class="title">b</span>)</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">return</span> __Dot&lt;DIM, T&gt;::result(a, b);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这时候可能会问，为什么命名第一种写法最简单最快，但是我们还要刻意写一份元编程版本的呢？</p>
+<p>这是由于，现代编译器普遍都具有了针对循环和递归的优化，这种优化对于比较大规模的循环是非常值得的，但是针对于比较小的向量内积计算，可能就没有一句直接展开a[0]*b[0] + a[1]*b[1] + a[2]*b[2]更为迅速了。可能一次两次的这种计算体现不出来，但是如果是大规模的计算可能就差别很大了。为了方便，我们折腾一个 benchmark 测试一下。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt; <span class="title">T</span> <span class="title">dot</span>(<span class="title">int</span> <span class="title">dim</span>, <span class="title">T</span> *<span class="title">a</span>, <span class="title">T</span> *<span class="title">b</span>)</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">int</span> result = T();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; dim; i++)</span><br><span class="line">        result += a[i] * b[i];</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; a = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>&#125;, b = &#123;<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">benchmark</span><span class="params">(<span class="keyword">int</span> cnt)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">define</span> DOT_META_(dim, a, b) dot_meta<span class="meta-string">&lt;dim&gt;(a, b)</span></span></span><br><span class="line"></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">define</span> TEST_CASE(id, foo) for (int i = 0; i &lt; cnt; i++)\</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; cnt; j++)\</span><br><span class="line">    &#123;\</span><br><span class="line">        <span class="keyword">int</span> hoge = foo(<span class="number">4</span>, a.data(), b.data());\</span><br><span class="line">        sum#<span class="meta">#id += hoge * foo(4, a.data(), a.data());\</span></span><br><span class="line">    &#125;\</span><br><span class="line">    <span class="keyword">auto</span> t#<span class="meta">#id = std::chrono::high_resolution_clock::now();</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> sum1 = <span class="number">0</span>, sum2 = <span class="number">0</span>, sum3 = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">auto</span> t0 = <span class="built_in">std</span>::chrono::high_resolution_clock::now();</span><br><span class="line">    TEST_CASE(<span class="number">1</span>, dot)</span><br><span class="line">    TEST_CASE(<span class="number">2</span>, dot_re)</span><br><span class="line">    TEST_CASE(<span class="number">3</span>, DOT_META_)</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::fixed &lt;&lt; <span class="built_in">std</span>::setprecision(<span class="number">2</span>);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"======== "</span> &lt;&lt; cnt &lt;&lt; <span class="string">" ========\n"</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"dot():      "</span> &lt;&lt; <span class="built_in">std</span>::chrono::duration&lt;<span class="keyword">double</span>, <span class="built_in">std</span>::milli&gt;(t1 - t0).count() &lt;&lt; <span class="string">"ms\n"</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"dot_re():   "</span> &lt;&lt; <span class="built_in">std</span>::chrono::duration&lt;<span class="keyword">double</span>, <span class="built_in">std</span>::milli&gt;(t2 - t1).count() &lt;&lt; <span class="string">"ms\n"</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"dot_meta(): "</span> &lt;&lt; <span class="built_in">std</span>::chrono::duration&lt;<span class="keyword">double</span>, <span class="built_in">std</span>::milli&gt;(t3 - t2).count() &lt;&lt; <span class="string">"ms\n"</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"(sum1 % 100, sum2 % 100, sum3 % 100)= ("</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; (sum1 % <span class="number">100</span>) &lt;&lt; <span class="string">", "</span> &lt;&lt; (sum2 % <span class="number">100</span>) &lt;&lt; <span class="string">", "</span>&lt;&lt; (sum3 % <span class="number">100</span>) &lt;&lt; <span class="string">")\n"</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="meta">#<span class="meta-keyword">undef</span> TEST_CASE</span></span><br><span class="line">    <span class="meta">#<span class="meta-keyword">undef</span> DOT_META_</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt; <span class="number">10</span>; i += <span class="number">2</span>) benchmark(i * <span class="number">1000</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后我们在编译时加上 <code>-O2</code> 选项，直接看结果：</p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">======== <span class="number">1000</span> ========</span><br><span class="line">dot<span class="comment">()</span>:      <span class="number">4.02</span>ms</span><br><span class="line">dot_re<span class="comment">()</span>:   <span class="number">1.99</span>ms</span><br><span class="line">dot_meta<span class="comment">()</span>: <span class="number">0.00</span>ms</span><br><span class="line"><span class="comment">(sum1 % 100, sum2 % 100, sum3 % 100)</span>= <span class="comment">(0, 0, 0)</span></span><br><span class="line"></span><br><span class="line">======== <span class="number">3000</span> ========</span><br><span class="line">dot<span class="comment">()</span>:      <span class="number">37.87</span>ms</span><br><span class="line">dot_re<span class="comment">()</span>:   <span class="number">15.98</span>ms</span><br><span class="line">dot_meta<span class="comment">()</span>: <span class="number">1.99</span>ms</span><br><span class="line"><span class="comment">(sum1 % 100, sum2 % 100, sum3 % 100)</span>= <span class="comment">(16, 16, 16)</span></span><br><span class="line"></span><br><span class="line">======== <span class="number">5000</span> ========</span><br><span class="line">dot<span class="comment">()</span>:      <span class="number">104.75</span>ms</span><br><span class="line">dot_re<span class="comment">()</span>:   <span class="number">43.89</span>ms</span><br><span class="line">dot_meta<span class="comment">()</span>: <span class="number">6.99</span>ms</span><br><span class="line"><span class="comment">(sum1 % 100, sum2 % 100, sum3 % 100)</span>= <span class="comment">(48, 48, 48)</span></span><br><span class="line"></span><br><span class="line">======== <span class="number">7000</span> ========</span><br><span class="line">dot<span class="comment">()</span>:      <span class="number">203.42</span>ms</span><br><span class="line">dot_re<span class="comment">()</span>:   <span class="number">87.76</span>ms</span><br><span class="line">dot_meta<span class="comment">()</span>: <span class="number">13.96</span>ms</span><br><span class="line"><span class="comment">(sum1 % 100, sum2 % 100, sum3 % 100)</span>= <span class="comment">(-4, -4, -4)</span></span><br><span class="line"></span><br><span class="line">======== <span class="number">9000</span> ========</span><br><span class="line">dot<span class="comment">()</span>:      <span class="number">336.08</span>ms</span><br><span class="line">dot_re<span class="comment">()</span>:   <span class="number">144.64</span>ms</span><br><span class="line">dot_meta<span class="comment">()</span>: <span class="number">23.93</span>ms</span><br><span class="line"><span class="comment">(sum1 % 100, sum2 % 100, sum3 % 100)</span>= <span class="comment">(-40, -40, -40)</span></span><br></pre></td></tr></table></figure>
+<p>可见，元编程版本的速度远远超过了前面的两种写法，而为什么递归版本的速度比循环要快呢？这是因为编译器把我们的递归版本进行了尾递归改写，然后再尾递归优化。有兴趣的可以利用g++ -S把汇编代码编译出来对比下区别。在我的电脑上，如果没有开-O2`优化，汇编的代码忠实的记录了执行时会进行递归调用。但是如果开了-O2优化之后，就会发现整个递归已经被改写成非常简洁的迭代代码。这就是最简单的尾递归优化。但是即便如此，也比不上直接展开计算的效率。当然，并不是所有时候这种展开都会很快，而这更多的细节就等到真正用到的时候再去测试吧。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../../../../07/01/数据库/必须掌握的面试问题系列（一）数据库/" class="pre-post btn btn-default" title="必须掌握的面试问题系列（一）数据库（转）">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">必须掌握的面试问题系列（一）数据库（转）</span>
+        </a>
+    
+    
+        <a href="../../../13/算法与数据结构/8. 最长回文子串与最长公共子串问题/" class="next-post btn btn-default" title="8.最长回文子串与最长公共子串问题">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">8.最长回文子串与最长公共子串问题</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#一、C-的元编程"><span class="toc-text">一、C++的元编程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-为什么要元编程呢？"><span class="toc-text">1.1 为什么要元编程呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-元编程实例"><span class="toc-text">1.2 元编程实例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-1-简单的递归"><span class="toc-text">1.2.1 简单的递归</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-2-元编程实现上述递归"><span class="toc-text">1.2.2 元编程实现上述递归</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-2-普通递归和元编程实现的区别"><span class="toc-text">1.2.2 普通递归和元编程实现的区别</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-元编程对性能的影响"><span class="toc-text">1.3 元编程对性能的影响</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#二、试试稍复杂的模板元编程"><span class="toc-text">二、试试稍复杂的模板元编程</span></a></li></ol>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

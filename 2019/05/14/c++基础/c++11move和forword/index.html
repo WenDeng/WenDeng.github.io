@@ -1,0 +1,393 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="C++11特性,技术">
+
+
+    <meta name="description" content="move和forward有他们各自的应用场景，学习并合理区别他们的用法很重要。最近刚好把它们俩梳理了一遍, 来写写move和forward为什么会出现, 他们能解决什么痛点.
+1、特性背景c++...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>c++11特性之move和forward应用与区别 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="c++11特性之move和forward应用与区别">
+            
+	            c++11特性之move和forward应用与区别
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/C-基础/">C++基础</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/C-11特性/">C++11特性</a> <a class="tag-link" href="../../../../../tags/技术/">技术</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/14</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>move和forward有他们各自的应用场景，学习并合理区别他们的用法很重要。<br>最近刚好把它们俩梳理了一遍, 来写写move和forward为什么会出现, 他们能解决什么痛点.<br><a id="more"></a></p>
+<h3 id="1、特性背景"><a href="#1、特性背景" class="headerlink" title="1、特性背景"></a>1、特性背景</h3><p>c++中传值默认是copy，而copy开销很大， 比如下面例子, 他们都要经历至少一次复制操作:</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span><span class="params">(<span class="string">"some temporary string"</span>)</span></span>; <span class="comment">//初始化string, 传入函数, 可能会导致string的复制</span></span><br><span class="line">v.push_back(<span class="type">X</span>()); <span class="comment">//初始化了一个临时X, 然后被复制进了vector</span></span><br><span class="line">a = b + <span class="built_in">c</span>; <span class="comment">//b+c是一个临时值, 然后被赋值给了a</span></span><br><span class="line">x++; <span class="comment">//x++操作也有临时变量的产生</span></span><br><span class="line">a = b + <span class="built_in">c</span> + d; <span class="comment">//c+d一个临时变量, b+(c+d)另一个临时变量</span></span><br></pre></td></tr></table></figure>
+<p>这些临时变量在C++11里被定义为<strong>右值</strong>, 因为没有对应的变量名存他们，同时有对应变量名的被称为<strong>左值</strong>。</p>
+<h3 id="2、案例"><a href="#2、案例" class="headerlink" title="2、案例"></a>2、案例</h3><p>以上copy操作有没有必要呢? 有些地方可不可以省略呢? 我们来看看下面一个案例, 之后我们会用到它来推导出为什么我们需要move和forward:</p>
+<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class A<span class="meta">&#123;...&#125;</span>;</span><br><span class="line"></span><br><span class="line"><span class="built_in">void</span> A::<span class="built_in">set</span>(<span class="keyword">const</span> <span class="built_in">string</span> &amp; var1, <span class="keyword">const</span> <span class="built_in">string</span> &amp; var2)&#123;</span><br><span class="line">  m_var1 = var1;  //copy</span><br><span class="line">  m_var2 = var2;  //copy</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面这个写法是没法避免copy的, 因为怎么着都得把外部初始的string传进set函数, 再复制给成员变量:</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">A <span class="built_in">a1</span><span class="comment">;</span></span><br><span class="line">string var1(<span class="string">"string1"</span>)<span class="comment">;</span></span><br><span class="line">string var2(<span class="string">"string2"</span>)<span class="comment">;</span></span><br><span class="line"><span class="built_in">a1</span><span class="meta">.set</span>(var1, var2)<span class="comment">; // OK to copy</span></span><br></pre></td></tr></table></figure>
+<p>但下面这个呢? 临时生成了2个string, 传进set函数里, 复制给成员变量, 然后这两个临时string再被回收，本质上来说，和上一个是一样的，是不是有点多余?</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">A <span class="built_in">a1</span><span class="comment">;</span></span><br><span class="line"><span class="built_in">a1</span><span class="meta">.set</span>(<span class="string">"temporary str1"</span>,<span class="string">"temporary str2"</span>)<span class="comment">; //temporary, unnecessary copy</span></span><br></pre></td></tr></table></figure>
+<p>上面复制的行为, 在底层的操作很可能是这样的:</p>
+<ul>
+<li>(1)临时变量的内容先被复制一遍</li>
+<li>(2)被复制的内容覆盖到成员变量指向的内存</li>
+<li>(3)临时变量用完了再被回收</li>
+</ul>
+<p>这里能不能优化一下呢? 临时变量反正都要被回收, 如果能直接把临时变量的内容, 和成员变量内容交换一下, 就能避免复制了? 如下:</p>
+<ul>
+<li>(1)成员变量内部的指针指向”temporary str1”所在的内存</li>
+<li>(2)临时变量内部的指针指向成员变量以前所指向的内存</li>
+<li>(3)最后临时变量指向的那块内存再被回收</li>
+</ul>
+<p>上面这个操作避免了一次copy的发生, 其实它就是所谓的<strong>move语义</strong>.</p>
+<h3 id="3、传变量和临时变量"><a href="#3、传变量和临时变量" class="headerlink" title="3、传变量和临时变量"></a>3、传变量和临时变量</h3><p>再回到我们的例子，没法避免copy操作的时候, 还是要用const T&amp;把<strong>变量</strong>传进set函数里, 现在T &amp;叫左值引用了, 如下:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="keyword">const</span> <span class="built_in">string</span> &amp; var1, <span class="keyword">const</span> <span class="built_in">string</span> &amp; var2)</span></span>&#123;</span><br><span class="line">  m_var1 = var1;  <span class="comment">//copy</span></span><br><span class="line">  m_var2 = var2;  <span class="comment">//copy</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">A a1;</span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">var1</span><span class="params">(<span class="string">"string1"</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="built_in">string</span> <span class="title">var2</span><span class="params">(<span class="string">"string2"</span>)</span></span>;</span><br><span class="line">a1.<span class="built_in">set</span>(var1, var2); <span class="comment">// OK to copy</span></span><br></pre></td></tr></table></figure></p>
+<p>传临时变量的时候, 可以传T &amp;&amp;, 叫右值引用, 它能接收临时变量（右值）,之后再调用std::move就避免copy了。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">set</span><span class="params">(<span class="built_in">string</span> &amp;&amp; var1, <span class="built_in">string</span> &amp;&amp; var2)</span></span>&#123;</span><br><span class="line">  <span class="comment">//avoid unnecessary copy!</span></span><br><span class="line">  m_var1 = <span class="built_in">std</span>::move(var1);  </span><br><span class="line">  m_var2 = <span class="built_in">std</span>::move(var2);</span><br><span class="line">&#125;</span><br><span class="line">A a1;</span><br><span class="line"><span class="comment">//temporary, move! no copy!</span></span><br><span class="line">a1.<span class="built_in">set</span>(<span class="string">"temporary str1"</span>,<span class="string">"temporary str2"</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="4、引入forward"><a href="#4、引入forward" class="headerlink" title="4、引入forward"></a>4、引入forward</h3><p>现在终于能处理临时变量了, 但如果按上面那样写, 处理临时变量用右值引用string &amp;&amp;, 处理普通变量用const引用const string &amp;…这代码量有点大呀? 每次都至少要写两遍,怎么避免重复呢？那就是forward。</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename <span class="built_in">T1</span>, typename <span class="built_in">T2</span>&gt;</span><br><span class="line">void set(<span class="built_in">T1</span> &amp;&amp; var1, <span class="built_in">T2</span> &amp;&amp; var2)&#123;</span><br><span class="line">  m_var1 = std::forward&lt;<span class="built_in">T1</span>&gt;(var1)<span class="comment">;</span></span><br><span class="line">  m_var2 = std::forward&lt;<span class="built_in">T2</span>&gt;(var2)<span class="comment">;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>perfect forward (完美转发)能将上述两者结合在一起：</p>
+<ul>
+<li>如果外面传来了右值临时变量, 它就转发右值并且启用move语义.</li>
+<li>如果外面传来了左值, 它就转发左值并且启用copy. 然后它也还能保留const.</li>
+</ul>
+<h3 id="5、有了forward为什么还要用move"><a href="#5、有了forward为什么还要用move" class="headerlink" title="5、有了forward为什么还要用move?"></a>5、有了forward为什么还要用move?</h3><p>技术上来说, forward确实可以替代所有的move，但还有一些问题:</p>
+<p>首先, forward常用于template函数中, 使用的时候必须要多带一个template参数T:forward<t>, 代码略复杂;还有, 明确只需要move的情况而用forward, 代码意图不清晰, 其他人看着理解起来比较费劲.</t></p>
+<p>更技术上来说, 他们都可以被static_cast替代. 为什么不用static_cast呢? 也就是为了读着方便易懂.</p>
+<h3 id="6、总结"><a href="#6、总结" class="headerlink" title="6、总结"></a>6、总结</h3><p>可以这么说，move属于强转，forward对于左值还是会转换成左值，对于右值转换成右值。一般在模板元编程里面，对于forward需求比较多，因为可以处理各种不同场景。而一般的代码里面，由于可以确认传入的是左值还是右值，所以一般直接就调用std::move了。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../../../15/c++基础/《STL源码剖析》第3章 迭代器与traits编程技法/" class="pre-post btn btn-default" title="《STL源码剖析》第3章 迭代器与traits编程技法">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">《STL源码剖析》第3章 迭代器与traits编程技法</span>
+        </a>
+    
+    
+        <a href="../c++11std-move使用与原理/" class="next-post btn btn-default" title="c++11特性之std-move的使用和原理">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">c++11特性之std-move的使用和原理</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、特性背景"><span class="toc-text">1、特性背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、案例"><span class="toc-text">2、案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、传变量和临时变量"><span class="toc-text">3、传变量和临时变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、引入forward"><span class="toc-text">4、引入forward</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、有了forward为什么还要用move"><span class="toc-text">5、有了forward为什么还要用move?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、总结"><span class="toc-text">6、总结</span></a></li></ol>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

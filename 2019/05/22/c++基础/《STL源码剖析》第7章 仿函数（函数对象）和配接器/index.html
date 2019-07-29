@@ -1,0 +1,401 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="技术,STL源码">
+
+
+    <meta name="description" content="所谓的仿函数(functor)，是通过重载()运算符模拟函数形为的类。因此，这里需要明确两点：
+
+1 仿函数不是函数，它是个类； 
+2 仿函数重载了()运算符，使得它的对你可以像函数那样子调用。...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>《STL源码剖析》第7章 仿函数（函数对象）和配接器 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="《STL源码剖析》第7章 仿函数（函数对象）和配接器">
+            
+	            《STL源码剖析》第7章 仿函数（函数对象）和配接器
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/C-基础/">C++基础</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/STL源码/">STL源码</a> <a class="tag-link" href="../../../../../tags/技术/">技术</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/22</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>所谓的仿函数(functor)，是通过重载()运算符模拟函数形为的类。因此，这里需要明确两点：</p>
+<ul>
+<li>1 仿函数不是函数，它是个类； </li>
+<li>2 仿函数重载了()运算符，使得它的对你可以像函数那样子调用。 </li>
+</ul>
+<p>《Design Patterns》一书提到23个最普及的设计模式，其中对adapter样式的定义如下：<strong>将一个class的接口转换为另一个class 的接口，使原本因接口不兼容而不能合作的classes，可以一起运作</strong>。</p>
+<a id="more"></a>
+<h3 id="1、仿函数"><a href="#1、仿函数" class="headerlink" title="1、仿函数"></a>1、仿函数</h3><p>仿函数是早期的命名，C++标准规定所采用的新名称是函数对象。<strong>函数对象，如其名字一样是指一种具有函数特质的对象</strong>。调用者可以像函数一样的使用这些对象，但必须重载operator()，先产生类对象的一个匿名对象，再调用相应的函数。</p>
+<p>例如在很多STL算法中，都可以看到，我们可以将一个方法作为模板内的参数传入到算法实现中，例如sort的时候我们可以根据我们传入的自定义的compare函数来进行比较排序。解决办法是使用函数指针，或者是将这个“操作”设计为一个所谓的仿函数，再用这个仿函数生成一个对象，并用这个对象作为算法的一个参数。</p>
+<p><strong>那为什么STL不使用函数指针而使用仿函数呢？</strong><br>这主要是因为函数指针不能满足STL对抽象性的要求，<strong>无法和STL的其他组件搭配</strong>以产生更加灵活的效果。</p>
+<h3 id="2、仿函数的可配接性"><a href="#2、仿函数的可配接性" class="headerlink" title="2、仿函数的可配接性"></a>2、仿函数的可配接性</h3><p>仿函数灵活性的关键就在于仿函数。<br>STL仿函数应该有能力被函数适配器修饰，就像积木一样串接，然而，为了拥有配接能力，每个仿函数都必须定义自己的<strong>函数参数类型和返回值类型</strong>，就像迭代器如果要融入整个STL大家庭，也必须按照规定定义自己的5个相应的类型一样。下面主要讲解一元函数和二元函数的基本的相关设计。</p>
+<h4 id="2-1-unary-function"><a href="#2-1-unary-function" class="headerlink" title="2.1 unary_function"></a>2.1 unary_function</h4><p>用来呈现一元函数的参数类型和返回值类型，使用者实现对应的一元仿函数时只需继承这个类并进行事项即可。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Template&lt;<span class="class"><span class="keyword">class</span> <span class="title">Arg</span>, <span class="type">class Result&gt; //基类</span></span></span><br><span class="line">Struct unary_function</span><br><span class="line">&#123;</span><br><span class="line">    Typedef Arg argument_type;</span><br><span class="line">    Typedef Result result_type;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//自定义的一元仿函数可以继承上类来获得类型定义</span></span><br><span class="line">Template&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line">Struct negate:<span class="keyword">public</span> unary_function&lt;T,T&gt; <span class="comment">//取反</span></span><br><span class="line">&#123;</span><br><span class="line">    T <span class="keyword">operator</span>()(<span class="keyword">const</span> T&amp; x)<span class="keyword">const</span> &#123;<span class="keyword">return</span> –x;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-2-binary-function"><a href="#2-2-binary-function" class="headerlink" title="2.2 binary_function"></a>2.2 binary_function</h4><p>用来呈现二元函数的第一个参数类型、第二个参数类型和返回值类型。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Template&lt;<span class="class"><span class="keyword">class</span> <span class="title">Arg1</span>, <span class="type">class Arg2</span>, <span class="type">class Result&gt;</span></span></span><br><span class="line">Struct binary_function</span><br><span class="line">&#123;</span><br><span class="line">    Typedef Arg1 first_argument_type;</span><br><span class="line">    Typedef Arg2 second_argument_type;</span><br><span class="line">    Typedef Result result_type;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line"></span><br><span class="line">Template&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line">Struct plus: <span class="keyword">public</span> binary_function&lt;T,T,T&gt;  <span class="comment">//用法示例，加运算</span></span><br><span class="line">&#123;</span><br><span class="line">    T <span class="keyword">operator</span>()(<span class="keyword">const</span> T&amp; x, <span class="keyword">const</span> T&amp; y)<span class="keyword">const</span> &#123;<span class="keyword">return</span> x+y ;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h3 id="3、几种仿函数"><a href="#3、几种仿函数" class="headerlink" title="3、几种仿函数"></a>3、几种仿函数</h3><ul>
+<li><p>算术类仿函数<br>用于算术运算，包括加法：plus<t>，减法：minus<t>，乘法：multiplies<t>，除法：divides<t>，取模：modulus<t>，取反：negate<t>。</t></t></t></t></t></t></p>
+</li>
+<li><p>关系类仿函数<br>用于进行关系运算，包括等于：equal_to<t>，不等于：not_equal_to<t>，大于：greater<t>，大于等于：greater_equal<t>，小于：less<t>，小于等于：less_equal<t>。</t></t></t></t></t></t></p>
+</li>
+<li><p>逻辑类仿函数<br>提供几种逻辑运算，包括逻辑运算and：logical_and<t>，逻辑运算or：logical_or<t>，逻辑运算not：logical_not<t>。</t></t></t></p>
+</li>
+<li><p>证同(identity)、选择(select)、投射(project)<br>证同用于返回本身；选择用于接受一个pair,返回第一个元素或第二个元素；投射传回第一参数，忽略第二参数或相反。</p>
+</li>
+</ul>
+<p><strong>来看一下他们的运用实例</strong>：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;functional&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//算术类仿函数</span></span><br><span class="line">	plus&lt;<span class="keyword">int</span>&gt; plusobj;</span><br><span class="line">	minus&lt;<span class="keyword">int</span>&gt; minusobj;</span><br><span class="line">	multiplies&lt;<span class="keyword">int</span>&gt; mulobj;</span><br><span class="line">	divides&lt;<span class="keyword">int</span>&gt; divobj;</span><br><span class="line">	modulus&lt;<span class="keyword">int</span>&gt; modobj;</span><br><span class="line">	negate&lt;<span class="keyword">int</span>&gt; negobj;</span><br><span class="line">   </span><br><span class="line">    <span class="comment">//除下面的使用方式外，还可以用临时对象调用</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; plusobj(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//8</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; minusobj(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//-2</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; mulobj(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//15</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; divobj(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//0</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; modobj(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//3</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; negobj(<span class="number">3</span>) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//-3</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//关系类仿函数，不等于：，大于：greater&lt;T&gt;，大于等于：greater_equal&lt;T&gt;，小于：less&lt;T&gt;，小于等于：less_equal&lt;T&gt;。</span></span><br><span class="line">	equal_to&lt;<span class="keyword">int</span>&gt; equal_to_obj; </span><br><span class="line">	not_equal_to&lt;<span class="keyword">int</span>&gt; not_equal_to_obj;</span><br><span class="line">	greater&lt;<span class="keyword">int</span>&gt; greater_obj;</span><br><span class="line">	greater_equal&lt;<span class="keyword">int</span>&gt; greater_equal_obj;</span><br><span class="line">	less&lt;<span class="keyword">int</span>&gt; less_obj;</span><br><span class="line">	less_equal&lt;<span class="keyword">int</span>&gt; less_equal_obj;</span><br><span class="line"> </span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; boolalpha &lt;&lt; equal_to_obj(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//false</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; not_equal_to_obj(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; <span class="built_in">endl</span>;<span class="comment">//true</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; greater_obj(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; <span class="built_in">endl</span>;<span class="comment">//false</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; greater_equal_obj(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; <span class="built_in">endl</span>;<span class="comment">//false</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; less_obj(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; <span class="built_in">endl</span>;<span class="comment">//true</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; less_equal_obj(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; <span class="built_in">endl</span>;<span class="comment">//true</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//逻辑类仿函数</span></span><br><span class="line">	logical_and&lt;<span class="keyword">int</span>&gt; logical_and_obj;</span><br><span class="line">	logical_or&lt;<span class="keyword">int</span>&gt; logical_or_obj;</span><br><span class="line">	logical_not&lt;<span class="keyword">int</span>&gt; logical_not_obj;</span><br><span class="line"> </span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; logical_and_obj(<span class="number">1</span>, <span class="number">0</span>) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//false</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; logical_or_obj(<span class="number">1</span>, <span class="number">0</span>) &lt;&lt; <span class="built_in">endl</span>;<span class="comment">//true</span></span><br><span class="line">	<span class="built_in">cout</span> &lt;&lt; logical_not_obj(<span class="number">1</span>) &lt;&lt; <span class="built_in">endl</span>;<span class="comment">//false</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="4、配接器"><a href="#4、配接器" class="headerlink" title="4、配接器"></a>4、配接器</h3><p>配接器（Adapter）在STL组件的灵活组合运用功能上，<strong>扮演着轴承、转换器的角色</strong>，即将一个class的接口转换为另一个class的接口，使原本因接口不兼容而不能合作的classes，可以一起运作，它事实上<strong>是一种设计模式</strong>。</p>
+<p>STL 主要提供如下三种配接器：</p>
+<ul>
+<li>（1）改变仿函数（functors）接口，称之为function adapter</li>
+<li>（2）改变容器（containers）接口，称之位container adapter</li>
+<li>（3）改变迭代器（iterators）接口者，称之为iterator adapter</li>
+</ul>
+<h4 id="4-1-容器配接器container-adapter"><a href="#4-1-容器配接器container-adapter" class="headerlink" title="4.1 容器配接器container adapter"></a>4.1 容器配接器container adapter</h4><p>STL 提供的两个容器queue和stack，其实都不过是一种配接器，是对deque （双端队列）接口的修饰而成就自己的容器风貌。queue和stack底层都是由deque构成的，它们封住所有deque对外接口，只开发符合对应原则的几个函数，故它们是适配器，是一个作用于容器之上的适配器。</p>
+<p>如果按照该标准衡量其他容器的话，序列式容器的 set 和 map 其实是对其内部所维护的RB-tree接口的改造。</p>
+<h4 id="4-2-迭代器配接器iterator-adapter"><a href="#4-2-迭代器配接器iterator-adapter" class="headerlink" title="4.2 迭代器配接器iterator adapter"></a>4.2 迭代器配接器iterator adapter</h4><p>STL提供了许多应用于迭代器身上的配接器，包括<strong>insert iterators，reverse iterators，iostream iterators</strong>。</p>
+<p>insert iterators可以将一般迭代器的赋值操作转变为插入操作。此迭代器包括专门从尾端插入操作back_insert_iterator，专门从头端插入操作front_insert_iterator，以及可从任何位置执行插入操作的insert_iterator。因iterator adapters使用接口不是十分直观，STL提供三个相应的函数back_inserter()、front_inserter()、inserter()，从而提高使用时的便利性。</p>
+<p>reverse iterators可以将一般迭代器的行进方向逆转，使原本应该前进的operator++变成了后退操作，使原本应该后退的operator–变成了前进操作。此操作用在“从尾端开始进行”的算法上，有很大的方便性。</p>
+<p>iostream iterators可以将迭代器绑定到某个iostream对象身上。绑定到istream对象身上，为istream_iterator，拥有输入功能；绑定到ostream对象身上，成为ostream_iterator，拥有输出功能。此迭代器用在屏幕输出上，非常方便。</p>
+<h4 id="4-3-functor配接器functor-adapter"><a href="#4-3-functor配接器functor-adapter" class="headerlink" title="4.3 functor配接器functor adapter"></a>4.3 functor配接器functor adapter</h4><p>functor adapters是所有配接器中数量最庞大的一个族群，其配接灵活度是后两者不能及的，可以配接、配接、再配接。其中配接操作包括系结（bind）、否定（negate）、组合（compose）、以及对一般函数或成员函数的修饰（使其成为一个仿函数）。它的价值在于，通过它们之间的绑定、组合、修饰能力，几乎可以无限制地创造出各种可能的表达式（expression），搭配STL算法一起演出。</p>
+<p>由于仿函数就是“将function call操作符重载”的一种class，而任何算法接受一个仿函数时，总是在其演算过程中调用该仿函数的operator()，这使得不具备仿函数之形、却有真函数之实的“一般函数”和“成员函数（member functions）感到为难。<strong>如果”一般函数“和“成员函数”不能纳入复用的体系中，则STL的规划将崩落了一角</strong>。为此，STL提供了为数众多的配接器，使“一般函数”和“成员函数”得以无缝地与其他配接器或算法结合起来。</p>
+<p>所有期望获取配接能力的组件，本身都必须是可配接的，即一元仿函数必须继承自unary_function，二元仿函数必须继承自binary_function，成员函数必须以mem_fun处理过，一般函数必须以ptr_fun处理过。</p>
+<p><strong>一个未经ptr_fun处理过的一般函数，虽然也可以函数指针的形式传给STL算法使用，却无法拥有任何配接能力</strong>。</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以下配接器其实就是把一个一元函数指针包起来；</span></span><br><span class="line"><span class="comment">// 当仿函数被使用时，就调用该函数指针</span></span><br><span class="line">template &lt;class <span class="variable">_Arg</span>, class <span class="variable">_Result</span>&gt;</span><br><span class="line">class pointer_to_unary_function : public unary_function&lt;<span class="variable">_Arg</span>, <span class="variable">_Result</span>&gt; </span><br><span class="line">&#123;</span><br><span class="line">protected:</span><br><span class="line">  <span class="variable">_Result</span> (*<span class="variable">_M_ptr</span>)(<span class="variable">_Arg</span>);     <span class="comment">// 内部成员，一个函数指针</span></span><br><span class="line">public:</span><br><span class="line">  pointer_to_unary_function() &#123;&#125;</span><br><span class="line">  <span class="comment">// 以下constructor将函数指针记录于内部成员之中</span></span><br><span class="line">  explicit pointer_to_unary_function(<span class="variable">_Result</span> (*<span class="variable">__x</span>)(<span class="variable">_Arg</span>)) : <span class="variable">_M_ptr</span>(<span class="variable">__x</span>) &#123;&#125;</span><br><span class="line">  <span class="comment">// 通过函数指针执行函数</span></span><br><span class="line">  <span class="variable">_Result</span> operator()(<span class="variable">_Arg</span> <span class="variable">__x</span>) const &#123; return <span class="variable">_M_ptr</span>(<span class="variable">__x</span>); &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 辅助函数，使我们能够方便运用pointer_to_unary_function</span></span><br><span class="line">template &lt;class <span class="variable">_Arg</span>, class <span class="variable">_Result</span>&gt;</span><br><span class="line">inline pointer_to_unary_function&lt;<span class="variable">_Arg</span>, <span class="variable">_Result</span>&gt; ptr_fun(<span class="variable">_Result</span> (*<span class="variable">__x</span>)(<span class="variable">_Arg</span>))</span><br><span class="line">&#123;</span><br><span class="line">  return pointer_to_unary_function&lt;<span class="variable">_Arg</span>, <span class="variable">_Result</span>&gt;(<span class="variable">__x</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="5、小结"><a href="#5、小结" class="headerlink" title="5、小结"></a>5、小结</h3><p>本节主要介绍仿函数和配接器这两种思想，二者的主要的目的都是粘合STL的另外三大组件容器、迭代器和算法，理解其意，思而用之，也必能有所收益。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../../网络协议/《TCP-IP详解卷1》第2章 链路层/" class="pre-post btn btn-default" title="《TCP-IP详解卷1》第2章 链路层">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">《TCP-IP详解卷1》第2章 链路层</span>
+        </a>
+    
+    
+        <a href="../../网络协议/《TCP-IP详解卷1》第1章 概述  /" class="next-post btn btn-default" title="《TCP-IP详解卷1》第1章 概述">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">《TCP-IP详解卷1》第1章 概述</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、仿函数"><span class="toc-text">1、仿函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、仿函数的可配接性"><span class="toc-text">2、仿函数的可配接性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-unary-function"><span class="toc-text">2.1 unary_function</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-binary-function"><span class="toc-text">2.2 binary_function</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、几种仿函数"><span class="toc-text">3、几种仿函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、配接器"><span class="toc-text">4、配接器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-容器配接器container-adapter"><span class="toc-text">4.1 容器配接器container adapter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-迭代器配接器iterator-adapter"><span class="toc-text">4.2 迭代器配接器iterator adapter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-3-functor配接器functor-adapter"><span class="toc-text">4.3 functor配接器functor adapter</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、小结"><span class="toc-text">5、小结</span></a></li></ol>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

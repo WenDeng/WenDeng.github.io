@@ -1,0 +1,508 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="野渡">
+
+
+    <meta name="description" content="而世之奇伟、瑰怪、非常之观，常在于险远，而人之所罕至焉，故非有志者不能至也。">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>分类: 网络协议 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content ">
+                    <ol class="breadcrumb">
+    
+    
+        <li>
+            网络协议
+        </li>
+    
+
+</ol>
+
+
+    <article class="post">
+        
+            <div class="post-media">
+                <a href="../../2019/05/24/网络协议/《TCP-IP详解卷1》第4章ARP：地址解析协议/">
+                    <img class="img-ajax" src="../../img/loading.gif" data-src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/40.png?raw=true" alt="《TCP-IP详解卷1》第4章ARP：地址解析协议">
+                </a>
+            </div>
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/24/网络协议/《TCP-IP详解卷1》第4章ARP：地址解析协议/">《TCP-IP详解卷1》第4章ARP：地址解析协议</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月24日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    数据链路如以太网或令牌环网都有自己的寻址机制（常常为48 bit地址），这是使用数据链路的任何网络层都必须遵从的。一个网络如以太网可以同时被不同的网络层使用。
+当一台主机把以太网数据帧发送到位于同一局域网上的另一台主机时，是根据48bit的以太网地址来确定目的接口的。设备驱动程序从不检查IP数据报中的目的IP地址。
+地址解析为这两种不同的地址形式提供映射：32 bit的IP地址和数据链路层使用的任何类型的地址。ARP（地址解析协议）和RAR P（逆地址解析协议）就是这样的两个映射协议。
+ARP为IP地址到对应的硬件地址之间提供动态映射。我们之所以用动态这个词是因为这个过程是自动完成的，一般应用程序用户或系统管理员不必关心。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+            <div class="post-media">
+                <a href="../../2019/05/23/网络协议/《TCP-IP详解卷1》第3章 IP：网际协议/">
+                    <img class="img-ajax" src="../../img/loading.gif" data-src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/37.png?raw=true" alt="《TCP-IP详解卷1》第3章 IP：网际协议">
+                </a>
+            </div>
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/23/网络协议/《TCP-IP详解卷1》第3章 IP：网际协议/">《TCP-IP详解卷1》第3章 IP：网际协议</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月23日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    IP是TCP/IP协议族中最为核心的协议。所有的TCP、UDP、ICMP及IGMP数据都以IP数据报格式传输。但是IP提供不可靠、无连接的数据报传送服务。
+不可靠在于它不能保证IP数据报能成功到达目的地，仅提供最好的传输服务。IP在传输服务时出现错误(如，路由器的缓冲区用完了)，直接丢弃该数据报，然后通过ICMP消息给信源端。任何可靠性都必须由上层如TCP来提供。
+无连接意味着IP不维护任何关于后续数据报的状态信息，每个数据报的处理都是独立的，可以不按顺序接收。不同的数据报都要独立地进行路由选择，可能选择不同的路线。
+在本章，我们将简要介绍IP首部中的各个字段，讨论IP路由选择和子网的有关内容。还要介绍两个有用的命令：ifconfig和netstat。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+            <div class="post-media">
+                <a href="../../2019/05/22/网络协议/《TCP-IP详解卷1》第2章 链路层/">
+                    <img class="img-ajax" src="../../img/loading.gif" data-src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/34.png?raw=true" alt="《TCP-IP详解卷1》第2章 链路层">
+                </a>
+            </div>
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/22/网络协议/《TCP-IP详解卷1》第2章 链路层/">《TCP-IP详解卷1》第2章 链路层</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月22日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    在TCP/IP协议族中，链路层主要有三个目的：
+
+（1）为IP模块发送和接收IP数据报；   
+（2）为ARP模块发送ARP请求和接收ARP应答；
+（3）为RARP发送RARP请求和接收RARP应答。
+
+TCP/IP支持多种不同的链路层协议，这取决于网络所使用的硬件，如以太网、令牌环网、FDDI（光纤分布式数据接口）及RS-232串行线路等。
+本节我们将详细讨论以太网链路层协议，两个串行接口链路层协议（SLIP和PPP），以及大多数实现都包含的环回（loopback）驱动程序。以太网和SLIP是本书中大多数例子使用的链路层。对MTU（最大传输单元）进行了介绍，这个概念在本书的后面章节中将多次遇到。我们还讨论了如何为串行线路选择MTU。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+            <div class="post-media">
+                <a href="../../2019/05/22/网络协议/《TCP-IP详解卷1》第1章 概述  /">
+                    <img class="img-ajax" src="../../img/loading.gif" data-src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/27.png?raw=true" alt="《TCP-IP详解卷1》第1章 概述">
+                </a>
+            </div>
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/22/网络协议/《TCP-IP详解卷1》第1章 概述  /">《TCP-IP详解卷1》第1章 概述</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月22日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    TCP/IP起源于60年代末美国政府资助的一个分组交换网络研究项目。到90年代已发展成为计算机之间最常应用的组网形式。它是一个真正的开放系统，因为协议族的定义及其多种实现可以不用花钱或者花很少的钱就可以公开的得到。它成为被称作”全球互联网”或”因特网”的基础，该广域网（WAN）已包含超过100万台遍布世界各地的计算机。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2018/12/28/网络协议/HTTPS安全通信机制及SSL握手过程/">HTTPS安全通信机制及SSL握手过程</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2018年12月28日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    HTTP是一种超文本传输协议，它是无状态的、简单快速的、基于 TCP 的可靠传输协议。 HTTP使用明文传输，由此造成了很大的安全隐患。在网络传输过程中，只要数据包被人截获，截获人可以直接解析出数据包内的信息，容易导致信息泄露。
+HTTPS常被定义为为HTTP over SSL，超文本传输安全协议。HTTPS协议在HTTP和传输层TCP之间增加了SSL/TSL层，SSL/TSL层能够提供密钥协商、数据加解密的功能，数据在网络以密文形式传输，从而保证数据安全。本文将一步步讲解https的安全通信原理。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+            <div class="post-media">
+                <a href="../../2018/12/06/网络协议/深入理解netfilter的核心原理与实现/">
+                    <img class="img-ajax" src="../../img/loading.gif" data-src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/1.jpg?raw=true" alt="深入理解netfilter的核心原理与实现">
+                </a>
+            </div>
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2018/12/06/网络协议/深入理解netfilter的核心原理与实现/">深入理解netfilter的核心原理与实现</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2018年12月06日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    本文旨在一探Iptables和Netfilter的关系，了解网络包经过网络协议栈的过程，从而对linux的防火墙机制有更深入的认识。…
+                
+            </p>
+        </div>
+    </article>
+ 
+
+
+
+
+
+
+
+
+
+                </main>
+                
+                    
+    <aside class="col-md-4 sidebar">
+        
+        
+    <div class="widget">
+        <h3 class="title">搜索</h3>
+        <div id="search-form">
+            <div id="result-mask" class="hide"></div>
+            <div class="search-area">
+                
+                    <input id="search-key" type="search" autocomplete="off" placeholder="搜点什么呢？">
+                    <button type="button" class="search-form-submit" id="search-local">站内搜索</button>
+                
+                
+            </div>
+            <div id="result-wrap" class="hide">
+                <div id="search-result"></div>
+            </div>
+            <div class="hide">
+                <template id="search-tpl">
+                    <div class="item">
+                        <a href="/{path}" title="{title}">
+                            <div class="title">{title}</div>
+                            <div class="content">{content}</div>
+                        </a>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+        
+        
+    <div class="widget">
+        <h3 class="title">分类</h3>
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="../C-基础/"><i class="fa" aria-hidden="true">C++基础</i></a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="../体会生活/"><i class="fa" aria-hidden="true">体会生活</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="../操作系统/"><i class="fa" aria-hidden="true">操作系统</i></a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="../数据库/"><i class="fa" aria-hidden="true">数据库</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="../服务端编程/"><i class="fa" aria-hidden="true">服务端编程</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="../算法与数据结构/"><i class="fa" aria-hidden="true">算法与数据结构</i></a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link current" href><i class="fa" aria-hidden="true">网络协议</i></a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="../设计模式/"><i class="fa" aria-hidden="true">设计模式</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="../项目工具/"><i class="fa" aria-hidden="true">项目工具</i></a><span class="category-list-count">4</span></li></ul>
+    </div>
+
+
+        
+        
+  <div class="widget">
+    <h3 class="title">标签云</h3>
+    <div class="content tag-cloud">
+        
+            <canvas width="300" height="300" id="tag-cloud-3d">
+                <a href="../../tags/C-11特性/" style="font-size: 16px;">C++11特性</a> <a href="../../tags/C-基础/" style="font-size: 18px;">C++基础</a> <a href="../../tags/IO-multiplexing/" style="font-size: 10px;">IO multiplexing</a> <a href="../../tags/Iptabls/" style="font-size: 12px;">Iptabls</a> <a href="../../tags/Netfilter/" style="font-size: 12px;">Netfilter</a> <a href="../../tags/STL源码/" style="font-size: 18px;">STL源码</a> <a href="../../tags/TCP-IP协议/" style="font-size: 16px;">TCP/IP协议</a> <a href="../../tags/epoll原理/" style="font-size: 10px;">epoll原理</a> <a href="../../tags/git使用/" style="font-size: 14px;">git使用</a> <a href="../../tags/traits编程技法/" style="font-size: 10px;">traits编程技法</a> <a href="../../tags/trie树/" style="font-size: 12px;">trie树</a> <a href="../../tags/二叉树/" style="font-size: 10px;">二叉树</a> <a href="../../tags/动态规划/" style="font-size: 12px;">动态规划</a> <a href="../../tags/字典树/" style="font-size: 12px;">字典树</a> <a href="../../tags/字符串/" style="font-size: 10px;">字符串</a> <a href="../../tags/思维扩散/" style="font-size: 10px;">思维扩散</a> <a href="../../tags/技术/" style="font-size: 20px;">技术</a> <a href="../../tags/操作系统/" style="font-size: 16px;">操作系统</a> <a href="../../tags/数组/" style="font-size: 10px;">数组</a> <a href="../../tags/模板特化/" style="font-size: 10px;">模板特化</a> <a href="../../tags/生活/" style="font-size: 10px;">生活</a> <a href="../../tags/约瑟夫环问题/" style="font-size: 10px;">约瑟夫环问题</a> <a href="../../tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="../../tags/面试/" style="font-size: 12px;">面试</a>
+            </canvas>
+        
+    </div>
+  </div>
+
+
+        
+        
+    <div class="widget">
+        <h3 class="title">归档</h3>
+        <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2019/07/"><i class="fa" aria-hidden="true">2019年07月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2019/06/"><i class="fa" aria-hidden="true">2019年06月</i></a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2019/05/"><i class="fa" aria-hidden="true">2019年05月</i></a><span class="archive-list-count">22</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2019/03/"><i class="fa" aria-hidden="true">2019年03月</i></a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2018/12/"><i class="fa" aria-hidden="true">2018年12月</i></a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2018/11/"><i class="fa" aria-hidden="true">2018年11月</i></a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2018/06/"><i class="fa" aria-hidden="true">2018年06月</i></a><span class="archive-list-count">4</span></li></ul>
+    </div>
+
+
+        
+        
+    <div class="widget">
+        <h3 class="title">友情链接</h3>
+        <div class="notification">
+            <p>
+    凡的博客：<a href="https://antfaiz5z.github.io/" title="fork me" target="_blank">https://antfaiz5z.github.io/</a> <br>
+    GitHub：<a href="https://github.com/WenDeng" title target="_blank">https://github.com/WenDeng</a> <br>
+    简书：<a href="https://www.jianshu.com/u/d98271abb2b1">https://www.jianshu.com/u/d98271abb2b1</a> <br>
+    我的CSDN：<a href="https://blog.csdn.net/qq_22567225">https://blog.csdn.net/qq_22567225</a>
+</p>
+        </div>
+    </div>
+
+        
+    </aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+	<script src="../../js/search.js?rev=@@hash"></script>
+
+
+
+    <script src="../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

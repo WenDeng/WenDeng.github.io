@@ -1,0 +1,443 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="技术,STL源码">
+
+
+    <meta name="description" content="由于整个STL的操作对象都放在容器内，而容器需要配置空间以放置数据，学习空间配置器的原理是掌握其它部分知识的基础。
+为什么不说allocator是内存配置器而说它是空间配置器呢？这是因为空间配置...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>《STL源码剖析》第2章 空间配置器 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="《STL源码剖析》第2章 空间配置器">
+            
+	            《STL源码剖析》第2章 空间配置器
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/C-基础/">C++基础</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/STL源码/">STL源码</a> <a class="tag-link" href="../../../../../tags/技术/">技术</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/13</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>由于整个STL的操作对象都放在容器内，而容器需要配置空间以放置数据，学习空间配置器的原理是掌握其它部分知识的基础。</p>
+<p>为什么不说allocator是内存配置器而说它是空间配置器呢？这是因为空间配置器的配置不一定是内存，其实也可以是磁盘或者其他辅助存储介质。<strong>我们也可以自己实现空间配置器，只需要自己对应实现相应的标准接口即可</strong>。</p>
+<a id="more"></a>
+<h3 id="1、SGI-STL配置器简介"><a href="#1、SGI-STL配置器简介" class="headerlink" title="1、SGI STL配置器简介"></a>1、SGI STL配置器简介</h3><p>SGI STL的配置器与众不同，也与标准规范不同，<strong>其名称是 alloc 而非 allocator</strong> ,而且不接受任何参数。如果要在程序中明确使用SGI配置器，那么应该这样写：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">vector</span>&lt;<span class="keyword">int</span>,<span class="built_in">std</span>::alloc&gt; iv; <span class="comment">//而不是vector&lt;int,std::allocator&lt;int&gt; &gt; iv;</span></span><br></pre></td></tr></table></figure></p>
+<p>标准配置器的名字是allocator，而且可以接受参数。<br>SGI STL的每一个容器都已经指定了<strong>缺省配置器</strong>：alloc。我们很少需要自己去指定空间配置器。比如vector容器的声明：<br><figure class="highlight cs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">template &lt;<span class="keyword">class</span> <span class="title">T</span>, <span class="title">class</span> <span class="title">Alloc</span> = alloc&gt;  <span class="comment">// 预设使用alloc为配置器</span></span><br><span class="line"><span class="keyword">class</span> <span class="title">vector</span> &#123;</span><br><span class="line"><span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>其实SGI也定义了一个符合部分标准，名为allocator的配置器，但是它自己不使用，也不建议我们使用，主要原因是效率不佳。<strong>它只是把C++的操作符::operator new和::operator delete做了一层简单的封装而已</strong>，可以用但是不建议我们使用。</p>
+</blockquote>
+<h3 id="2、SGI特殊的空间配置器alloc"><a href="#2、SGI特殊的空间配置器alloc" class="headerlink" title="2、SGI特殊的空间配置器alloc"></a>2、SGI特殊的空间配置器alloc</h3><p>我们所习惯的c++内存配置操作和释放操作如下：<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Foo</span> </span>&#123; ... &#125;;</span><br><span class="line">Foo* pf = <span class="keyword">new</span> Foo; <span class="comment">// 配置内存，然后构造对象</span></span><br><span class="line"><span class="keyword">delete</span> pf; <span class="comment">// 将对象析构，然后释放内存</span></span><br></pre></td></tr></table></figure></p>
+<p>这其中的new 操作符（new operator）包含两阶段操作：</p>
+<ul>
+<li>（1）调用operator new配置内存       </li>
+<li>（2）调用Foo::Foo( )构造函数构造对象内容。</li>
+</ul>
+<p>delete操作符包含两阶段操作：</p>
+<ul>
+<li>（1）调用Foo::~Foo( )析构函数将对象析构。        </li>
+<li>（2）调用operator delete释放内存</li>
+</ul>
+<p>SGI也提供了类似的操作函数，<strong>STL allocator 将这两阶段操作区分开来。内存配置操作由 alloc::allocate() 负责，内存释放操作由 alloc::deallocate() 负责；对象构造操作由 ::construct() 负责，对象析构操作由 ::destroy() 负责。</strong></p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/1.png?raw=true" alt="image"></p>
+<p>如上图，STL空间配置器主要分三个文件实现：  </p>
+<ul>
+<li>（1）<code>&lt;stl_construct.h&gt;</code>：定义了全局函数construct()和destroy()，负责对象的构造和析构。</li>
+<li>（2）<code>&lt;stl_alloc.h&gt;</code>：定义了一、二两级配置器，彼此合作，配置器名为alloc。</li>
+<li>（3）<code>&lt;stl_uninitialized.h&gt;</code>：这里定义了一些全局函数，用来初始化填充(fill)或复制大块内存数据，他们也都隶属于STL标准规范,具体实现可能为construct或memmove。</li>
+</ul>
+<h3 id="3、构造和析构工具：construct-和destroy"><a href="#3、构造和析构工具：construct-和destroy" class="headerlink" title="3、构造和析构工具：construct()和destroy()"></a>3、构造和析构工具：construct()和destroy()</h3><p>这两个函数的主要版本和功能如下：</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/2.png?raw=true" alt="image"></p>
+<h4 id="3-1-destory-函数"><a href="#3-1-destory-函数" class="headerlink" title="3.1 destory()函数"></a>3.1 destory()函数</h4><p>destroy()函数有两个版本，分别如下：<br>(1)第一个版本较简单，接受一个指针作为参数，直接调用对象的析构函数即可，其源代码：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">inline</span> <span class="title">void</span> <span class="title">destroy</span>(<span class="title">T</span>* <span class="title">pointer</span>) &#123;</span></span><br><span class="line">    pointer-&gt;~T();	<span class="comment">// 调用析构函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>(2)第二个版本，其参数接受两个迭代器，将两个迭代器所指范围内的所有对象析构掉。而且，<strong>它采用了一种特别的技术：依据元素的型别，判断其是否有trivial destructor（无用的析构函数）进行不同的处理</strong>。value_type用于获取迭代器所指对象的型别，_type_traits用于判断类型的析构函数是否有作用。如果对象的析构函数是trivial的,则不需要做析构操作。<br>SGI的destroy()的实际由_destroy()调用_destroy_aux()实现。<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以下是 destroy() 第二版本，接受两个迭代器。它会设法找出元素的数值型別，</span></span><br><span class="line"><span class="comment">// 进而利用 __type_traits&lt;&gt; 求取最适当措施。</span></span><br><span class="line">template &lt;<span class="keyword">class</span> ForwardIterator&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> destroy(ForwardIterator first, ForwardIterator last) &#123;</span><br><span class="line">  __destroy(first, last, value_type(first));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 判断元素的数值型別（value type）是否有 trivial destructor，分别调用上面的函数进行不同的处理</span></span><br><span class="line">template &lt;<span class="keyword">class</span> ForwardIterator, <span class="keyword">class</span> T&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> __destroy(ForwardIterator first, ForwardIterator last, T*) &#123;</span><br><span class="line">  <span class="keyword">typedef</span> <span class="keyword">typename</span> __type_traits&lt;T&gt;::has_trivial_destructor trivial_destructor;</span><br><span class="line">  __destroy_aux(first, last, trivial_destructor());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 如果元素的数值型別（value type）有 non-trivial destructor…</span></span><br><span class="line">template &lt;<span class="keyword">class</span> ForwardIterator&gt;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span></span><br><span class="line">__destroy_aux(ForwardIterator first, ForwardIterator last, __false_type) &#123;</span><br><span class="line">  <span class="keyword">for</span> ( ; first &lt; last; ++first)</span><br><span class="line">    destroy(&amp;*first);<span class="comment">//调用析构函数,destory不支持迭代器，转为第一个版本执行</span></span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">// 如果元素的数值型別（value type）有 trivial destructor…</span></span><br><span class="line">template &lt;<span class="keyword">class</span> ForwardIterator&gt; </span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> __destroy_aux(ForwardIterator, ForwardIterator, __true_type) &#123;&#125;<span class="comment">//不调用析构函数</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="3-2-construct-函数"><a href="#3-2-construct-函数" class="headerlink" title="3.2 construct()函数"></a>3.2 construct()函数</h4><p>construct()函数使用了new placement操作符，其也叫new placement运算子，作用是在指针所指的空间上初始化一个对象值，实现代码如下：</p>
+<figure class="highlight ceylon"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">template &lt;<span class="keyword">class</span> T<span class="number">1</span>, <span class="keyword">class</span> T<span class="number">2</span>&gt;</span><br><span class="line">inline <span class="keyword">void</span> construct(T<span class="number">1</span>* p, const T<span class="number">2</span>&amp; <span class="keyword">value</span>) &#123;</span><br><span class="line">  <span class="keyword">new</span> (p) T<span class="number">1</span>(<span class="keyword">value</span>); 	<span class="comment">// 定位new操作符placement new; 在指针p所指处构造对象</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="4、空间的配置和释放-std-alloc"><a href="#4、空间的配置和释放-std-alloc" class="headerlink" title="4、空间的配置和释放,std::alloc"></a>4、空间的配置和释放,std::alloc</h3><p>对象构造前的空间分配和析构后的空间释放，定义在头文件&lt;stl_alloc.h&gt;中，设计思想主要考虑以下几点：</p>
+<ul>
+<li>向system heap要求空间。</li>
+<li>考虑多线程状态。</li>
+<li>考虑内存不足时的应变措施。</li>
+<li>考虑过多“小额区块”可能造成的内存碎片问题。</li>
+</ul>
+<p><strong>本节不考虑多线程状态的处理</strong>，SGI绕过new()和free(),直接以malloc()和free()完成内存的配置和释放。考虑到<strong>小型区块</strong>可能造成的内存破碎问题，<strong>SGI设计了双层级配置器，第一级配置器直接使用malloc()和free()，第二级则视情况采用不同的策略：当配置区块超过128bytes时，便调用第一级配置器，小于128bytes时则采用复杂的内存池memory pool整理方式，而不再调用一级配置器</strong>。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/3.png?raw=true" alt="image"></p>
+<p>整个设计究竟是只开放第一级配置器还是同时开放第二级配置器取决于宏__USE_MALLOC是否被定义。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># <span class="meta-keyword">ifdef</span> __USE_MALLOC </span></span><br><span class="line">... </span><br><span class="line"><span class="keyword">typedef</span> __malloc_alloc_template&lt;<span class="number">0</span>&gt; malloc_alloc; <span class="comment">//令 alloc为第一级配置器</span></span><br><span class="line"><span class="keyword">typedef</span> malloc_alloc alloc; <span class="comment">//alloc为默认空间配置器</span></span><br><span class="line"><span class="meta"># <span class="meta-keyword">else</span> </span></span><br><span class="line">... </span><br><span class="line"><span class="comment">//令 alloc 为第二级配置器 </span></span><br><span class="line"><span class="keyword">typedef</span> __default_alloc_template&lt;__NODE_ALLOCATOR_THREADS, <span class="number">0</span>&gt; alloc; </span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* ! __USE_MALLOC */</span></span></span><br></pre></td></tr></table></figure>
+<p>无论alloc被定义为第一级或者是第二级配置器，SGI还为它包装一个接口如下，使配置器的接口能够符合STL规格：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>, <span class="title">class</span> <span class="title">Alloc</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">simple_alloc</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">static</span> T* <span class="title">allocate</span><span class="params">(<span class="keyword">size_t</span> n)</span></span></span><br><span class="line"><span class="function">                </span>&#123; <span class="keyword">return</span> <span class="number">0</span> == n? <span class="number">0</span> : (T*) Alloc::allocate(n * <span class="keyword">sizeof</span> (T)); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> T* <span class="title">allocate</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function">                </span>&#123; <span class="keyword">return</span> (T*) Alloc::allocate(<span class="keyword">sizeof</span> (T)); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deallocate</span><span class="params">(T *p, <span class="keyword">size_t</span> n)</span></span></span><br><span class="line"><span class="function">                </span>&#123; <span class="keyword">if</span> (<span class="number">0</span> != n) Alloc::deallocate(p, n * <span class="keyword">sizeof</span> (T)); &#125;</span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">deallocate</span><span class="params">(T *p)</span></span></span><br><span class="line"><span class="function">                </span>&#123; Alloc::deallocate(p, <span class="keyword">sizeof</span> (T)); &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>SGI STL容器全部是使用这个simple_alloc接口，比如vector:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>,<span class="title">class</span> <span class="title">Alloc</span>=<span class="title">alloc</span>&gt; //默认使用<span class="title">alloc</span>为配置器</span></span><br><span class="line"><span class="class"><span class="title">class</span> <span class="title">vector</span>&#123;</span></span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    <span class="keyword">typedef</span> simple_alloc&lt;value_type,Alloc&gt; data_allocator;<span class="comment">//配置器对象</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">deallocate</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(...) deta_allocator::deallocate(start,end_of_storage-start);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="5、双层级配置器机制"><a href="#5、双层级配置器机制" class="headerlink" title="5、双层级配置器机制"></a>5、双层级配置器机制</h3><p>如上节所述，SGI设计了双层级配置器，第一级配置器直接使用malloc()和free()，第二级则视情况采用不同的策略：当配置区块超过128bytes时，便调用第一级配置器，小于128bytes时则采用复杂的内存池memory pool整理方式，而不再调用一级配置器。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/4.png?raw=true" alt="image"></p>
+<h4 id="5-1-第一级配置器-malloc-alloc-template"><a href="#5-1-第一级配置器-malloc-alloc-template" class="headerlink" title="5.1 第一级配置器__malloc_alloc_template"></a>5.1 第一级配置器__malloc_alloc_template</h4><p>第一级配置器直接使用malloc(),free(),realloc()等C函数执行实际的内存配置、释放、重配置操作，并实现出<strong>类似C++ new handler机制</strong>（意思是可以要求系统在配置需求无法被满足时，调用一个你所指定的函数，这里之所以说类似是因为SGI没有new operator，不能直接使用对应的handler）。</p>
+<p>它有独特的<strong>out-of-memory</strong>(内存不足)内存处理机制：<br>SGI第一级配置器的allocate()和reallocate()在调用malloc()和realloc()不成功后，在抛出std::bad_alloc异常之前，改调用oom_malloc(),oom_realloc()，这两个函数两种都有内循环，不断调用“内存不足处理例程”以期望获得足够内存满足分配请求。如果没有设定“内存不足处理例程”，则还是会抛出std::bad_alloc异常。</p>
+<h4 id="5-2-第二级配置器-default-alloc-template"><a href="#5-2-第二级配置器-default-alloc-template" class="headerlink" title="5.2 第二级配置器__default_alloc_template"></a>5.2 第二级配置器__default_alloc_template</h4><p>相比第一级配置器，第二级配置器多了一些机制，<strong>避免小额区块造成内存的碎片</strong>。小区块带来的不仅仅是碎片的问题，配置时的额外负担也是一个大问题。因为区块越小，额外负担所占的比例就越大，愈显得浪费（额外负担是指动态分配内存块的时候，位于其头部的额外信息）。</p>
+<p>第二级配置器的思想主要包括以下两点：</p>
+<ul>
+<li>如果要分配的区块大于128bytes，则移交给第一级配置器处理。</li>
+<li>如果要分配的区块小于128bytes，则以内存池管理（memory pool），又称之次层配置）：每次配置一大块内存，并维护对应的自由链表（free-list）。下次若有相同大小的内存需求，则直接从free-list中取。如果有小额区块被释放，则由配置器回收到free-list中。</li>
+</ul>
+<h5 id="5-2-1-free-list的实现"><a href="#5-2-1-free-list的实现" class="headerlink" title="5.2.1 free_list的实现"></a>5.2.1 free_list的实现</h5><p>在第二级配置器中，<strong>小额区块内存需求大小都被上调至8的倍数</strong>，比如需要分配的大小是30bytes，就自动调整为32bytes。系统中总共维护16个free-lists，各自管理大小为8,16，…，128bytes的小额区块。</p>
+<p>为了维护链表，需要额外的指针，为了避免造成另外一种额外的负担，这里采用了一种技术：用union表示链表节点结构：</p>
+<figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">union</span> <span class="title">obj</span> &#123; //实现头节点和每个链表节点的复用</span></span><br><span class="line">      <span class="class"><span class="keyword">union</span> <span class="title">obj</span> * <span class="title">free_list_link</span>;</span> /<span class="regexp">/指向下一个节点</span></span><br><span class="line"><span class="regexp">      char client_data[1]; /</span><span class="regexp">/值表示所对应的每个链中的块的大小</span></span><br><span class="line"><span class="regexp">&#125;;</span></span><br></pre></td></tr></table></figure>
+<h5 id="5-2-2-default-alloc-template的allocate"><a href="#5-2-2-default-alloc-template的allocate" class="headerlink" title="5.2.2 __default_alloc_template的allocate()"></a>5.2.2 __default_alloc_template的allocate()</h5><p>身为一个配置器，__default_alloc_template拥有配置器的标准接口函数allocate(),此函数首先判断区块大小，如果要分配的区块大于128bytes，就调用第一级配置器。小于128bytes就检查对应free-list，如果free-list之内有可用的区块就就直接从free-list中取用，负责调用refill()为free list重新填充空间,refill()函数将下节介绍。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/6.png?raw=true" alt="image"></p>
+<h5 id="5-2-2-default-alloc-template的deallocate"><a href="#5-2-2-default-alloc-template的deallocate" class="headerlink" title="5.2.2 __default_alloc_template的deallocate()"></a>5.2.2 __default_alloc_template的deallocate()</h5><p>身为一个配置器，__default_alloc_template也拥有析构接口deallocate()，函数判断如果需要回收的区块大于128bytes，则调用第一级配置器的deallocate()。<br>如否则找到对应的free -list，将区块回收，<strong>注意是将区块放入free-list的头部</strong>。</p>
+<h3 id="6、refill-函数的处理机制"><a href="#6、refill-函数的处理机制" class="headerlink" title="6、refill()函数的处理机制"></a>6、refill()函数的处理机制</h3><p><strong>前面提到，如果free-list中没有可用的区块，就通过refill为对应的free-list 重新填充空间。此时refill进行了怎样的操作呢</strong>？</p>
+<p>默认操作是通过<strong>chunk_alloc</strong>从内存池中取得20个新的节点添加到free-list链表中，而如果内存池中的内存不够用，这时候能分多少就分多少节点，返回的相应的节点数。再万一内存池<strong>一个节点都提供不了</strong>，就给内存池新增空间，如果失败，再抛出bad_alloc异常。</p>
+<h4 id="6-1-chunk-alloc——从内存池中取空间供free-list使用"><a href="#6-1-chunk-alloc——从内存池中取空间供free-list使用" class="headerlink" title="6.1 chunk_alloc——从内存池中取空间供free list使用"></a>6.1 chunk_alloc——从内存池中取空间供free list使用</h4><p>通过<strong>chunk_alloc()</strong>，从内存池中分配空间给free-list。<strong>chunk_alloc()</strong>的流程总结如下：</p>
+<ul>
+<li>(1) 内存池剩余空间完全满足20个区块的需求量，则直接取出对应大小的空间（其中1个返回，剩下部分放入free-list）。</li>
+<li>(2) 内存池剩余空间不能完全满足20个区块的需求量，但是足够供应一个及一个以上的区块，则取出能够满足条件的区块个数的空间。</li>
+<li>(3) 内存池剩余空间不能满足一个区块的大小，则:</li>
+<li><ul>
+<li>首先判断内存池中是否有残余零头内存空间，如果有则进行回收，将其编入free list。然后向heap申请空间，补充内存池。</li>
+</ul>
+</li>
+<li>heap空间满足，空间分配成功(分配的个数为需求的2倍再加一个附加量，然后一半留给内存池，剩下的除去请求的的那部分后放入free-list)。</li>
+<li>heap空间不足，malloc()调用失败。则<br>搜寻适当的free list（适当的是指：<strong>尚有未用区块，并且区块足够大</strong>），调整以进行释放，将其编入内存池。然后递归调用chunk_alloc函数从内存池取空间供free list。<br>搜寻free list释放空间也未能解决问题，这时候调用第一级配置器，利用out-of-memory机制尝试解决内存不足问题。如果可以就成功，否则抛出bad_alloc异常。</li>
+</ul>
+<p><strong>如果有需求的话，内存池中会不断的通过malloc申请新的内存，最后内存池所拥有的内存也会越来越大，当然最后进程结束的时候，这些内存都会由操作系统收回。</strong></p>
+<h3 id="7、内存基本处理工具"><a href="#7、内存基本处理工具" class="headerlink" title="7、内存基本处理工具"></a>7、内存基本处理工具</h3><p>处理construct()和destroy(),另外还有三个函数作用于未初始化空间上，分别为uninitialized_copy()、uninitialized_fill()、uninitialized_copy_n()，此处不再介绍。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/5.png?raw=true" alt="image"></p>
+<h3 id="8、小结"><a href="#8、小结" class="headerlink" title="8、小结"></a>8、小结</h3><p>学完空间配置器的相关知识，有必要总结一下：</p>
+<ul>
+<li>constructor: 由new placement操作符实现。</li>
+<li>destroy: 进行特化，利用value_type和type_trait<t>确定析构函数是否有效，从而决定是否利用指针调用析构函数。</t></li>
+<li>alloc:双层配置器，第一级配置器采用malloc+类似new handle实现，第二级配置器采用free-list处理小额区块+块为8的整数倍+memory pool+一级配置器实现。</li>
+<li>dealloc：大于128bytes用free()+否则将空间放到free-list的首部。 </li>
+</ul>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../../../14/c++基础/c++11std-move使用与原理/" class="pre-post btn btn-default" title="c++11特性之std-move的使用和原理">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">c++11特性之std-move的使用和原理</span>
+        </a>
+    
+    
+        <a href="../../../../03/09/算法与数据结构/3.字典序/" class="next-post btn btn-default" title="3.字典序">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">3.字典序</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、SGI-STL配置器简介"><span class="toc-text">1、SGI STL配置器简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、SGI特殊的空间配置器alloc"><span class="toc-text">2、SGI特殊的空间配置器alloc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、构造和析构工具：construct-和destroy"><span class="toc-text">3、构造和析构工具：construct()和destroy()</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-destory-函数"><span class="toc-text">3.1 destory()函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-construct-函数"><span class="toc-text">3.2 construct()函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、空间的配置和释放-std-alloc"><span class="toc-text">4、空间的配置和释放,std::alloc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、双层级配置器机制"><span class="toc-text">5、双层级配置器机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-第一级配置器-malloc-alloc-template"><span class="toc-text">5.1 第一级配置器__malloc_alloc_template</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-第二级配置器-default-alloc-template"><span class="toc-text">5.2 第二级配置器__default_alloc_template</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#5-2-1-free-list的实现"><span class="toc-text">5.2.1 free_list的实现</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-2-2-default-alloc-template的allocate"><span class="toc-text">5.2.2 __default_alloc_template的allocate()</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#5-2-2-default-alloc-template的deallocate"><span class="toc-text">5.2.2 __default_alloc_template的deallocate()</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、refill-函数的处理机制"><span class="toc-text">6、refill()函数的处理机制</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-chunk-alloc——从内存池中取空间供free-list使用"><span class="toc-text">6.1 chunk_alloc——从内存池中取空间供free list使用</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7、内存基本处理工具"><span class="toc-text">7、内存基本处理工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8、小结"><span class="toc-text">8、小结</span></a></li></ol>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

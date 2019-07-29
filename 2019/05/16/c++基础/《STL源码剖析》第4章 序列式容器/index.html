@@ -1,0 +1,430 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="技术,STL源码">
+
+
+    <meta name="description" content="所谓序列式容器，其中的元素都可序，但未必有序，C++语言本身提供了一个序列式容器array，STL另外再提供vector、list、deque、stack、queue、priority-queu...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>《STL源码剖析》第4章 序列式容器 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="《STL源码剖析》第4章 序列式容器">
+            
+	            《STL源码剖析》第4章 序列式容器
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/C-基础/">C++基础</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/STL源码/">STL源码</a> <a class="tag-link" href="../../../../../tags/技术/">技术</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/16</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>所谓序列式容器，其中的元素<strong>都可序，但未必有序</strong>，C++语言本身提供了一个序列式容器array，STL另外再提供vector、list、deque、stack、queue、priority-queue等序列容器。其中stack和queue由于只是将deque改头换面而成，技术上被归类为一种配接器。</p>
+<p>本文将主要总结各种序列式容器的实现和用法。<br><a id="more"></a></p>
+<h3 id="1、vector容器"><a href="#1、vector容器" class="headerlink" title="1、vector容器"></a>1、vector容器</h3><p>vector的数据安排以及操作方式，与array非常相似，两者的唯一差别在于空间的运用的灵活性。array是静态空间，一旦配置就不能改变，如果要换个大点的空间，需要程序员自己来；<strong>vector是动态空间</strong>，随着元素的加入，它的内部机制会自行扩充空间以容纳新元素。</p>
+<p>vector的实现技术，<strong>关键在于其对大小的控制以及重新配置时的数据移动效率</strong>。因为“配置新空间/数据移动/释放旧空间”是一个大工程。</p>
+<h4 id="1-1-vector的迭代器"><a href="#1-1-vector的迭代器" class="headerlink" title="1.1 vector的迭代器"></a>1.1 vector的迭代器</h4><p>由于vector使用的是连续线性的空间，普通指针能满足所有vector迭代器的所需的操作行为，所以其迭代器实际就是原生指针，支持随机存取，为Random Access Iterator。</p>
+<h4 id="1-2-vector的数据结构"><a href="#1-2-vector的数据结构" class="headerlink" title="1.2 vector的数据结构"></a>1.2 vector的数据结构</h4><p>vector所采用的数据结构：线性连续空间。<br>它以两个迭代器start和finish分别指向配置得来的连续空间中目前已被使用的范围，并以迭代器end_of_storage指向整块连续空间（含备用空间）的尾端。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/9.png?raw=true" alt="image"></p>
+<p>vector的空间配置策略为：</p>
+<ul>
+<li>当插入元素的时候，如果配置的空间不足，则扩充空间至当前的两倍，如果仍然不足则扩充至所需空间。 </li>
+<li>容量的扩张必须经历“重新配置、元素移动、释放原空间”等过程。</li>
+</ul>
+<blockquote>
+<p>vector的空间配置中，需要扩容时为什么为当前容量的两倍呢？<br>可以参考<a href="https://www.zhihu.com/question/36538542/answer/67929747，其实这是空间和时间的权衡，一次分配的空间少，那么空间浪费也少，但分配的次数多时间也多;一次分配的空间多则对应的分配次数少效率也高，但空间浪费会增加，常见的为2倍和1.5倍。" target="_blank" rel="noopener">https://www.zhihu.com/question/36538542/answer/67929747，其实这是空间和时间的权衡，一次分配的空间少，那么空间浪费也少，但分配的次数多时间也多;一次分配的空间多则对应的分配次数少效率也高，但空间浪费会增加，常见的为2倍和1.5倍。</a></p>
+</blockquote>
+<h3 id="2、list容器"><a href="#2、list容器" class="headerlink" title="2、list容器"></a>2、list容器</h3><p>list是一个双list是一个双向链表，每次插入或删除一个元素，就分配或释放一个元素的空间；所以list对空间的控制十分精确，而且任何位置的插入或删除需要的时间都是常数，即时间复杂度为o(1)。</p>
+<p>list和vector是两种最常用的容器，什么时候选用哪种容器，视元素的多寡、元素的构造复杂度以及元素存取的行为特性，一般来说查找比较多的情况用vector,而插入和删除比较多的场景则比较适合list。</p>
+<h4 id="2-1-list的迭代器"><a href="#2-1-list的迭代器" class="headerlink" title="2.1 list的迭代器"></a>2.1 list的迭代器</h4><p>  list迭代器正确的递增、递减、取值、成员取用操作是指，递增指向下一个节点，递减指向上一个节点，取值取的是节点的数据值，成员取用时取用的是节点的成员。list不能再以原生指针作为迭代器，而需要定义特定的iterator类。<strong>list迭代器是一种Bidirectional Iterator</strong>，支持单步的前进或后退操作。</p>
+<p>list迭代器有一个重要性质：<strong>插入和结合操作都不会有list迭代器失效</strong>，这在vector是不成立的，因为vector的插入操作可能造成原来的重新配置，导致原有的迭代器全部失效。<strong>list的元素删除操作也只有指向删除元素的那个迭代器失效，其他迭代器不受影响</strong>。</p>
+<h4 id="2-2-list的数据结构"><a href="#2-2-list的数据结构" class="headerlink" title="2.2 list的数据结构"></a>2.2 list的数据结构</h4><p> list的结构如下图，SGI list不仅是一个双向链表，而且还是一个<strong>环状双向链表</strong>，所以它只需一个指针，便可完整表现整个链表。</p>
+<p> <img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/10.png?raw=true" alt="image"></p>
+<p> list缺省使用alloc作为空间配置器，以节点大小为配置单位。当我们以push_back()将元素插入list尾部时，此函数内部调用insert()，insert()是一个重载函数，有多种形式最简单的一种是：首先配置并构造一个节点，然后在尾端进行适当的指针操作，最后将节点插入进去，list不像vector那样有可能在空间不足时做重新配置、数据移动的操作，所以插入前的所有迭代器在插入操作之后都仍然有效。由于list是一个双向循环链表，只要我们把边界条件处理好，那么，在头部或者尾部插入元素的操作几乎是一样的，list内部提供一个所谓的迁移操作：将某连续范围的元素迁移到某个特定位置之前，节点间的指针移动而已。</p>
+<blockquote>
+<p>需要注意的是：list不能使用stl提供的通用sort算法，因为sort算法只接受Random Access Iterator，所以提供了自己的sort方法,可以直接调用，其内部好像是将原链分解为多个链表，然后依次进行合并。</p>
+</blockquote>
+<h3 id="3、deque容器"><a href="#3、deque容器" class="headerlink" title="3、deque容器"></a>3、deque容器</h3><p> vector是单向开口的连续线性空间，deque则是一种双向开口的连续线性空间。所谓双向开口，意思是可以在头尾分别做元素的的安插和删除操作；vector当然也可以在头尾两端做动作，但是其头部动作效率奇差。</p>
+<p> <img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/11.png?raw=true" alt="image"></p>
+<p>deque和vector的差异：</p>
+<ul>
+<li>一在于deque允许常数时间内对头端进行元素的插入或移除操作</li>
+<li>二在于deque没有所谓容量观念，因为它是动态地以分段连续空间组合而成，随时可以增加一段新的空间并链接起来。deque没有必要提供所谓的空间保留功能。vector只能向尾端“生长”，而deque可以在前端或者尾端增加新空间。不存在像vector那样“因空间不足而分配一块更大的空间然后复制元素”问题。</li>
+</ul>
+<h4 id="3-1-deque的迭代器"><a href="#3-1-deque的迭代器" class="headerlink" title="3.1 deque的迭代器"></a>3.1 deque的迭代器</h4><p>deque提供random access iterator，但并不是原生指针。其实现的复杂度也很大，这也影响到相关算法的效率。所以<strong>如非必要，应该尽量使用vector而不是deque</strong>。对的确需要进行排序时，可以先将元素复制到一个vector，排序后再复制回deque。</p>
+<h4 id="3-2-deque的数据结构"><a href="#3-2-deque的数据结构" class="headerlink" title="3.2 deque的数据结构"></a>3.2 deque的数据结构</h4><p>deque采用的是一种<strong>分段连续空间存储结构</strong>，采用一个map来管理这些空间段，这里所谓map是一小块连续空间，其中每个元素都是指针，指向另外一段较大的连续线性空间，称为缓冲区，<strong>缓冲区才是deque的存储空间主</strong>体，SGI STL允许我们指定缓冲区大小，默认值0表示使用512bytes缓冲区。</p>
+<p> <img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/12.png?raw=true" alt="image"></p>
+<p>由于<strong>每个缓冲区的大小是固定的</strong>，当有新元素加入而空间不足时，就分配一个新的缓冲区,配置策略为reallocate_map()。 deque的这种结构，使得其迭代器上的操作可能需要跨越多个缓冲区，这使得迭代器的实现非常复杂。</p>
+<h3 id="4、stack容器"><a href="#4、stack容器" class="headerlink" title="4、stack容器"></a>4、stack容器</h3><p>stack是一种<strong>先进后出</strong>的数据结构，它只有一个出口,stack允许新增元素、移除元素、取得最顶端元素。但除了最顶端元素外，没有任何其他方式可以存取stack的其他元素，换言之，<strong>stack不允许有遍历行为</strong>。</p>
+<p>stack不支持对元素的遍历，因此<strong>没有迭代器</strong>。</p>
+<h4 id="4-1-stack的数据结构"><a href="#4-1-stack的数据结构" class="headerlink" title="4.1 stack的数据结构"></a>4.1 stack的数据结构</h4><p>stack是一种先进后出的数据结构，只可以在顶端进行元素操作。如果有某种双向开口的数据结构，将其接口改变，符合“先进后出”的特性，就可以形成一个stack：deque和list都是这样的结构。</p>
+<p> <img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/13.png?raw=true" alt="image"></p>
+<p>SGI STL便以deque作为缺省情况下的stack底部结构。由于stack是以底部容器deque完成其所有工作，而具有这种“修改某物接口，形成另一种风貌”之性质者，称为<strong>adapter（配接器）</strong>,因此，STL stack往往不被归类为container（容器），而被归类为container adapter。</p>
+<h3 id="5、queue容器"><a href="#5、queue容器" class="headerlink" title="5、queue容器"></a>5、queue容器</h3><p>queue是一种先进先出的数据结构，它有两个出口。queue允许新增元素、移除元素、从底端加入元素、取得最顶端元素（queue不允许有遍历行为）。</p>
+<p>与stack一样，queue也不允许有遍历行为，queue没有迭代器。</p>
+<p>与stack类似，SGI STL默认情况下以deque作为queue的底部结构。也是一种container adapter。</p>
+<p> <img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/14.png?raw=true" alt="image"></p>
+<h3 id="6、heap"><a href="#6、heap" class="headerlink" title="6、heap"></a>6、heap</h3><p>heap并不归属于STL容器组件，它是个幕后英雄，扮演priority queue的助手,它分为 max heap 和min heap，在缺省情况下，<strong>max-heap是priority queue的底层实现机制</strong>。</p>
+<h4 id="6-1-heap的数据结构"><a href="#6-1-heap的数据结构" class="headerlink" title="6.1 heap的数据结构"></a>6.1 heap的数据结构</h4><p>以array表达tree的方式，称为<strong>隐式表述法</strong>,这样就可以使用一个array表示出一颗完全二叉树。array的缺点是无法动态的改变大小，所以实际实现机制中的<strong>max-heap实际上是以一个vector表现的完全二叉树</strong>。</p>
+<p> <img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/15.png?raw=true" alt="image"></p>
+<p> 从上图可以看出，第0号元素保留，这样就可以使得从arry[1]开始保存A，位于位置i的某个结点arry[i]，他的左子结点必然在arry[2*i]中，右子结点必然位于arry[2*i+1]，其父亲结点必然位于arry[i/2]处。</p>
+<h4 id="6-2-heap的相关算法"><a href="#6-2-heap的相关算法" class="headerlink" title="6.2 heap的相关算法"></a>6.2 heap的相关算法</h4><ul>
+<li><p>（1）建立堆：make_heap(_First, _Last, _Comp)<br>传入vector的迭代器，默认是建立最大堆的。对int类型，<strong>可以在第三个参数传入greater<int>()得到最小堆</int></strong>。</p>
+</li>
+<li><p>（2）在堆中添加数据：push_heap(_First, _Last)<br>要先在容器中加入数据push_back()，再调用push_heap()，vector的元素放在尾端，所以实际上push_heap所做的操作就是将尾端元素和其父节点进行比较，如果大于父节点则交换并不断上溯<strong>直到不满足大于为止</strong>。</p>
+</li>
+<li><p>（3）在堆中删除数据：pop_heap(_First, _Last)<br>该算法主要是先将vector的根节点即最大值放到vector的尾端，然后处理[start,end-1)区间的元素，从根节点开始，<strong>只要父节点的元素小于某个子节点的元素就进行交换并继续下溯</strong>，否则停止。 调用pop_heap()结束后vector()可以通过pop_back()取出最大元素。</p>
+</li>
+<li><p>（4）堆排序sort_heap(_First, _Last)<br>sort_heap算法的内部实现原理：每次pop_heap可获得heap中键值最大的元素，如果持续对整个heap做pop_heap操作，每次将操作范围从后向前缩减一个元素，当整个程序执行完毕时，便有了一个递增的序列。</p>
+</li>
+</ul>
+<h4 id="6-3-heap的迭代器"><a href="#6-3-heap的迭代器" class="headerlink" title="6.3 heap的迭代器"></a>6.3 heap的迭代器</h4><p>heap本身并不是一个容器，它更多的是依靠vector容器底层，并在上面实现算法从而实现对tree的表达。heap不提供遍历功能，也没有对应的迭代器。</p>
+<h3 id="7、priority-queue"><a href="#7、priority-queue" class="headerlink" title="7、priority__queue"></a>7、priority__queue</h3><p>priority_queue是一个拥有权值观念的queue，它允许加入新元素、移除旧元素、审视新元素等功能。由于是一个queue，所以只能在底端加入元素，在顶端取出元素。</p>
+<p> <img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/16.png?raw=true" alt="image"></p>
+<p>priority_queue带有权值概念，其内的元素并非依照被推入的次序排列，而是自动依照元素的权值排列。<strong>priority_queue缺省情况下是以vector为底层容器，并加上heap处理规则实现</strong>，因此，STL priority_queue往往不被归类为container(容器)，而被归类为container adapter。</p>
+<p>与queue一样，priority_queue也没有迭代器。</p>
+<h3 id="8、slist"><a href="#8、slist" class="headerlink" title="8、slist"></a>8、slist</h3><p>STL list是个双向链表，迭代器属于双向的Bidirectional iterator，而SGI STL另提供了一个<strong>单向链表，名为slist，迭代器属于单向的Forward iterator</strong>。slist的许多功能也因此受到限制，不过单项链表所耗用的空间更小，某些操作更快，不失为另一种选择。</p>
+<p>slist没有任何方便的方法可以回头定位到前一个位置，除了从头找起。slist不提供push_back()，只提供push_front()，因此slist的元素顺序和插入顺序完全是相反的！</p>
+<p> <img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/17.png?raw=true" alt="image"></p>
+<h3 id="9、总结"><a href="#9、总结" class="headerlink" title="9、总结"></a>9、总结</h3><p>在实际使用过程中，到底选择这几种容器中的哪一个？通常应该根据遵循以下原则： </p>
+<ul>
+<li>（1）如果需要高效的随机存取，不在乎插入和删除的效率，使用vector； </li>
+<li>（2）如果需要大量的插入和删除元素，不关心随机存取的效率，使用list； </li>
+<li>（3）如果需要随机存取，并且关心两端数据的插入和删除效率，使用deque； </li>
+<li>（4）如果打算存储数据字典，并且要求方便地根据key找到value，一对一的情况使用map，一对多的情况使用multimap； </li>
+<li>（5）如果打算查找一个元素是否存在于某集合中，唯一存在的情况使用set，不唯一存在的情况使用multiset。</li>
+</ul>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../../../17/体会生活/回顾十年/" class="pre-post btn btn-default" title="十年一瞬，沧海之间">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">十年一瞬，沧海之间</span>
+        </a>
+    
+    
+        <a href="../../../15/c++基础/《STL源码剖析》第3章 迭代器与traits编程技法/" class="next-post btn btn-default" title="《STL源码剖析》第3章 迭代器与traits编程技法">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">《STL源码剖析》第3章 迭代器与traits编程技法</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、vector容器"><span class="toc-text">1、vector容器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-vector的迭代器"><span class="toc-text">1.1 vector的迭代器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-vector的数据结构"><span class="toc-text">1.2 vector的数据结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、list容器"><span class="toc-text">2、list容器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-list的迭代器"><span class="toc-text">2.1 list的迭代器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-list的数据结构"><span class="toc-text">2.2 list的数据结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、deque容器"><span class="toc-text">3、deque容器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-deque的迭代器"><span class="toc-text">3.1 deque的迭代器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-deque的数据结构"><span class="toc-text">3.2 deque的数据结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、stack容器"><span class="toc-text">4、stack容器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-stack的数据结构"><span class="toc-text">4.1 stack的数据结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、queue容器"><span class="toc-text">5、queue容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、heap"><span class="toc-text">6、heap</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-heap的数据结构"><span class="toc-text">6.1 heap的数据结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-heap的相关算法"><span class="toc-text">6.2 heap的相关算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-3-heap的迭代器"><span class="toc-text">6.3 heap的迭代器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7、priority-queue"><span class="toc-text">7、priority__queue</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8、slist"><span class="toc-text">8、slist</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9、总结"><span class="toc-text">9、总结</span></a></li></ol>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

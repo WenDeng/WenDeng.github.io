@@ -1,0 +1,421 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="技术,STL源码,traits编程技法,模板特化">
+
+
+    <meta name="description" content="本节主要介绍迭代器和traits编程技法。
+迭代器是一种模板class，迭代器在STL中得到了广泛的应用，通过迭代器，容器和算法可以有机的粘合在一起，只要对算法给予不同的迭代器，就可以对不同容器...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>《STL源码剖析》第3章 迭代器与traits编程技法 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="《STL源码剖析》第3章 迭代器与traits编程技法">
+            
+	            《STL源码剖析》第3章 迭代器与traits编程技法
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/C-基础/">C++基础</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/STL源码/">STL源码</a> <a class="tag-link" href="../../../../../tags/traits编程技法/">traits编程技法</a> <a class="tag-link" href="../../../../../tags/技术/">技术</a> <a class="tag-link" href="../../../../../tags/模板特化/">模板特化</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/15</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>本节主要介绍迭代器和traits编程技法。</p>
+<p>迭代器是一种模板class，迭代器在STL中得到了广泛的应用，通过迭代器，容器和算法可以有机的粘合在一起，只要对算法给予不同的迭代器，就可以对不同容器进行相同的操作。此外，迭代器本身也是一种设计模式，其设计思想也值得我们仔细体会。</p>
+<p>traits编程技法主要是通过模板的类型推导和class内嵌类型定义从而获取并使用迭代器的所指对象的真正类型，比如作为返回值等。</p>
+<a id="more"></a>
+<h3 id="1、迭代器"><a href="#1、迭代器" class="headerlink" title="1、迭代器"></a>1、迭代器</h3><p>什么是迭代器呢？迭代器有什么用呢？</p>
+<p><strong>迭代器模式</strong>的定义：提供一种方法，在不需要暴露某个容器的内部表现形式情况下，使之能依次访问该容器中的各个元素，能针对多种容器提供统一的接口。</p>
+<p>下面以算法find为例，展示容器、算法和迭代器之间的合作：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> InputIterator, <span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="function">InputIterator <span class="title">find</span><span class="params">(InputIterator first, InputIterator last, <span class="keyword">const</span> T &amp;value)</span> </span></span><br><span class="line"><span class="function"></span>&#123;   </span><br><span class="line">    <span class="comment">//迭代器对容器进行了屏蔽，不需要知道容器是什么。</span></span><br><span class="line">    <span class="keyword">while</span> (first != last &amp;&amp; *frist != value)  ++first;</span><br><span class="line">    <span class="keyword">return</span> first;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>只要给予不同的迭代器，比如vector<int>::iterator、list<int>::iterator，find()就能对不同的容器进行查找，而无需针对某个容器来设计多个版本。这样看来，迭代器似乎依附在容器之下，<strong>有没有独立而范用的迭代器</strong>？这个问题先留着，后面自有答案。</int></int></p>
+<h4 id="1-1-迭代器是一种smart-pointer"><a href="#1-1-迭代器是一种smart-pointer" class="headerlink" title="1.1 迭代器是一种smart pointer"></a>1.1 迭代器是一种smart pointer</h4><p>实际上<strong>迭代器是一种智能指针，是一种行为类似指针的对象</strong>，它内部封装了一个原始指针，并重载了operator*() 和operator-&gt;()等操作。</p>
+<p>迭代器在这里使用的好处主要有：</p>
+<ul>
+<li>(1) 不用担心内存泄漏（类似智能指针，析构函数释放内存）；</li>
+<li>(2) 对于list，取下一个元素不是通过自增而是通过next指针来取，这样子暴露了太多东西，使用智能指针可以对自增进行重载，从而<strong>提供统一接口</strong>。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//对于数组的实现</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">Iterator&amp; <span class="keyword">operator</span>++() <span class="comment">//对于算法来说，就是++n操作，不关心内部实现</span></span><br><span class="line">&#123; </span><br><span class="line">    ++m_ptr; </span><br><span class="line">    retrun *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//对于链表的实现</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line">Iterator&amp; <span class="keyword">operator</span>++()</span><br><span class="line">&#123;</span><br><span class="line">    m_ptr = m_ptr-&gt;next(); <span class="comment">//next()用于获取链表的下一个节点 </span></span><br><span class="line">    <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="1-2-设计一个简单迭代器"><a href="#1-2-设计一个简单迭代器" class="headerlink" title="1.2 设计一个简单迭代器"></a>1.2 设计一个简单迭代器</h4><p>知道迭代器的主要功能后，<strong>下面我们来设计一个独立的list迭代器</strong>。首先先设计一个list：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//List节点的结构</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ListItem</span> //链表节点</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ListItem() &#123; m_pNext = <span class="number">0</span>;&#125;</span><br><span class="line">    ListItem(T v, ListItem *p = <span class="number">0</span>) &#123; m_value = v; m_pNext = p;&#125;</span><br><span class="line">    <span class="function">T <span class="title">value</span><span class="params">()</span> <span class="keyword">const</span>  </span>&#123; <span class="keyword">return</span> m_value;&#125; <span class="comment">//取值</span></span><br><span class="line">    <span class="function">ListItem* <span class="title">next</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123; <span class="keyword">return</span> m_pNext;&#125;  <span class="comment">//取下一个指针</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    T m_value;  <span class="comment">//存储的数据</span></span><br><span class="line">    ListItem* m_pNext;  <span class="comment">//指向下一个ListItem的指针</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//List表的结构</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">List</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span>  <span class="title">Push</span><span class="params">(T value)</span> <span class="comment">//从链表尾部插入元素</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">       m_pTail = <span class="keyword">new</span> ListItem&lt;T&gt;(value);</span><br><span class="line">       m_pTail = m_pTail-&gt;next();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回链表头部指针</span></span><br><span class="line">    ListItem&lt;T&gt;* begin() <span class="keyword">const</span> &#123; <span class="keyword">return</span> m_pHead;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//返回链表尾部指针</span></span><br><span class="line">    ListItem&lt;T&gt;* end() <span class="keyword">const</span> &#123; <span class="keyword">return</span> m_pTail;&#125;</span><br><span class="line"></span><br><span class="line">    ...<span class="comment">//其它成员函数</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>：</span><br><span class="line">    ListItem&lt;T&gt; *m_pHead;    <span class="comment">//指向链表头部的指针</span></span><br><span class="line">    ListItem&lt;T&gt; *m_pTail;    <span class="comment">//指向链表尾部的指针</span></span><br><span class="line">    <span class="keyword">long</span> m_nSize;    <span class="comment">//链表长度</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>list有了，现在我们需要设计一个迭代器来访问list的值和next,来看一下怎么实现：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">template&lt;typename T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ListIterator</span>  //<span class="title">mylist</span>迭代器</span></span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ListIterator(T *p = <span class="number">0</span>) : m_ptr(p)&#123;&#125; <span class="comment">//构造函数</span></span><br><span class="line"></span><br><span class="line">    T&amp; <span class="keyword">operator</span>*() <span class="keyword">const</span> &#123; <span class="keyword">return</span> *m_ptr;&#125;  <span class="comment">//取值，即dereference</span></span><br><span class="line">    T* <span class="keyword">operator</span>-&gt;() <span class="keyword">const</span> &#123; <span class="keyword">return</span> m_ptr;&#125; <span class="comment">//成员访问，即member access</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//前置++操作</span></span><br><span class="line">    ListIterator&amp; <span class="keyword">operator</span>++() </span><br><span class="line">    &#123; </span><br><span class="line">        m_ptr = m_ptr-&gt;next(); <span class="comment">//暴露了ListItem的东西</span></span><br><span class="line">        <span class="keyword">return</span> *<span class="keyword">this</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//后置++操作</span></span><br><span class="line">    ListIterator <span class="keyword">operator</span>++(int)</span><br><span class="line">    &#123;</span><br><span class="line">        ListIterator temp = *<span class="keyword">this</span>;</span><br><span class="line">        ++*<span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">return</span> temp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//判断两个ListIter是否指向相同的地址</span></span><br><span class="line">    bool opeartor==(<span class="keyword">const</span> ListIterator &amp;arg) <span class="keyword">const</span> &#123; <span class="keyword">return</span> arg.m_ptr == m_ptr;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//判断两个ListIter是否指向不同的地址</span></span><br><span class="line">    bool <span class="keyword">operator</span>!=(<span class="keyword">const</span> ListIterator &amp;arg) <span class="keyword">const</span> &#123; <span class="keyword">return</span> arg.m_ptr != m_ptr;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    T* m_ptr;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>好了，现在list和其对应的迭代器都有了，那我们该怎么将ListIter将List和find()粘合起来呢？来看一下：<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">const</span>  <span class="keyword">char</span> *argv[])</span><br><span class="line">&#123;</span><br><span class="line">    List&lt;<span class="keyword">int</span>&gt; mylist;</span><br><span class="line">    <span class="built_in">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; ++i) mylist.push(i);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//这里暴露了ListItem，为了获取对应的指针</span></span><br><span class="line">    ListIterator&lt;ListItem&lt;<span class="keyword">int</span>&gt; &gt; <span class="built_in">begin</span>(mylist.<span class="built_in">begin</span>());</span><br><span class="line">    ListIterator&lt;ListItem&lt;<span class="keyword">int</span>&gt; &gt; <span class="built_in">end</span>(mylist.<span class="built_in">end</span>());</span><br><span class="line">    ListIterator&lt;ListItem&lt;<span class="keyword">int</span>&gt; &gt; iter;</span><br><span class="line"></span><br><span class="line">    iter = <span class="built_in">find</span>(<span class="built_in">begin</span>, <span class="built_in">end</span>, <span class="number">3</span>);<span class="comment">//从链表中查找3</span></span><br><span class="line">    <span class="built_in">if</span> (iter != <span class="built_in">end</span>)  cout&lt;&lt;<span class="string">"found"</span>&lt;&lt;endl;</span><br><span class="line">    <span class="built_in">else</span>  cout&lt;&lt;<span class="string">"not found"</span>&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>需要注意的是，算法find是通过*first != value用来判断元素是否符合要求，而上面测试代码中，first的类型为ListItem<int>，而value的类型为int，两者之间并没有可用的operator!=函数，因此，需要另外声明一个全局的operator!=重载函数，代码如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="keyword">bool</span> <span class="keyword">operator</span>!=(<span class="keyword">const</span> ListItem&lt;T&gt; &amp;item, T n)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> item.Value() != n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></int></p>
+<h4 id="1-3-迭代器小结"><a href="#1-3-迭代器小结" class="headerlink" title="1.3 迭代器小结"></a>1.3 迭代器小结</h4><p>从上面的代码我们可以看到，为了实现迭代器ListIter，我们在很多地方暴露了容器List的内部实现ListItem，这违背一开始说的<strong>迭代器模式中不暴露某个容器的内部表现形式情况下，使之能依次访问该容器中的各个元素的定义</strong>。</p>
+<p>可见，<strong>独立的迭代器并不能满足我们的要求，所以STL将迭代器的实现交给了容器，每种容器都会以嵌套的方式在内部定义专属的迭代器</strong>。各种迭代器的接口相同，内部实现却不相同，这也直接体现了泛型编程的概念。（泛型编程的思想主要是定义相同的接口，而内部实现各不相同，从而实现多态）  </p>
+<p>总而言之，<strong>迭代器依附于具体的容器，即不同的容器有不同的迭代器实现</strong>。     对于泛型算法find，只要给它传入不同的迭代器，就可以对不同的容器进行查找操作。迭代器的穿针引线，有效地实现了算法对不同容器的访问。</p>
+<h3 id="2、traits编程技法"><a href="#2、traits编程技法" class="headerlink" title="2、traits编程技法"></a>2、traits编程技法</h3><p>其实上一章我们就涉及过trait编程技法，就是在配置器的destroy()函数中，我们需要用traits来判断某类型的构造和析构函数是否是trival(无用的)，从而决定有没有必要调用析构函数，从而减少一些不必要的操作。</p>
+<p>本节我们来了解其实现原理。</p>
+<h4 id="2-1-迭代器型别value-type"><a href="#2-1-迭代器型别value-type" class="headerlink" title="2.1 迭代器型别value type"></a>2.1 迭代器型别value type</h4><p>迭代器所指对象的型别，称为该迭代器的value type，比如int*的value type为int。那我们该怎么来获取这个型别呢？<br>RTTI性质中的typeid()只能获得型别的名称，但不能用来声明变量。要想获得迭代器型别，<strong>参数推导机制</strong>是一个不错的方法。</p>
+<p>在下面这个函数里面，如果我们想要得到迭代器的value type，以下做法是否可行？看看下面这种情况：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iteratorator&gt;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(Iteratorator iter)</span> </span>&#123;</span><br><span class="line">    *Iteratorator var;<span class="comment">//对迭代器取值，得其值类型？</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>事实上，以上代码是编译失败的，C++并不提供这个支持。</p>
+<h4 id="2-2-参数推导机制-内嵌型别机制"><a href="#2-2-参数推导机制-内嵌型别机制" class="headerlink" title="2.2 参数推导机制+内嵌型别机制"></a>2.2 参数推导机制+内嵌型别机制</h4><p>既然上述方式不能行，那我们换一种思路，引入中间层试一下，来看代码实现:<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iterator, <span class="keyword">typename</span> T&gt; <span class="comment">//T推导为int型</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func_impl</span><span class="params">(Iterator iter, T t)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    T temp;<span class="comment">//这里就解决了问题</span></span><br><span class="line">    <span class="comment">//这里做原本func()的工作</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iterator&gt; <span class="comment">//Iterator推导为int*类型</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">func</span><span class="params">(Iterator iter)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    func_impl(iter, *iter);<span class="comment">//这里通过传递*iter，让func_impl去推导</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span>  <span class="keyword">char</span> *argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    func(&amp;i); <span class="comment">//这里传入的是一个迭代器（原生指针也是一种迭代器）</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面做法通过多层迭代很巧妙地导出了T，但是却很有局限性，比如，我的func()希望返回迭代器的value type类型返回值，那么上面的做法就无能为力了。<strong>这种template参数推导的只是参数，无法推导返回值</strong>。</p>
+<p>上述方法还是不行，但如果在参数推导机制上加上内嵌型别(typedef)呢？来看一下实现：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Iterator</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">typedef</span> T value_type; <span class="comment">//内嵌类型声明</span></span><br><span class="line">    Iterator(T *p = <span class="number">0</span>) : m_ptr(p) &#123;&#125;</span><br><span class="line">    T&amp; <span class="keyword">operator</span>*() <span class="keyword">const</span> &#123; <span class="keyword">return</span> *m_ptr;&#125;</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    T *m_ptr;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iterator&gt;</span><br><span class="line"><span class="comment">//以迭代器所指对象的类型作为返回类型</span></span><br><span class="line"><span class="comment">//注意typename是必须的，它告诉编译器这是一个类型</span></span><br><span class="line"><span class="keyword">typename</span> Iterator::<span class="function">value_type <span class="title">func</span><span class="params">(Iterator iter)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> *iter;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">const</span>  <span class="keyword">char</span> *argv[])</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    Iterator&lt;<span class="keyword">int</span>&gt; iter(<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">10</span>));</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;func(iter)&lt;&lt;<span class="built_in">endl</span>;  <span class="comment">//输出：10</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上面的解决方案近乎完美了，但其实有一个隐晦的陷阱：<strong>实际上并不是所有的迭代器都是class type，原生指针也是一种迭代器,由于原生指针不是class type，所以没法为它定义内嵌型别</strong>。要解决这个问题，Partial specialization（模板偏特化）就出场了。</p>
+<h4 id="2-4-Partial-specialization（模板偏特化）"><a href="#2-4-Partial-specialization（模板偏特化）" class="headerlink" title="2.4 Partial specialization（模板偏特化）"></a>2.4 Partial specialization（模板偏特化）</h4><p>所谓偏特化是指如果一个class template拥有一个以上的template参数，我们可以针对其中某个（或多个，但不是全部）template参数进行特化，比如下面这个例子：<br><figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;typename T&gt;</span><br><span class="line">class C <span class="meta">&#123;...&#125;</span>; //此泛化版本的T可以是任何类型</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;typename T&gt;</span><br><span class="line">class C&lt;T*&gt; <span class="meta">&#123;...&#125;</span>; //特化版本，仅仅适用于T为“原生指针”的情况，是泛化版本的限制版</span><br></pre></td></tr></table></figure></p>
+<p>所谓特化，就是特殊情况特殊处理，第一个类为泛化版本，T可以是任意类型，第二个类为特化版本，是第一个类的特殊情况，只针对原生指针。</p>
+<h4 id="2-5-原生指针怎么办？——特性“萃取”traits"><a href="#2-5-原生指针怎么办？——特性“萃取”traits" class="headerlink" title="2.5 原生指针怎么办？——特性“萃取”traits"></a>2.5 原生指针怎么办？——特性“萃取”traits</h4><p>还记得前面的参数推导机制+内嵌型别机制获取型别有什么问题吗？问题就是原生指针虽然是迭代器但不是class，无法定义内嵌型别，而偏特化似乎可以解决这个问题。</p>
+<p>有了上面的认识，我们再看看STL是如何应用的,STL定义了下面的类模板，它专门用来“萃取”迭代器的特性，而value type正是迭代器的特性之一：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iterator&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">iterator_traits</span> //类型萃取机</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span> Iterator::value_type value_type;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>我们看看加入萃取机前后的变化：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iterator&gt; <span class="comment">//萃取前</span></span><br><span class="line"><span class="keyword">typename</span> Iterator::<span class="function">value_type  <span class="title">func</span><span class="params">(Iterator iter)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> *iter;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//通过iterator_traits作用后的版本</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iterator&gt;  <span class="comment">//萃取后</span></span><br><span class="line"><span class="keyword">typename</span> iterator_traits&lt;Iterator&gt;::<span class="function">value_type  <span class="title">func</span><span class="params">(Iterator iter)</span></span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="keyword">return</span> *iter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>看到这里也许你会晕了，iterator_traits::value_type跟Iterator::value_type完全是同一个东西，为什么还要增加iterator_traits这一层封装，是不是多此一举？</p>
+<p>回想萃取之前的版本有什么缺陷：不支持原生指针。而通过萃取机的封装，<strong>我们可以通过类模板的特化来支持原生指针的版本</strong>！如此一来，无论是智能指针，还是原生指针，iterator_traits::value_type都能起作用，这就解决了前面的问题。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//iterator_traits的偏特化版本，针对迭代器是原生指针的情况</span></span><br><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">iterator_traits</span>&lt;T*&gt;</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">typedef</span> T value_type;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-6-偏特化处理更多的情况——const指针"><a href="#2-6-偏特化处理更多的情况——const指针" class="headerlink" title="2.6 偏特化处理更多的情况——const指针"></a>2.6 偏特化处理更多的情况——const指针</h4><p>通过偏特化添加一层中间转换的traits模板class，能实现对原生指针和迭代器的支持，但是这里还有一个特殊情况，对于指向常数对象的指针又该怎么处理呢？比如下面的例子：<br><figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">iterator_traits&lt;<span class="keyword">const</span> <span class="keyword">int</span>*&gt;::value_type  //获得的value_type是<span class="keyword">const</span> <span class="keyword">int</span>，并不是<span class="keyword">int</span></span><br></pre></td></tr></table></figure></p>
+<p>这里会调用的还是上述原生指针对应的偏特化，获得的value taype是const int，我们知道，const变量只能初始化，而不能赋值（这两个概念必须区分清楚）。这将带来问题：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Iterator&gt;</span><br><span class="line"><span class="keyword">typename</span> iterator_traits&lt;Iterator&gt;::<span class="function">value_type  <span class="title">func</span><span class="params">(Iterator iter)</span> </span></span><br><span class="line"><span class="function"></span>&#123; </span><br><span class="line">    <span class="keyword">typename</span> iterator_traits&lt;Iterator&gt;::value_type tmp;<span class="comment">//注意不是typedef哦..</span></span><br><span class="line">    tmp = *iter; <span class="comment">//ok?</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> val = <span class="number">8</span>;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> *p = &amp;val;</span><br><span class="line">func(p); <span class="comment">//这时函数里对tmp的赋值都将是不允许的</span></span><br></pre></td></tr></table></figure></p>
+<p>可以看到，我们的本意是获取int，而事实上获取到的是const int，这将造成误会，那该怎么办呢？答案还是偏特化，来看实现：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">iterator_traits</span>&lt;const T*&gt; //特化<span class="title">const</span>指针</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">typedef</span> T value_type; <span class="comment">//得到T而不是const T</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-7-traits编程技法总结"><a href="#2-7-traits编程技法总结" class="headerlink" title="2.7 traits编程技法总结"></a>2.7 traits编程技法总结</h4><p>通过本节的学习，我们知道traits编程技法就是增加一层中间的模板class，以解决获取迭代器的型别中的原生指针问题，其核心知识点在于<strong>模板参数推导机制+内嵌类型定义机制</strong>，为了能处理原生指针这种特殊的迭代器，在traits机这个模板class上引入了<strong>偏特化机制</strong>。traits就像一台“特性萃取机”，把迭代器放进去，就能榨取出迭代器的特性。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/7.png?raw=true" alt="image"></p>
+<h3 id="3、迭代器的型别和种类"><a href="#3、迭代器的型别和种类" class="headerlink" title="3、迭代器的型别和种类"></a>3、迭代器的型别和种类</h3><h4 id="3-1-迭代器的型别"><a href="#3-1-迭代器的型别" class="headerlink" title="3.1 迭代器的型别"></a>3.1 迭代器的型别</h4><p>常见迭代器相应型别有5种：</p>
+<ul>
+<li>（1）value_type：迭代器所指对象的类型，原生指针也是一种迭代器，对于原生指针int*，int即为指针所指对象的类型，也就是所谓的value_type。</li>
+<li>（2）difference_type用来表示两个迭代器之间的距离，对于原生指针，STL以C++内建的ptrdiff_t作为原生指针的difference_type。</li>
+<li>（3）reference_type是指迭代器所指对象的类型的引用，reference_type一般用在迭代器的*运算符重载上，如果value_type是T，那么对应的reference_type就是T&amp;；如果value_type是const T，那么对应的reference_type就是const T&amp;。</li>
+<li>（4）pointer_type就是相应的指针类型，对于指针来说，最常用的功能就是operator*和operator-&gt;两个运算符。</li>
+<li>（5）iterator_category的作用是标识迭代器的移动特性和可以对迭代器执行的操作，从iterator_category上，可将迭代器分为Input Iterator、Output Iterator、Forward Iterator、Bidirectional Iterator、Random Access Iterator五类，这样分可以尽可能地提高效率。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> Category,</span><br><span class="line">         <span class="keyword">typename</span> T,</span><br><span class="line">         <span class="keyword">typename</span> Distance = <span class="keyword">ptrdiff_t</span>,</span><br><span class="line">         <span class="keyword">typename</span> Pointer = T*,</span><br><span class="line">         <span class="keyword">typename</span> Reference = T&amp;&gt;</span><br><span class="line">struct iterator <span class="comment">//迭代器的定义</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">typedef</span> Category iterator_category;</span><br><span class="line">    <span class="keyword">typedef</span> T value_type;</span><br><span class="line">    <span class="keyword">typedef</span> Distance difference_type;</span><br><span class="line">    <span class="keyword">typedef</span> Pointer pointer;</span><br><span class="line">    <span class="keyword">typedef</span> Reference reference;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>iterator class不包含任何成员变量，只有类型的定义，因此不会增加额外的负担。由于后面三个类型都有默认值，在继承它的时候，只需要提供前两个参数就可以了。<strong>这个类主要是用来继承的，在实现具体的迭代器时，可以继承上面的类，这样子就不会漏掉上面的5个型别了</strong>。</p>
+<p>对应的迭代器萃取机设计如下：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">tempalte&lt;<span class="keyword">typename</span> I&gt;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">iterator_traits</span>  //特性萃取机，萃取迭代器特性</span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span> I::iterator_category iterator_category;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span> I::value_type value_type;</span><br><span class="line">    <span class="keyword">typedef</span> typeanme I:difference_type difference_type;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span> I::pointer pointer;</span><br><span class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span> I::reference reference;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//需要对型别为指针和const指针设计特化版本</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="3-2-迭代器的分类"><a href="#3-2-迭代器的分类" class="headerlink" title="3.2 迭代器的分类"></a>3.2 迭代器的分类</h4><p>迭代器型别iterator_category对应迭代器类别，这个类别会限制迭代器的操作和移动特性，<br><strong>除了原生指针以外</strong>，迭代器被分为五类：</p>
+<ul>
+<li><strong>(1) Input Iterator</strong>： 此迭代器不允许修改所指的对象，即是只读的。支持==、!=、++、*、-&gt;等操作。</li>
+<li><strong>(2) Output Iterator</strong>：允许算法在这种迭代器所形成的区间上进行只写操作。支持++、*等操作。</li>
+<li><strong>(3) Forward Iterator</strong>：允许算法在这种迭代器所形成的区间上进行读写操作，但只能单向移动，每次只能移动一步。支持Input Iterator和Output Iterator的所有操作。</li>
+<li><strong>(4) Bidirectional Iterator</strong>：允许算法在这种迭代器所形成的区间上进行读写操作，可双向移动，每次只能移动一步。支持Forward Iterator的所有操作，并另外支持–操作。</li>
+<li><strong>(5) Random Access Iterator</strong>：包含指针的所有操作，可进行随机访问，随意移动指定的步数。支持前面四种Iterator的所有操作，并另外支持it + n、it - n、it += n、 it -= n、it1 - it2和it[n]等操作。</li>
+</ul>
+<p><strong>为什么我们要对迭代器进行分类呢</strong>?<br>设计算法时，如果可能，我们尽量针对上面某种迭代器提供一个明确定义，并针对更强化的某种迭代器提供另一种定义，这样才能在不同情况下提供最大效率。比如，有个算法可接受Forward Iterator，但是你传入一个Random Access Iterator，虽然可用（Random Access Iterator也是一种Forward Iterator），但是不一定是最佳的，因为Random Access Iterator可能更加臃肿，效率不一定高。</p>
+<p>对于一个算法，它该调用哪个类型的迭代器，我们可以简单的在内部使用if…else在执行时选择，但是这样却降低了效率，如果能在编译时选择就再好不过了。STL使用了重载函数机制达成了这个目标，此处就不再深入讨论了。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../../../16/c++基础/《STL源码剖析》第4章 序列式容器/" class="pre-post btn btn-default" title="《STL源码剖析》第4章 序列式容器">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">《STL源码剖析》第4章 序列式容器</span>
+        </a>
+    
+    
+        <a href="../../../14/c++基础/c++11move和forword/" class="next-post btn btn-default" title="c++11特性之move和forward应用与区别">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">c++11特性之move和forward应用与区别</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、迭代器"><span class="toc-text">1、迭代器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-迭代器是一种smart-pointer"><span class="toc-text">1.1 迭代器是一种smart pointer</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-设计一个简单迭代器"><span class="toc-text">1.2 设计一个简单迭代器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-迭代器小结"><span class="toc-text">1.3 迭代器小结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、traits编程技法"><span class="toc-text">2、traits编程技法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-迭代器型别value-type"><span class="toc-text">2.1 迭代器型别value type</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-参数推导机制-内嵌型别机制"><span class="toc-text">2.2 参数推导机制+内嵌型别机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-Partial-specialization（模板偏特化）"><span class="toc-text">2.4 Partial specialization（模板偏特化）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-原生指针怎么办？——特性“萃取”traits"><span class="toc-text">2.5 原生指针怎么办？——特性“萃取”traits</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-6-偏特化处理更多的情况——const指针"><span class="toc-text">2.6 偏特化处理更多的情况——const指针</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-7-traits编程技法总结"><span class="toc-text">2.7 traits编程技法总结</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、迭代器的型别和种类"><span class="toc-text">3、迭代器的型别和种类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-迭代器的型别"><span class="toc-text">3.1 迭代器的型别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-迭代器的分类"><span class="toc-text">3.2 迭代器的分类</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

@@ -1,0 +1,454 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="技术,操作系统">
+
+
+    <meta name="description" content="虽然可以mmap和munmap函数来创建和删除虚拟内存的区域，但是C程序员还是会觉得当需要额外的虚拟内存时，用动态内存分配器更方便，也有更好的可移植性。
+动态内存分配器维护着一个进程的虚拟内存区...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>第9章 虚拟内存之动态内存分配与垃圾收集 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="第9章 虚拟内存之动态内存分配与垃圾收集">
+            
+	            第9章 虚拟内存之动态内存分配与垃圾收集
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/操作系统/">操作系统</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/技术/">技术</a> <a class="tag-link" href="../../../../../tags/操作系统/">操作系统</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/23</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>虽然可以mmap和munmap函数来创建和删除虚拟内存的区域，但是C程序员还是会觉得当需要额外的虚拟内存时，用<strong>动态内存分配器</strong>更方便，也有更好的可移植性。</p>
+<p>动态内存分配器维护着一个进程的虚拟内存区域，称为堆。对于每个进程，内核维护着一个变量brk,它指向堆的顶部。分配器将堆视为一组不同大小的块的集合来维护。每个块就是一个连续的虚拟内存片,要么是已分配的，要么是空闲的。已分配的块显式地保留为供应用程序使用，空闲块保持空闲，直到它显式地被应用所分配。一个已分配的块保持已分配状态，直到它被释放，这种释放要么是应用程序显式执行的，要么是内存分配器自身隐式执行的。</p>
+<p>分配器有两种基本风格，<strong>显式分配器</strong>要求应用显式释放分配的块，而<strong>隐式分配器</strong>(<strong>也叫做垃圾收集器</strong>)则要求分配器检查不再使用的块并释放。本文将对显示分配器和隐式分配器做更深入的讨论。</p>
+<a id="more"></a>
+<h3 id="1、malloc和free函数"><a href="#1、malloc和free函数" class="headerlink" title="1、malloc和free函数"></a>1、malloc和free函数</h3><h4 id="1-1-malloc函数"><a href="#1-1-malloc函数" class="headerlink" title="1.1 malloc函数"></a>1.1 malloc函数</h4><p>c标准库提供了一个称为malloc程序包的显式分配器。程序通过调用malloc函数来从堆中分配块。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">malloc</span><span class="params">(<span class="keyword">size_t</span> size)</span></span>; <span class="comment">//返回：若成功则为已分配块的指针，若出错则为null.</span></span><br></pre></td></tr></table></figure></p>
+<p>malloc函数返回一个指针，指向大小至少为size字节的内存块，这个块会为可能包含在这个块内的任何数据对象类型做对齐。如果malloc遇到问题，那么它就返回null，并设置errno。<strong>malloc不初始化它返回的内存，如果想要已初始化的内存则通过calloc分配，如果想要改变已分配块的大小则使用realloc函数</strong>。</p>
+<h4 id="1-2-malloc的底层——sbrk函数"><a href="#1-2-malloc的底层——sbrk函数" class="headerlink" title="1.2 malloc的底层——sbrk函数"></a>1.2 malloc的底层——sbrk函数</h4><p>malloc可以通过mmap和munmap来显式分配和释放堆内存，或则还可以使用sbrk函数：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span>* <span class="title">sbrk</span><span class="params">(<span class="keyword">intptr_t</span> incr)</span></span>; <span class="comment">//成功返回brk的旧值，出错返回-1</span></span><br></pre></td></tr></table></figure></p>
+<p>sbrk函数通过将内核的brk(指向堆顶部)指针增加incr来扩展和收缩堆。如果成功则返回brk的旧值，否则返回-1并设置errno为ENOMEM。如果sbrk的参数为0，则返回的为原来的brk地址。</p>
+<h4 id="1-3-free函数"><a href="#1-3-free函数" class="headerlink" title="1.3 free函数"></a>1.3 free函数</h4><p>程序通过调用free函数来释放已分配的堆块。<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">free</span><span class="params">(<span class="keyword">void</span> *ptr)</span></span>; <span class="comment">//不返回值</span></span><br></pre></td></tr></table></figure></p>
+<p>ptr必须指向一个已分配块的起始位置，如果不是，那么free的行为就是未定义的。</p>
+<h3 id="2、为什么要使用动态内存"><a href="#2、为什么要使用动态内存" class="headerlink" title="2、为什么要使用动态内存"></a>2、为什么要使用动态内存</h3><p>程序使用动态内存分配的最重要的原因是经常直到程序实际运行时，才知道某些数据结构的大小。比如我们需要根据输入的n分配一个对应大小的数据来临时存储数据，这是就用动态分配比较好。</p>
+<blockquote>
+<p>值得注意的是，c99提供了动态的数组大小分配，可以不再需要由程序员显式分配动态空间。不过这种分配方式是否是堆上的空间就需要进一步验证了。</p>
+</blockquote>
+<h3 id="3、分配器的要求和目标"><a href="#3、分配器的要求和目标" class="headerlink" title="3、分配器的要求和目标"></a>3、分配器的要求和目标</h3><p>显式分配器必须在一些相当严格的约束条件下工作：</p>
+<ul>
+<li><strong>处理任意请求序列</strong>：一个应用可以有任意的分配请求和释放请求序列，分配器不可以假设分配和释放请求的顺序。</li>
+<li><strong>立即响应请求</strong>：分配器必须立即响应分配请求。因此不允许分配器提高性能，从新排列或者缓冲请求。</li>
+<li><strong>只使用堆</strong>：分配器使用的任何数据结构都保存在堆里。</li>
+<li><strong>对齐块</strong>：比如8个字节的对齐。</li>
+<li><strong>不修改已分配的块</strong>：分配器只能操作或者改变空闲块，不允许不能压缩已分配的块。</li>
+</ul>
+<p>分配器在满足上述要求的情况下，需要达到以下两个目标：</p>
+<ul>
+<li>(1)最大化吞吐率,单位时间完成尽可能多的请求。</li>
+<li>(2)最大化存储器的利用率。天真的程序员经常不正确的假设虚拟存储器是一个无限的资源<strong>，事实上，一个系统中被所有进程分配的虚拟存储器的全部数量是受磁盘上交换空间的数量限制的</strong>。好的程序员知道虚拟内存是一个有限的空间，必须高效地使用。</li>
+</ul>
+<p>分配器设计中一个有趣的挑战就是在上述两个目标之间找到一个适当的平衡。</p>
+<h3 id="3、碎片"><a href="#3、碎片" class="headerlink" title="3、碎片"></a>3、碎片</h3><p>造成堆的空间利用率很低的主要原因是一种被称为碎片的现象，当虽然有未使用的内存但这块内存并不能满足分配请求时，就会产生碎片。有以下两种形式的碎片：内部碎片和外部碎片。</p>
+<ul>
+<li><strong>内部碎片</strong>：在一个已分配块比有效载荷大时发生。比如分配器限制的最小分配至比实际请求值要大，又或者为了对齐而增加块的大小。意味着已分配但是未使用。</li>
+<li>外部碎片：当空闲内存合计起来足够满足一个分配请求，但是没有一个单独的空闲块足够大到可以来处理这个请求时发生。<strong>外部碎片难以量化且不可预测，所以分配器通常采用启发式策略来试图维持少量的大空闲块，而不是维持大量的小空闲块</strong>。</li>
+</ul>
+<h3 id="4、分配器设计"><a href="#4、分配器设计" class="headerlink" title="4、分配器设计"></a>4、分配器设计</h3><p>一个分配器需要在吞吐率和利用率之间把握好平衡，必须要考虑以下几个因素：</p>
+<ul>
+<li>组织空闲块：如何组织</li>
+<li>放置：怎么选择一个合适的块来放置新分配的块。</li>
+<li>分割：新分配的块放到某个空闲块后，如何处理剩余部分。</li>
+<li>合并：如何处理一个刚刚被释放的块。</li>
+</ul>
+<h3 id="5、隐式空闲链表"><a href="#5、隐式空闲链表" class="headerlink" title="5、隐式空闲链表"></a>5、隐式空闲链表</h3><h4 id="5-1-组织空闲块"><a href="#5-1-组织空闲块" class="headerlink" title="5.1 组织空闲块"></a>5.1 组织空闲块</h4><p>假设用下图结构来组织堆块，并且已知采用双字对齐，头部后面的就是应用调用malloc时请求的有效载荷。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/30.jpg?raw=true" alt="image"></p>
+<p>分配器将堆组织为下图式样的一个连续的已分配块和空闲块的序列，该序列被称为<strong>隐式空闲链表</strong>。之所以称为隐式空闲链表是因为分配需要遍历堆中所有的块，才能知道空闲块的集合。注意，<strong>图中用一个已分配而大小为的零的块来标记结束</strong>。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/31.png?raw=true" alt="image"></p>
+<p>隐式空闲链表的有点是简单，缺点是放置开销会与已分配块和空闲块块的总数呈线性关系。</p>
+<h4 id="5-2-放置已分配的块"><a href="#5-2-放置已分配的块" class="headerlink" title="5.2 放置已分配的块"></a>5.2 放置已分配的块</h4><p>当应用发起一个分配请求时，分配器需要从空闲链表中选择一个合适的块来满足请求。分配器的选择方式称为<strong>放置策略</strong>。常见的放置策略有以下几种：</p>
+<ul>
+<li><strong>首次适配</strong>：从头开始搜索空闲链表，选择第一个遇见的合适的空闲块。它的优点在于趋向于将大的空闲块保留在链表的后面，缺点是它趋向于在靠近链表前部处留下小空闲块的碎片，从而增加较大请求块的放置时间。</li>
+<li><strong>下一次适配</strong>：每次从上一次查询结束的地方开始进行搜索，直到遇见合适的空闲块。这种策略通常比首次适配效率高，但是内存利用率则要低得多了</li>
+<li><strong>最佳适配</strong>：检查每个空闲块，选择适合所需请求大小的最小空闲块。最佳适配的内存利用率是三种策略中最高的，但它需要对堆进行彻底的搜索。</li>
+</ul>
+<h4 id="5-3-分割空闲块"><a href="#5-3-分割空闲块" class="headerlink" title="5.3 分割空闲块"></a>5.3 分割空闲块</h4><p>分配器在匹配到一个合适的空闲块后，就需要决定分配这个空闲块中多少空间，可以称之为分割策略，一般有以下两种方式：</p>
+<ul>
+<li>（1）选择用整个空闲块，这个方式简单而且快捷，缺点是可能会造成很多内部碎片。</li>
+<li>（2）分配器嫁给你空闲块分为两个部分，第一部分变成分配块，而剩下的那部分则组织成一个新的空闲块。</li>
+</ul>
+<h4 id="5-4-合并空闲块"><a href="#5-4-合并空闲块" class="headerlink" title="5.4 合并空闲块"></a>5.4 合并空闲块</h4><p>为了避免假碎片问题，分配器需要在释放一个已分配块时，除了重新标记当前块外也需要合并相邻空闲块。合并空闲块的方式称为合并策略，主要分为两种：</p>
+<ul>
+<li>（1）立即合并：就是在每次释放块时，就立即合并所有相邻块，这种方式可能会产生抖动（比如频繁在一个8字节的空闲块中执行3字节的分配与释放，就可能产生大量不必要的分割与合并）。</li>
+<li>（2）推迟合并：即推迟合并空闲块的时机，比如直到某个分配请求失败才扫描整个堆，合并所有的空闲块。快速的分配器通常会选择某种形式的推迟合并。</li>
+</ul>
+<h4 id="5-5-合并空闲块的具体实现"><a href="#5-5-合并空闲块的具体实现" class="headerlink" title="5.5 合并空闲块的具体实现"></a>5.5 合并空闲块的具体实现</h4><p>对于向后合并，我们可以通过当前块的头部指针判断下一个块是否空闲，从而进行合并，但是如何合并前面的块呢？搜索整个链表？</p>
+<p>Knuth提出了一种叫做<strong>边界标记</strong>的技术用于常数时间对前面的块进行合并。其实现如下图，通过在每个块的结尾处添加一个脚部，其是头部的一个副本。这样分配器就可以通过检查当前块的前一个字节的内容从而判断前一个块的起始位置和状态。</p>
+<p>比如有一个释放当前块，其前一个块和后一块都是空闲的，此时需要将三块的大小求和然后更新前一块的头部和后一块脚部，明显能在常数时间内完成。</p>
+<p>边界标记的一个缺陷是每一块都要保持一个头部和一个脚部，这会导致显著的内存开销。一种可能的优化方案是在已分配的块剩余部分保存脚部信息，从而减小开销。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/32.png?raw=true" alt="image"></p>
+<h3 id="6、显式空闲链表"><a href="#6、显式空闲链表" class="headerlink" title="6、显式空闲链表"></a>6、显式空闲链表</h3><h4 id="6-1-空闲块组织"><a href="#6-1-空闲块组织" class="headerlink" title="6.1 空闲块组织"></a>6.1 空闲块组织</h4><p>其实对于通用的分配器来说，隐式空闲链表是不适合的，一种更好的方法是将空闲块组织为某种形式的显式空闲链表。</p>
+<p>如下图，我们用一个双向链表组织空闲块，为了节省空间，我们将前驱指针pred和后继指针succ放在空闲块的主体当中。双向链表使得首次适配的时间从块总数的线性时间减少到了空闲块总数的线性时间。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/33.png?raw=true" alt="image"></p>
+<p>在释放分配块时，有两种方式，分别为：</p>
+<ul>
+<li><strong>后进先出</strong>LIFO顺序维护链表：将新释放的块放在链表的开始处，加上边界标记后能快速合并完成并放置。<br>-<strong> 按照地址顺序维护链表</strong>：这种方式使得每个块的地址都小于它后继的地址。释放一个块比较麻烦，但是首次适配有更高的内存利用率。</li>
+</ul>
+<p>显式空闲链表的需要存储前向和后向指针，这会限制最小块的大小，从而增加内存碎片。</p>
+<h4 id="6-2-分离的空闲链表"><a href="#6-2-分离的空闲链表" class="headerlink" title="6.2 分离的空闲链表"></a>6.2 分离的空闲链表</h4><p>为了减少分配时间，人们想出了另一种叫做<strong>分离存储</strong>的方法，主要是通过维护多个空闲链表，其中每个链表中的块有大致相等的大小。也即是分配器维护一个空闲链表数组，然后每个空闲链表中的空闲块按照大小进行升序排序。<strong>简单分离存储</strong>中采用的方式是每个空闲链中的空闲块大小一样，而<strong>分离适配</strong>方式的每个空闲链表中的块大小却不一样，这样适配时需要在空闲链表中进行匹配。</p>
+<p>当有一个分配请求时，我们检查相应的空闲链表。如果链表非空，那么就分配其中第一块的全部。如果链表为空，分配器就向操作系统请求一个固定大小的额外内存片，将这个片分成大小相等的块，然后将这些块链接起来形成新的空闲链表。类型vector中的free list。</p>
+<p>要释放一个块，分配器只需要简单地将这个块插入到相应的空闲链表的头部。</p>
+<h3 id="7、垃圾收集"><a href="#7、垃圾收集" class="headerlink" title="7、垃圾收集"></a>7、垃圾收集</h3><p>在编写C程序时，一般只能显式地分配与释放堆中的内存（malloc()与free()），程序员不仅需要分配内存，还需要负责内存的释放。但如果能自动回收是不是更好呢？</p>
+<p><strong>垃圾收集器是一种动态内存分配器，它自动释放程序不再需要的已分配块</strong>。这些块被称为垃圾，自动回收堆存储的过程叫做垃圾收集。接下来讨论一种垃圾收集算法——Mark&amp;Sweep法，可以称为标记清除法。</p>
+<h4 id="7-1-垃圾收集器垃圾组织"><a href="#7-1-垃圾收集器垃圾组织" class="headerlink" title="7.1 垃圾收集器垃圾组织"></a>7.1 垃圾收集器垃圾组织</h4><p>垃圾器将内存视为一张有向可达图，组织如下：</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/34.png?raw=true" alt="image"></p>
+<p>垃圾收集器一般采用以下两种（之一）的策略来判断一块堆内存是否为垃圾内存：</p>
+<ul>
+<li><p>引用计数器：在数据的物理空间中添加一个计数器，当有其他数据与其相关时（引用），该计数器加一，反之则减一。通过定期检查计数器的值，只要为0则认为是垃圾内存，可以释放它所占用的已分配块。使用引用计数器，实现简单直接，但缺点也很明显，它无法回收循环引用的两个对象（假设有对象A与对象B，它们2个互相引用，但实际上对象A与对象B都已经是没用的对象了）。</p>
+</li>
+<li><p>可达性分析：垃圾收集器将堆内存视为一张有向图，然后选出一组根节点（例如，在Java中一般为类加载器、全局变量、运行时常量池中的引用类型变量等），根节点必须是足够“活跃“的对象。然后计算从根节点集合出发的可达路径，只要从根节点出发不可达的节点，都视为垃圾内存。</p>
+</li>
+</ul>
+<h4 id="7-2-Mark-amp-Sweep垃圾收集器"><a href="#7-2-Mark-amp-Sweep垃圾收集器" class="headerlink" title="7.2 Mark&amp;Sweep垃圾收集器"></a>7.2 Mark&amp;Sweep垃圾收集器</h4><p>Mark&amp;Sweep垃圾收集器由标记阶段和清除阶段组成，标记阶段标记出根节点的所有可达的和已分配的后继，而后面的清除阶段释放每个未被标记的已分配块。标记-清除算法实现简单，但它的效率不高，而且会产生许多内存碎片。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%B3%BB%E7%BB%9F/35.png?raw=true" alt="image"></p>
+<p>再介绍两种垃圾收集器进行回收的算法：</p>
+<ul>
+<li><p>复制：将程序所拥有的内存空间划分为大小相等的两块，每次都只使用其中的一块。当这一块的内存用完了，就把还存活着的对象复制到另一块内存上，然后将已使用过的内存空间进行清理。这种方法不必考虑内存碎片问题，但内存利用率很低。这个比例不是绝对的，像HotSpot虚拟机为了避免浪费，将内存划分为Eden空间与两个Survivor空间，每次都只使用Eden和其中一个Survivor。当回收时，将Eden和Survivor中还存活着的对象一次性地复制到另外一个Survivor空间上，然后清理掉Eden和刚才使用过的Survivor空间。HotSpot虚拟机默认的Eden和Survivor的大小比例为8：1，只有10%的内存空间会被闲置浪费。</p>
+</li>
+<li><p>分代：分代算法根据对象的存活周期的不同将内存划分为多块，这样就可以对不同的年代采用不同的回收算法。一般分为新生代与老年代，新生代存放的是存活率较低的对象，可以采用复制算法；老年代存放的是存活率较高的对象，如果使用复制算法，那么内存空间会不够用，所以必须使用标记-清除或标记-整理算法。</p>
+</li>
+</ul>
+<h3 id="8、小结"><a href="#8、小结" class="headerlink" title="8、小结"></a>8、小结</h3><p>本节主要讨论动态内存的分配与垃圾回收，主要是大概了解常见的内存管理方式。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../../../24/网络协议/《TCP-IP详解卷1》第4章ARP：地址解析协议/" class="pre-post btn btn-default" title="《TCP-IP详解卷1》第4章ARP：地址解析协议">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">《TCP-IP详解卷1》第4章ARP：地址解析协议</span>
+        </a>
+    
+    
+        <a href="../../网络协议/《TCP-IP详解卷1》第3章 IP：网际协议/" class="next-post btn btn-default" title="《TCP-IP详解卷1》第3章 IP：网际协议">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">《TCP-IP详解卷1》第3章 IP：网际协议</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、malloc和free函数"><span class="toc-text">1、malloc和free函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-1-malloc函数"><span class="toc-text">1.1 malloc函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-2-malloc的底层——sbrk函数"><span class="toc-text">1.2 malloc的底层——sbrk函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1-3-free函数"><span class="toc-text">1.3 free函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、为什么要使用动态内存"><span class="toc-text">2、为什么要使用动态内存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、分配器的要求和目标"><span class="toc-text">3、分配器的要求和目标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、碎片"><span class="toc-text">3、碎片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、分配器设计"><span class="toc-text">4、分配器设计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、隐式空闲链表"><span class="toc-text">5、隐式空闲链表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-组织空闲块"><span class="toc-text">5.1 组织空闲块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-2-放置已分配的块"><span class="toc-text">5.2 放置已分配的块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-3-分割空闲块"><span class="toc-text">5.3 分割空闲块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-4-合并空闲块"><span class="toc-text">5.4 合并空闲块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-5-合并空闲块的具体实现"><span class="toc-text">5.5 合并空闲块的具体实现</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、显式空闲链表"><span class="toc-text">6、显式空闲链表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-空闲块组织"><span class="toc-text">6.1 空闲块组织</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-分离的空闲链表"><span class="toc-text">6.2 分离的空闲链表</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7、垃圾收集"><span class="toc-text">7、垃圾收集</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-垃圾收集器垃圾组织"><span class="toc-text">7.1 垃圾收集器垃圾组织</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-Mark-amp-Sweep垃圾收集器"><span class="toc-text">7.2 Mark&amp;Sweep垃圾收集器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8、小结"><span class="toc-text">8、小结</span></a></li></ol>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

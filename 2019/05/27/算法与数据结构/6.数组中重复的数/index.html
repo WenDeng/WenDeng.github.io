@@ -1,0 +1,372 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="技术,数组">
+
+
+    <meta name="description" content="在一个长度为n的数组里的所有数字都在0到n-1的范围内。 数组中某些数字是重复的，但不知道有几个数字是重复的。也不知道每个数字重复几次。请找出数组中任意一个重复的数字。 例如，如果输入长度为7的...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>6.数组中的重复数 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="6.数组中的重复数">
+            
+	            6.数组中的重复数
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/算法与数据结构/">算法与数据结构</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/技术/">技术</a> <a class="tag-link" href="../../../../../tags/数组/">数组</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/27</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>在一个长度为n的数组里的所有数字都在0到n-1的范围内。 数组中某些数字是重复的，但不知道有几个数字是重复的。也不知道每个数字重复几次。请找出数组中任意一个重复的数字。 例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是第一个重复的数字2。</p>
+<a id="more"></a>
+<h3 id="1、题目描述"><a href="#1、题目描述" class="headerlink" title="1、题目描述"></a>1、题目描述</h3><p>在一个长度为n的数组里的所有数字都在0到n-1的范围内。 数组中某些数字是重复的，但不知道有几个数字是重复的。也不知道每个数字重复几次。请找出数组中任意一个重复的数字。 例如，如果输入长度为7的数组{2,3,1,0,2,5,3}，那么对应的输出是第一个重复的数字2。</p>
+<blockquote>
+<p><a href="https://www.nowcoder.com/practice/623a5ac0ea5b4e5f95552655361ae0a8?tpId=13&amp;tqId=11203&amp;tPage=3&amp;rp=3&amp;ru=/ta/coding-interviews&amp;qru=/ta/coding-interviews/question-ranking" target="_blank" rel="noopener">https://www.nowcoder.com/practice/623a5ac0ea5b4e5f95552655361ae0a8?tpId=13&amp;tqId=11203&amp;tPage=3&amp;rp=3&amp;ru=/ta/coding-interviews&amp;qru=/ta/coding-interviews/question-ranking</a></p>
+</blockquote>
+<h3 id="2、解题思路"><a href="#2、解题思路" class="headerlink" title="2、解题思路"></a>2、解题思路</h3><h4 id="（1）Hash求解（或者排序后求解）"><a href="#（1）Hash求解（或者排序后求解）" class="headerlink" title="（1）Hash求解（或者排序后求解）"></a>（1）Hash求解（或者排序后求解）</h4><p>用一个辅助数组进行计数，遍历原数组并记录每个数出现的次数，然后就可以得到重复的数。这种的解法的的时间复杂度为O(n),空间复杂度也为O(n)。实现代码如下：</p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">class Solution &#123;</span><br><span class="line">public:</span><br><span class="line">    // Parameters:</span><br><span class="line">    // numbers: an<span class="built_in"> array </span>of integers</span><br><span class="line">    // length:  the length of<span class="built_in"> array </span>numbers</span><br><span class="line">    // duplication: (Output) the duplicated number in the<span class="built_in"> array </span>number</span><br><span class="line">    // Return value:true<span class="built_in"> if </span>the input is valid,<span class="built_in"> and </span>there are some duplications in the<span class="built_in"> array </span>number; otherwise false</span><br><span class="line">    </span><br><span class="line">    bool duplicate(int numbers[],<span class="built_in"> int </span>length, int* duplication) &#123;</span><br><span class="line">       <span class="built_in"> int </span>*cnt=new int[length]; //辅助数组</span><br><span class="line">        for(int i=0;i&lt;length;i++) cnt[i]=0; //计数都为0</span><br><span class="line">        for(int i=0;i&lt;length;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            if(numbers[i]&gt;=length || numbers[i]&lt;0)<span class="built_in"> return </span>false;</span><br><span class="line">            if(cnt[numbers[i]]&gt;=1) //判断是否重复</span><br><span class="line">            &#123;</span><br><span class="line">                *duplication=numbers[i];</span><br><span class="line">                delete cnt; //记得释放</span><br><span class="line">               <span class="built_in"> return </span>true;</span><br><span class="line">            &#125;</span><br><span class="line">            else cnt[numbers[i]]++;</span><br><span class="line">        &#125;</span><br><span class="line">        delete cnt;//记得释放</span><br><span class="line">       <span class="built_in"> return </span>false;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h4 id="（2）创新解法"><a href="#（2）创新解法" class="headerlink" title="（2）创新解法"></a>（2）创新解法</h4><p>依次遍历数组，对于坐标i，取其值m，然后判断numbers[m]是否与m相等，相等则表明对应的位置上已经有该值，返回；否则交换numbers[i]和numbers[m]，将m放到对应的位置，然后继续取numbers[i],直到numbers[i]==i,即当前位置已经被放置。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">duplicate</span><span class="params">(<span class="keyword">int</span> numbers[], <span class="keyword">int</span> length, <span class="keyword">int</span> *duplication)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(numbers==<span class="literal">nullptr</span>||length&lt;<span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;length;i++)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">while</span>(i!=numbers[i])</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">if</span> (numbers[i] &gt;= length || numbers[i] &lt; <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">//范围出错</span></span><br><span class="line">                <span class="keyword">if</span> (numbers[i] == numbers[numbers[i]])  <span class="comment">//对应的数已经出现过一次了</span></span><br><span class="line">                &#123;</span><br><span class="line">                    *duplication = numbers[i]; <span class="comment">//找到值</span></span><br><span class="line">                    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                swap(numbers[i], numbers[numbers[i]]);<span class="comment">//一直换，知道换到对应的数为相应的数</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>该种解法的<strong>时间复杂度为O(n)</strong>,虽然有两重循环，但是固定位置的数只需要放正确一次即可，无论是while循环还是for循环都来做。<strong>空间复杂度为O(1)</strong>。</p>
+<h3 id="3、类似的题"><a href="#3、类似的题" class="headerlink" title="3、类似的题"></a>3、类似的题</h3><h4 id="3-1-长度为n-1的数组放1-n的数，求重复的数（不能修改原数组）。"><a href="#3-1-长度为n-1的数组放1-n的数，求重复的数（不能修改原数组）。" class="headerlink" title="3.1 长度为n+1的数组放1~n的数，求重复的数（不能修改原数组）。"></a>3.1 长度为n+1的数组放1~n的数，求重复的数（不能修改原数组）。</h4><p>这个题跟上一个题的数主要区别是不能修改原数组。可以用辅助数组进行求解，还可以用二分法进行求解，如取中间的数m，然后统计1~m的数的个数cnt1，统计m+1~n的数的个数cnt2。如果cnt大于m，则对应的重复的数在1~m这个区间，继续二分，直到最后一个数。</p>
+<p>时间复杂度为O(nlogn),空间复杂度为O(1)。</p>
+<h4 id="3-2-除了一个数外，所有两个数都出现两次的数组，找出这个数。"><a href="#3-2-除了一个数外，所有两个数都出现两次的数组，找出这个数。" class="headerlink" title="3.2 除了一个数外，所有两个数都出现两次的数组，找出这个数。"></a>3.2 除了一个数外，所有两个数都出现两次的数组，找出这个数。</h4><p>用异或可解决问题，时间复杂度为O(n)。</p>
+<h4 id="3-3-除了两个数外，所有两个数都出现两次的数组，找出这两个数。"><a href="#3-3-除了两个数外，所有两个数都出现两次的数组，找出这两个数。" class="headerlink" title="3.3 除了两个数外，所有两个数都出现两次的数组，找出这两个数。"></a>3.3 除了两个数外，所有两个数都出现两次的数组，找出这两个数。</h4><p>还是用异或进行解决，需要注意的是这里需要求出那两个特殊的数的异或结果，然后找到其为1最低位对应的2的幂值m，遍历数组找到与m相与为1的所有数然后异或即可得结果result1，遍历数组找到与m相与为0的所有数然后异或即可得结果result2。</p>
+<h4 id="3-4-除一个数外，其它的所有的数都出现3次，求这个数。"><a href="#3-4-除一个数外，其它的所有的数都出现3次，求这个数。" class="headerlink" title="3.4 除一个数外，其它的所有的数都出现3次，求这个数。"></a>3.4 除一个数外，其它的所有的数都出现3次，求这个数。</h4><p>这个题的解法为用一个长度为32的数组，用来统计数组中所有数对应位为1的个数。最后遍历一次处理这个数组即可得到结果。</p>
+<p>时间复杂度为O(n),空间复杂度为O(1)。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../../../../06/06/算法与数据结构/7.二叉树问题集合/" class="pre-post btn btn-default" title="7.二叉树问题集合">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">7.二叉树问题集合</span>
+        </a>
+    
+    
+        <a href="../../操作系统/第9章 虚拟内存之C程序中常见的内存相关错误/" class="next-post btn btn-default" title="第9章 虚拟内存之C程序中常见的内存相关错误">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">第9章 虚拟内存之C程序中常见的内存相关错误</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、题目描述"><span class="toc-text">1、题目描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、解题思路"><span class="toc-text">2、解题思路</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#（1）Hash求解（或者排序后求解）"><span class="toc-text">（1）Hash求解（或者排序后求解）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#（2）创新解法"><span class="toc-text">（2）创新解法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、类似的题"><span class="toc-text">3、类似的题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-长度为n-1的数组放1-n的数，求重复的数（不能修改原数组）。"><span class="toc-text">3.1 长度为n+1的数组放1~n的数，求重复的数（不能修改原数组）。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-除了一个数外，所有两个数都出现两次的数组，找出这个数。"><span class="toc-text">3.2 除了一个数外，所有两个数都出现两次的数组，找出这个数。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-除了两个数外，所有两个数都出现两次的数组，找出这两个数。"><span class="toc-text">3.3 除了两个数外，所有两个数都出现两次的数组，找出这两个数。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-除一个数外，其它的所有的数都出现3次，求这个数。"><span class="toc-text">3.4 除一个数外，其它的所有的数都出现3次，求这个数。</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

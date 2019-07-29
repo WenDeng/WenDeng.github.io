@@ -1,0 +1,441 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="技术,Iptabls,Netfilter">
+
+
+    <meta name="description" content="HTTP是一种超文本传输协议，它是无状态的、简单快速的、基于 TCP 的可靠传输协议。 HTTP使用明文传输，由此造成了很大的安全隐患。在网络传输过程中，只要数据包被人截获，截获人可以直接解析出...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>HTTPS安全通信机制及SSL握手过程 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="HTTPS安全通信机制及SSL握手过程">
+            
+	            HTTPS安全通信机制及SSL握手过程
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/网络协议/">网络协议</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/Iptabls/">Iptabls</a> <a class="tag-link" href="../../../../../tags/Netfilter/">Netfilter</a> <a class="tag-link" href="../../../../../tags/技术/">技术</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2018/12/28</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>HTTP是一种超文本传输协议，它是无状态的、简单快速的、基于 TCP 的可靠传输协议。 HTTP使用明文传输，由此造成了很大的安全隐患。在网络传输过程中，只要数据包被人截获，截获人可以直接解析出数据包内的信息，容易导致信息泄露。</p>
+<p>HTTPS常被定义为为HTTP over SSL，超文本传输安全协议。HTTPS协议在HTTP和传输层TCP之间增加了SSL/TSL层，SSL/TSL层能够提供密钥协商、数据加解密的功能，数据在网络以密文形式传输，从而保证数据安全。本文将一步步讲解https的安全通信原理。</p>
+<a id="more"></a>
+<h3 id="1、http为什么不安全？"><a href="#1、http为什么不安全？" class="headerlink" title="1、http为什么不安全？"></a>1、http为什么不安全？</h3><p><strong>http协议属于明文传输协议</strong>，交互过程以及数据传输都没有进行加密，通信双方也没有进行任何认证，通信过程非常容易遭遇劫持、监听、篡改，严重情况下，会造成恶意的流量劫持等问题，甚至造成个人隐私泄露（比如银行卡卡号和密码泄露）等严重的安全问题。</p>
+<p>可以把http通信比喻成寄送信件一样，A给B寄信，信件在寄送过程中，会经过很多的邮递员之手，他们可以拆开信读取里面的内容。A的信件里面的任何内容（包括各类账号和密码）都会被轻易窃取。除此之外，邮递员们还可以伪造或者修改信件的内容，导致B接收到的信件内容是假的。</p>
+<p>比如常见的，在http通信过程中，“中间人”将广告链接嵌入到服务器发给用户的http报文里，导致用户界面出现很多不良链接； 或者是修改用户的请求头URL，导致用户的请求被劫持到另外一个网站，用户的请求永远到不了真正的服务器。这些都会导致用户得不到正确的服务，甚至是损失惨重。</p>
+<h3 id="2、https如何保证安全？"><a href="#2、https如何保证安全？" class="headerlink" title="2、https如何保证安全？"></a>2、https如何保证安全？</h3><p>要解决http带来的问题，就要引入<strong>加密</strong>以及<strong>身份验证机制</strong>。</p>
+<h4 id="2-1-引入对称加密算法"><a href="#2-1-引入对称加密算法" class="headerlink" title="2.1 引入对称加密算法"></a>2.1 引入对称加密算法</h4><p>如果Server给Client的消息是密文的，只有服务器和客户端才能读懂，就可以保证数据的保密性。同时，在交换数据之前，验证一下对方的合法身份，就可以保证通信双方的安全。那么，问题来了，服务器把数据加密后，客户端如何读懂这些数据呢？</p>
+<p>这时服务器必须要把加密的密钥（<strong>对称密钥</strong>，后面会详细说明）告诉客户端，客户端才能利用对称密钥解开密文的内容。但是，服务器如果将这个对称密钥以明文的方式给客户端，还是会被中间人截获，中间人也会知道对称密钥，依然无法保证通信的保密性。但是，如果服务器以密文的方式将对称密钥发给客户端，客户端又如何解开这个密文，得到其中的对称密钥呢？</p>
+<h4 id="2-2-引入非对称加密算法"><a href="#2-2-引入非对称加密算法" class="headerlink" title="2.2 引入非对称加密算法"></a>2.2 引入非对称加密算法</h4><p>这时，我们引入了<strong>非对称加解密的概</strong>念。在非对称加解密算法里，公钥加密的数据，有且只有唯一的私钥才能够解密，所以<strong>服务器只要把公钥发给客户端，客户端就可以用这个公钥来加密进行数据传输的对称密钥。客户端利用公钥将对称密钥发给服务器时，即使中间人截取了信息，也无法解密，因为私钥只部署在服务器，其他任何人都没有私钥，因此，只有服务器才能够解密。服务器拿到客户端的信息并用私钥解密之后，就可以拿到加解密数据用的对称密钥，通过这个对称密钥来进行后续通信的数据加解密</strong>。除此之外，非对称加密可以很好的管理对称密钥，保证每次数据加密的对称密钥都是不相同的，这样子的话，即使客户端病毒拉取到通信缓存信息，也无法窃取正常通信内容。</p>
+<p>上述通信过程，可以画成以下交互图：</p>
+<p><img src="https://pic3.zhimg.com/5c09960e4b42cc41cc058cd7d7b27d8d_b.jpg" alt></p>
+<p>但是这样似乎还不够，如果通信过程中，在三次握手或者客户端发起HTTP请求过程中，客户端的请求被<strong>中间人劫持</strong>，那么中间人就可以伪装成“假冒客户端”和服务器通信；中间人又可以伪装成“假冒服务器”和客户端通信。接下来，我们详细阐述中间人获取对称密钥的过程。</p>
+<h4 id="2-3-中间人劫持"><a href="#2-3-中间人劫持" class="headerlink" title="2.3 中间人劫持"></a>2.3 中间人劫持</h4><p>中间人在收到服务器发送给客户端的公钥（这里是“正确的公钥”）后，并没有发给客户端，而是中间人将自己的公钥（这里中间人也会有一对公钥和私钥，这里称呼为“伪造公钥”）发给客户端。之后，客户端把对称密钥用这个“伪造公钥”加密后，发送过程中经过了中间人，中间人就可以用自己的私钥解密数据并拿到对称密钥，此时中间人再把对称密钥用“正确的公钥”加密发回给服务器。此时，客户端、中间人、服务器都拥有了一样的对称密钥，后续客户端和服务器的所有加密数据，中间人都可以通过对称密钥解密出来。</p>
+<p>中间人获取对称密钥的过程如下：</p>
+<p><img src="https://pic2.zhimg.com/83296008f1e7d679cd8a99a61944fbbb_b.jpg" alt></p>
+<h4 id="2-4-引入身份验证机制——数字证书"><a href="#2-4-引入身份验证机制——数字证书" class="headerlink" title="2.4 引入身份验证机制——数字证书"></a>2.4 引入身份验证机制——数字证书</h4><p>为了解决此问题，我们引入了<strong>数字证书</strong>的概念。服务器首先生成公私钥，将公钥提供给<strong>相关机构</strong>（CA），CA将公钥放入数字证书并将数字证书颁布给服务器，此时服务器就不是简单的把公钥给客户端，而是给客户端一个数字证书，数字证书中加入了一些数字签名的机制，保证了数字证书一定是服务器给客户端的。中间人发送的伪造证书，不能够获得CA的认证，此时，客户端和服务器就知道通信被劫持了。加入了CA数字签名认证的SSL会话过程如下所示：</p>
+<p><img src="https://pic4.zhimg.com/0d635fd33e0c9a8da972e14c83ec094b_b.jpg" alt></p>
+<p>所以综合以上三点：非对称加密算法（公钥和私钥）交换对称密钥+数字证书验证身份（验证公钥是否是伪造的）+利用对称密钥加解密后续传输的数据=安全</p>
+<p><img src="https://pic3.zhimg.com/bbb86e2b373fcf8c61dc7b1b09b80cf7_b.jpg" alt></p>
+<h3 id="3、https协议简介"><a href="#3、https协议简介" class="headerlink" title="3、https协议简介"></a>3、https协议简介</h3><p>接下来将会简要介绍https安全通信过程的相关技术，为什么是简单地介绍https协议呢？因为相关的知识太多了。</p>
+<h4 id="3-1-对称加密算法"><a href="#3-1-对称加密算法" class="headerlink" title="3.1 对称加密算法"></a>3.1 对称加密算法</h4><p>对称加密是指：加密和解密使用相同密钥的算法。它要求发送方和接收方在安全通信之前，商定一个对称密钥。对称算法的安全性完全依赖于密钥，密钥泄漏就意味着任何人都可以对他们发送或接收的消息解密，所以密钥的保密性对通信至关重要。</p>
+<h5 id="3-1-1-对称加密又分为两种模式：流加密和分组加密"><a href="#3-1-1-对称加密又分为两种模式：流加密和分组加密" class="headerlink" title="3.1.1 对称加密又分为两种模式：流加密和分组加密"></a>3.1.1 对称加密又分为两种模式：流加密和分组加密</h5><p>流加密是将消息作为字节流对待，并且使用数学函数分别作用在每一个字节位上。使用流加密时，每加密一次，相同的明文位会转换成不同的密文位。流加密使用了密钥流生成器，它生成的字节流与明文字节流进行异或，从而生成密文。</p>
+<p>分组加密是将消息划分为若干个分组，这些分组随后会通过数学函数进行处理，每次一个分组。假设使用64位的分组密码，此时如果消息长度为640位，就会被划分成10个64位的分组（如果最后一个分组长度不到64，则用0补齐之后加到64位），每个分组都用一系列数学公式进行处理，最后得到10个加密文本分组。然后，将这条密文消息发送给对端。对端必须拥有相同的分组密码，以相反的顺序对10个密文分组使用前面的算法解密，最终得到明文消息。<strong>比较常用的分组加密算法有DES、3DES、AES</strong>。其中DES是比较老的加密算法，现在已经被证明不安全。而3DES是一个过渡的加密算法，相当于在DES基础上进行三重运算来提高安全性，但其本质上还是和DES算法一致。而AES是DES算法的替代算法，<strong>AES是现在最安全的对称加密算法之一</strong>。</p>
+<h5 id="3-1-2-对称加密算法的优缺点："><a href="#3-1-2-对称加密算法的优缺点：" class="headerlink" title="3.1.2 对称加密算法的优缺点："></a>3.1.2 对称加密算法的优缺点：</h5><p>优点：计算量小、加密速度快、加密效率高。<br>缺点：</p>
+<ul>
+<li>（1）交易双方都使用同样密钥，安全性得不到保证；</li>
+<li>（2）每次使用对称加密算法时，都需要使用其他人不知道的惟一密钥，这会使得发收信息双方所拥有的钥匙数量呈几何级数增长，密钥管理成为负担。</li>
+</ul>
+<h4 id="3-2-非对称加密算法"><a href="#3-2-非对称加密算法" class="headerlink" title="3.2 非对称加密算法"></a>3.2 非对称加密算法</h4><p>在非对称密钥交换算法出现以前，对称加密的最主要缺陷就是不知道如何在通信双方之间传输对称密钥，而又不让中间人窃取。非对称密钥交换算法诞生之后，专门针对对称密钥传输做加解密，使得对称密钥的交互传输变得非常安全了。</p>
+<p>非对称密钥交换算法本身非常复杂，密钥交换过程涉及到随机数生成，模指数运算，空白补齐，加密，签名等等一系列极其复杂的过程。<strong>常见的密钥交换算法有RSA，ECDHE，DH，DHE等算法</strong>。其中，最经典也是最常用的是RSA算法。</p>
+<p>RSA算法安全性很高，最重要的是，算法实现非常简单。缺点就是需要比较大的质数（目前常用的是2048位）来保证安全强度，极其消耗CPU运算资源。<strong>RSA是目前唯一一个既能用于密钥交换又能用于证书签名的算法，RSA 是最经典，同时也是最常用的是非对称加解密算法</strong>。</p>
+<h5 id="3-2-1-非对称加密的缺点"><a href="#3-2-1-非对称加密的缺点" class="headerlink" title="3.2.1 非对称加密的缺点"></a>3.2.1 非对称加密的缺点</h5><p>非对称加密相比对称加密更加安全，但也存在两个致命的缺点：</p>
+<ul>
+<li><p>（1）<strong>CPU计算资源消耗非常大</strong>。一次完全TLS握手，密钥交换时的非对称解密计算量占整个握手过程的90%以上。而对称加密的计算量只相当于非对称加密的0.1%。如果后续的应用层数据传输过程也使用非对称加解密，那么CPU性能开销太庞大，服务器是根本无法承受的。赛门特克给出的实验数据显示，加解密同等数量的文件，非对称算法消耗的CPU资源是对称算法的1000倍以上。</p>
+</li>
+<li><p>（2）非对称加密算法对<strong>加密内容的长度有限制</strong>，不能超过公钥长度。比如现在常用的公钥长度是2048位，意味着待加密内容不能超过256个字节。</p>
+</li>
+</ul>
+<p><strong>所以非对称加解密目前只能用来作对称密钥交换或者CA签名，不适合用来做应用层内容传输的加解密。</strong></p>
+<h4 id="3-3-身份认证"><a href="#3-3-身份认证" class="headerlink" title="3.3 身份认证"></a>3.3 身份认证</h4><p><strong>https协议中身份认证的部分是由CA数字证书完成的</strong>，证书由公钥、证书主体、数字签名等内容组成。在客户端发起SSL请求后，服务端会将数字证书发给客户端，客户端会对证书进行验证（验证这张证书是否是伪造的？也就是公钥是否是伪造的），如果证书不是伪造的，客户端就获取用于对称密钥交换的非对称密钥（获取公钥）。</p>
+<h5 id="3-3-1-数字证书的作用"><a href="#3-3-1-数字证书的作用" class="headerlink" title="3.3.1 数字证书的作用"></a>3.3.1 数字证书的作用</h5><p>数字证书有三个作用：</p>
+<ul>
+<li>（1）身份授权。确保浏览器访问的网站是经过CA验证的可信任的网站。</li>
+<li>（2）分发公钥。每个数字证书都包含了注册者生成的公钥（验证确保是合法的，非伪造的公钥）。在SSL握手时会通过certificate消息传输给客户端。</li>
+<li>（3）验证证书合法性。客户端接收到数字证书后，会对证书合法性进行验证。只有验证通过后的证书，才能够进行后续通信过程。</li>
+</ul>
+<h5 id="3-3-2-如何申请一个受信任的CA数字证书"><a href="#3-3-2-如何申请一个受信任的CA数字证书" class="headerlink" title="3.3.2 如何申请一个受信任的CA数字证书"></a>3.3.2 如何申请一个受信任的CA数字证书</h5><p>申请一个受信任的CA数字证书通常有如下流程：</p>
+<ul>
+<li>（1）公司的服务器生成公钥和私钥，并发起生成CA数字证书请求。</li>
+<li>（2）RA（证书注册及审核机构）检查实体的合法性，即检查在注册系统里面是否注册过的正规公司。</li>
+<li>（3）CA证书签发机构签发证书，发送给申请者实体。</li>
+<li>（4）证书更新到repository（负责数字证书及CRL内容存储和分发），实体终端后续从repository更新证书，查询证书状态等。</li>
+</ul>
+<h4 id="3-4-数字证书验证"><a href="#3-4-数字证书验证" class="headerlink" title="3.4 数字证书验证"></a>3.4 数字证书验证</h4><p>申请者拿到CA的证书并部署在网站服务器端，那浏览器发起握手并接收到证书后，如何确认这个证书就是CA签发的呢？怎样避免第三方伪造这个证书？</p>
+<p>答案就是数字签名，数字签名是证书的防伪标签，目前使用最广泛的SHA-RSA（SHA用于哈希算法，RSA用于非对称加密算法）。<strong>数字签名的制作和验证过程如下</strong>：</p>
+<ul>
+<li>（1）数字签名的签发。首先是使用哈希函数对待签名内容进行安全哈希，生成消息摘要，然后使用CA自己的私钥对消息摘要进行加密。</li>
+<li>（2）数字签名的校验。使用CA的公钥解密签名，然后使用相同的签名函数对签名证书内容进行签名，并和服务端数字签名里的签名内容进行比较，如果相同就认为校验成功。</li>
+</ul>
+<p><img src="https://pic2.zhimg.com/e464309875c608aefd964d905345a0a0_b.jpg" alt></p>
+<p>需要注意的是：</p>
+<ul>
+<li>（1）数字签名签发和校验使用的非对称密钥是CA自己的公钥和私钥，跟证书申请者（提交证书申请的公司实体）提交的公钥没有任何关系。</li>
+<li>（2）数字签名的签发过程跟公钥加密的过程刚好相反，即是用私钥加密，公钥解密。（一对公钥和私钥，公钥加密的内容只有私钥能够解密；反过来，私钥加密的内容，也就有公钥才能够解密）</li>
+<li>（3）现在大的CA都会有证书链，证书链的好处：首先是安全，保持CA的私钥离线使用。第二个好处是方便部署和撤销。这里为啥要撤销呢？因为，如果CA数字证书出现问题（被篡改或者污染），只需要撤销相应级别的证书，根证书依然是安全的。</li>
+<li>（4）根CA证书都是自签名，即用自己的公钥和私钥完成了签名的制作和验证。而证书链上的证书签名都是使用上一级证书的非对称密钥进行签名和验证的。</li>
+<li>（5）怎样获取根CA和多级CA的密钥对？还有，既然是自签名和自认证，那么它们是否安全可信？这里的答案是：当然可信，因为这些厂商跟浏览器和操作系统都有合作，它们的根公钥都默认装到了浏览器或者操作系统环境里。</li>
+</ul>
+<h4 id="3-5-数据完整性验证"><a href="#3-5-数据完整性验证" class="headerlink" title="3.5 数据完整性验证"></a>3.5 数据完整性验证</h4><p>数据传输过程中的完整性使用MAC算法来保证。为了避免网络中传输的数据被非法篡改，或者数据比特被污染，SSL利用基于MD5或SHA的MAC算法来保证消息的完整性（由于MD5在实际应用中存在冲突的可能性比较大，所以尽量别采用MD5来验证内容一致性）。</p>
+<p>MAC算法是在密钥参与下的数据摘要算法，能将密钥和任意长度的数据转换为固定长度的数据。发送者在密钥的作用下，利用MAC算法计算出消息的MAC值，并将其添加在需要发送的消息之后，并发送给接收者。接收者利用同样的密钥和MAC算法计算出消息的MAC值，并与接收到的MAC值比较。如果二者相同，则报文没有改变；否则，报文在传输过程中被修改或者污染，接收者将丢弃该报文。</p>
+<p>SHA也不能使用SHA0和SHA1，山东大学的王小云教授在2005年就宣布破解了 SHA-1完整版算法，并获得了业内专家的认可。微软和google都已经宣布16年及17年之后不再支持sha1签名证书。</p>
+<h3 id="4、Https的通信握手过程"><a href="#4、Https的通信握手过程" class="headerlink" title="4、Https的通信握手过程"></a>4、Https的通信握手过程</h3><p>SSL是一个介于HTTP协议与TCP之间的一个可选层，为数据通讯提供安全支持。SSL协议可分为两层：</p>
+<ul>
+<li>SSL记录协议（SSL Record Protocol）：它建立在可靠的传输协议（如TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持。</li>
+<li>SSL握手协议（SSL Handshake Protocol）：它建立在SSL记录协议之上，用于在实际的数据传输开始前，通讯双方进行身份认证、协商加密算法、交换加密密钥等。</li>
+</ul>
+<p>SSL协议握手以及https的通信过程如下：</p>
+<ul>
+<li>（1）客户端请求建立SSL链接，并向服务端发送一个报文，内容包括TSL协议版本、用于生成对话密钥的随机数1、支持的加密方法、支持的压缩方法，此时是明文传输。</li>
+<li>（2）服务端回复客户端一个报文，内容包括确认使用的加密通信协议版本、用于生成对话密钥的随机数2、确认加密方法、服务器证书（包含非对称加密的公钥）。</li>
+<li>（3）客户端验证证书，如果证书不是可信机构颁布，或证书域名与实际域名不符，或者证书已经过期，就会向访问者显示一个警告，是否继续通信。</li>
+<li>（4）客户端确认证书没有问题，就会取出证书中的服务器公钥，然后生成新的随机数3并通过服务端下发的公钥及加密方法进行加密，发送给服务器。</li>
+<li>（5）服务端收到客户端的回复，利用已知的加解密方式进行解密，同时利用上述3个随机数通过一定的算法生成HTTP链接数据传输的对称加密key – session key。</li>
+</ul>
+<p>此后的HTTP链接数据传输即通过对称加密方式进行加密传输。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../../../../../2019/03/08/算法与数据结构/1.保卫方案/" class="pre-post btn btn-default" title="1.保卫方案">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">1.保卫方案</span>
+        </a>
+    
+    
+        <a href="../../../11/c++基础/c++实现单例模式/" class="next-post btn btn-default" title="c++实现单例模式">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">c++实现单例模式</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、http为什么不安全？"><span class="toc-text">1、http为什么不安全？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、https如何保证安全？"><span class="toc-text">2、https如何保证安全？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-引入对称加密算法"><span class="toc-text">2.1 引入对称加密算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-引入非对称加密算法"><span class="toc-text">2.2 引入非对称加密算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-中间人劫持"><span class="toc-text">2.3 中间人劫持</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-引入身份验证机制——数字证书"><span class="toc-text">2.4 引入身份验证机制——数字证书</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、https协议简介"><span class="toc-text">3、https协议简介</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-对称加密算法"><span class="toc-text">3.1 对称加密算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-1-对称加密又分为两种模式：流加密和分组加密"><span class="toc-text">3.1.1 对称加密又分为两种模式：流加密和分组加密</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-2-对称加密算法的优缺点："><span class="toc-text">3.1.2 对称加密算法的优缺点：</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-非对称加密算法"><span class="toc-text">3.2 非对称加密算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-1-非对称加密的缺点"><span class="toc-text">3.2.1 非对称加密的缺点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-身份认证"><span class="toc-text">3.3 身份认证</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-1-数字证书的作用"><span class="toc-text">3.3.1 数字证书的作用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-2-如何申请一个受信任的CA数字证书"><span class="toc-text">3.3.2 如何申请一个受信任的CA数字证书</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-数字证书验证"><span class="toc-text">3.4 数字证书验证</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-数据完整性验证"><span class="toc-text">3.5 数据完整性验证</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、Https的通信握手过程"><span class="toc-text">4、Https的通信握手过程</span></a></li></ol>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

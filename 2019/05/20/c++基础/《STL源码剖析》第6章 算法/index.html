@@ -1,0 +1,442 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="技术,STL源码">
+
+
+    <meta name="description" content="STL算法部分主要由头文件,,组成。要使用 STL中的算法函数必须包含头文件，对于数值算法须包含，中则定义了一些模板类，用来声明函数对象。
+
+
+大部分内容摘自：https://www.cnblo...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>《STL源码剖析》第6章 算法 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="《STL源码剖析》第6章 算法">
+            
+	            《STL源码剖析》第6章 算法
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/C-基础/">C++基础</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/STL源码/">STL源码</a> <a class="tag-link" href="../../../../../tags/技术/">技术</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/20</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>STL算法部分主要由头文件<algorithm>,<numeric>,<functional>组成。要使用 STL中的算法函数必须包含头文件<algorithm>，对于数值算法须包含<numeric>，<functional>中则定义了一些模板类，用来声明函数对象。</functional></numeric></algorithm></functional></numeric></algorithm></p>
+<a id="more"></a>
+<blockquote>
+<p>大部分内容摘自：<a href="https://www.cnblogs.com/linuxAndMcu/p/10264339.html" target="_blank" rel="noopener">https://www.cnblogs.com/linuxAndMcu/p/10264339.html</a></p>
+</blockquote>
+<h3 id="1、常见的算法种类"><a href="#1、常见的算法种类" class="headerlink" title="1、常见的算法种类"></a>1、常见的算法种类</h3><p>（1）质变与非质变算法：</p>
+<ul>
+<li>质变算法-会改变操作对象的值。所有的STL算法都作用在[first,last)所标示的区间上，在运算过程中改变区间元素值。例如：copy,swap,replace,fill,remove,permulation,partition,sort等。</li>
+<li>非质变算法-不改变操作对象之值。例如：find,search,count,equal,max,min等。</li>
+</ul>
+<p>（2）STL中算法大致分为四类：</p>
+<ul>
+<li>非可变序列算法：指不直接修改其所操作的容器内容的算法。</li>
+<li>可变序列算法：指可以修改它们所操作的容器内容的算法。</li>
+<li>排序算法：包括对序列进行排序和合并的算法、搜索算法以及有序序列上的集合操作。</li>
+<li>数值算法：对容器内容进行数值计算。</li>
+</ul>
+<p>细致分类可分为13类，由于算法过多，所以不一一做介绍，只选取几个最常用的算法介绍。</p>
+<h3 id="2、SGI-STL中的常见算法"><a href="#2、SGI-STL中的常见算法" class="headerlink" title="2、SGI STL中的常见算法"></a>2、SGI STL中的常见算法</h3><h4 id="2-1-查找算法"><a href="#2-1-查找算法" class="headerlink" title="2.1 查找算法"></a>2.1 查找算法</h4><p>查找算法共13个，包含在<algorithm>头文件中，用来提供元素排序策略，这里只列出一部分算法：</algorithm></p>
+<ul>
+<li>adjacent_find: 在iterator对标识元素范围内，查找一对相邻重复元素，找到则返回指向这对元素的第一个元素的ForwardIterator。否则返回last。重载版本使用输入的二元操作符代替相等的判断。</li>
+<li>count: 利用等于操作符，把标志范围内的元素与输入值比较，返回相等元素个数。</li>
+<li>count_if: 利用输入的操作符，对标志范围内的元素进行操作，返回结果为true的个数。</li>
+<li>binary_search: 在有序序列中查找value，找到返回true。重载的版本实用指定的比较函数对象或函数指针来判断相等。</li>
+<li>equal_range: 功能类似equal，返回一对iterator，第一个表示lower_bound，第二个表示upper_bound。</li>
+<li>find: 利用底层元素的等于操作符，对指定范围内的元素与输入值进行比较。当匹配时，结束搜索，返回指向该元素的Iterator。</li>
+<li>find_if: 使用输入的函数代替等于操作符执行find。</li>
+<li>search: 给出两个范围，返回一个ForwardIterator，查找成功指向第一个范围内第一次出现子序列(第二个范围)的位置，查找失败指向last1。重载版本使用自定义的比较操作。</li>
+<li>search_n: 在指定范围内查找val出现n次的子序列。重载版本使用自定义的比较操作。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdafx.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;functional&gt;  </span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> iarr[] = &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span> &#125;;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; iv(iarr, iarr + <span class="keyword">sizeof</span>(iarr) / <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** adjacent_find: 在iterator对标识元素范围内，查找一对相邻重复元素 ***/</span></span><br><span class="line">    <span class="comment">//原型： _FwdIt adjacent_find(_FwdIt _First, _FwdIt _Last)</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"adjacent_find: "</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; *adjacent_find(iv.begin(), iv.end()) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** count: 利用等于操作符，把标志范围内的元素与输入值比较，返回相等元素个数。 ***/</span></span><br><span class="line">    <span class="comment">//原型： count(_InIt _First, _InIt _Last, const _Ty&amp; _Val)</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"count(==7): "</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; count(iv.begin(), iv.end(), <span class="number">6</span>) &lt;&lt; <span class="built_in">endl</span>;<span class="comment">//统计6的个数</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** count_if: 利用输入的操作符，对标志范围内的元素进行操作，返回结果为true的个数。 ***/</span></span><br><span class="line">    <span class="comment">//原型： count_if(_InIt _First, _InIt _Last, _Pr _Pred)</span></span><br><span class="line">    <span class="comment">//统计小于7的元素的个数 :9个</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"count_if(&lt;7): "</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; count_if(iv.begin(), iv.end(), bind2nd(less&lt;<span class="keyword">int</span>&gt;(), <span class="number">7</span>)) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** binary_search: 在有序序列中查找value，找到返回true。 ***/</span></span><br><span class="line">    <span class="comment">//原型： bool binary_search(_FwdIt _First, _FwdIt _Last, const _Ty&amp; _Val)</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"binary_search: "</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; binary_search(iv.begin(), iv.end(), <span class="number">4</span>) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//找到返回true</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** equal_range: 功能类似equal，返回一对iterator，第一个表示lower_bound，第二个表示upper_bound。 ***/</span></span><br><span class="line">    <span class="comment">//原型： equal_range(_FwdIt _First, _FwdIt _Last, const _Ty&amp; _Val)</span></span><br><span class="line">    pair&lt;<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::iterator, <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;::iterator&gt; pairIte;  </span><br><span class="line">    pairIte = equal_range(iv.begin(), iv.end(), <span class="number">3</span>);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"pairIte.first:"</span> &lt;&lt; *(pairIte.first) &lt;&lt; <span class="built_in">endl</span>;<span class="comment">//lowerbound 3   </span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"pairIte.second:"</span> &lt;&lt; *(pairIte.second) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//upperbound 4</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** find: 利用底层元素的等于操作符，对指定范围内的元素与输入值进行比较。 ***/</span></span><br><span class="line">    <span class="comment">//原型： _InIt find(_InIt _First, _InIt _Last, const _Ty&amp; _Val)</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"find: "</span>;</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; *find(iv.begin(), iv.end(), <span class="number">4</span>) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//返回元素为4的元素的下标位置</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** find_if: 使用输入的函数代替等于操作符执行find。 ***/</span></span><br><span class="line">    <span class="comment">//原型： _InIt find_if(_InIt _First, _InIt _Last, _Pr _Pred)</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"find_if: "</span> &lt;&lt; *find_if(iv.begin(), iv.end(), bind2nd(greater&lt;<span class="keyword">int</span>&gt;(), <span class="number">2</span>)) &lt;&lt; <span class="built_in">endl</span>; <span class="comment">//返回大于2的第一个元素的位置：3 </span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** search: 给出两个范围，返回一个ForwardIterator，查找成功指向第一个范围内第一次出现子序列的位置。 ***/</span></span><br><span class="line">    <span class="comment">//原型： _FwdIt1 search(_FwdIt1 _First1, _FwdIt1 _Last1, _FwdIt2 _First2, _FwdIt2 _Last2)</span></span><br><span class="line">    <span class="comment">//在iv中查找 子序列 2 3 第一次出现的位置的元素   </span></span><br><span class="line">    <span class="keyword">int</span> iarr3[<span class="number">3</span>] = &#123; <span class="number">2</span>, <span class="number">3</span> &#125;;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; iv3(iarr3, iarr3 + <span class="number">2</span>);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"search: "</span> &lt;&lt; *search(iv.begin(), iv.end(), iv3.begin(), iv3.end()) &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** search_n: 在指定范围内查找val出现n次的子序列。 ***/</span></span><br><span class="line">    <span class="comment">//原型： _FwdIt1 search_n(_FwdIt1 _First1, _FwdIt1 _Last1, _Diff2 _Count, const _Ty&amp; _Val)</span></span><br><span class="line">    <span class="comment">//在iv中查找 2个6 出现的第一个位置的元素   </span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"search_n: "</span> &lt;&lt; *search_n(iv.begin(), iv.end(), <span class="number">2</span>, <span class="number">6</span>) &lt;&lt; <span class="built_in">endl</span>;  </span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-2-排序和通用算法"><a href="#2-2-排序和通用算法" class="headerlink" title="2.2 排序和通用算法"></a>2.2 排序和通用算法</h4><p>排序算法共14个，包含在<algorithm>头文件中，用来判断容器中是否包含某个值，这里只列出一部分算法：</algorithm></p>
+<ul>
+<li>merge: 合并两个有序序列，存放到另一个序列。重载版本使用自定义的比较。</li>
+<li>random_shuffle: 对指定范围内的元素随机调整次序。重载版本输入一个随机数产生操作。</li>
+<li>nth_element: 将范围内的序列重新排序，使所有小于第n个元素的元素都出现在它前面，而大于它的都出现在后面。重载版本使用自定义的比较操作。</li>
+<li>reverse: 将指定范围内元素重新反序排序。</li>
+<li>sort: 以升序重新排列指定范围内的元素。重载版本使用自定义的比较操作。</li>
+<li>stable_sort: 与sort类似，不过保留相等元素之间的顺序关系。</li>
+</ul>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdafx.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;functional&gt; //定义了greater&lt;int&gt;()</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">//要注意的技巧</span></span><br><span class="line"><span class="keyword">template</span> &lt;class T&gt;</span><br><span class="line">struct <span class="built_in">display</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="keyword">operator</span>()(<span class="keyword">const</span> T&amp;x) <span class="keyword">const</span></span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; x &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">//如果想从大到小排序，可以采用先排序后反转的方式，也可以采用下面方法:</span></span><br><span class="line"><span class="comment">//自定义从大到小的比较器，用来改变排序方式</span></span><br><span class="line"><span class="keyword">bool</span> Comp(<span class="keyword">const</span> <span class="keyword">int</span>&amp; a, <span class="keyword">const</span> <span class="keyword">int</span>&amp; b) &#123;</span><br><span class="line">    <span class="built_in">return</span> a &gt; b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> iarr1[] = &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span> &#125;;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; iv1(iarr1, iarr1 + <span class="keyword">sizeof</span>(iarr1) / <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; iv2(iarr1 + <span class="number">4</span>, iarr1 + <span class="number">8</span>); <span class="comment">//4 5 6 6</span></span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; iv3(<span class="number">15</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** merge: 合并两个有序序列，存放到另一个序列 ***/</span></span><br><span class="line">    <span class="comment">//iv1和iv2合并到iv3中（合并后会自动排序）</span></span><br><span class="line">    merge(iv1.<span class="built_in">begin</span>(), iv1.<span class="built_in">end</span>(), iv2.<span class="built_in">begin</span>(), iv2.<span class="built_in">end</span>(), iv3.<span class="built_in">begin</span>());</span><br><span class="line">    cout &lt;&lt; <span class="string">"merge合并后: "</span>;</span><br><span class="line">    for_each(iv3.<span class="built_in">begin</span>(), iv3.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** random_shuffle: 对指定范围内的元素随机调整次序。 ***/</span></span><br><span class="line">    <span class="keyword">int</span> iarr2[] = &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span> &#125;;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; iv4(iarr2, iarr2 + <span class="keyword">sizeof</span>(iarr2) / <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="comment">//打乱顺序  </span></span><br><span class="line">    random_shuffle(iv4.<span class="built_in">begin</span>(), iv4.<span class="built_in">end</span>());</span><br><span class="line">    cout &lt;&lt; <span class="string">"random_shuffle打乱后: "</span>;</span><br><span class="line">    for_each(iv4.<span class="built_in">begin</span>(), iv4.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** nth_element: 将范围内的序列重新排序。 ***/</span></span><br><span class="line">    <span class="comment">//将小于iv.begin+5的放到左边   </span></span><br><span class="line">    nth_element(iv4.<span class="built_in">begin</span>(), iv4.<span class="built_in">begin</span>() + <span class="number">5</span>, iv4.<span class="built_in">end</span>());</span><br><span class="line">    cout &lt;&lt; <span class="string">"nth_element重新排序后: "</span>;</span><br><span class="line">    for_each(iv4.<span class="built_in">begin</span>(), iv4.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** reverse: 将指定范围内元素重新反序排序。 ***/</span></span><br><span class="line">    reverse(iv4.<span class="built_in">begin</span>(), iv4.<span class="built_in">begin</span>());</span><br><span class="line">    cout &lt;&lt; <span class="string">"reverse翻转后: "</span>;</span><br><span class="line">    for_each(iv4.<span class="built_in">begin</span>(), iv4.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** sort: 以升序重新排列指定范围内的元素。 ***/</span></span><br><span class="line">    <span class="comment">//sort(iv4.begin(), iv4.end(), Comp); //也可以使用自定义Comp()函数</span></span><br><span class="line">    sort(iv4.<span class="built_in">begin</span>(), iv4.<span class="built_in">end</span>(), greater&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; <span class="string">"sort排序（倒序）: "</span>;</span><br><span class="line">    for_each(iv4.<span class="built_in">begin</span>(), iv4.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** stable_sort: 与sort类似，不过保留相等元素之间的顺序关系。 ***/</span></span><br><span class="line">    <span class="keyword">int</span> iarr3[] = &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span> &#125;;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; iv5(iarr3, iarr3 + <span class="keyword">sizeof</span>(iarr3) / <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    stable_sort(iv5.<span class="built_in">begin</span>(), iv5.<span class="built_in">end</span>(), greater&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; <span class="string">"stable_sort排序（倒序）: "</span>;</span><br><span class="line">    for_each(iv5.<span class="built_in">begin</span>(), iv5.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-3-删除和替换算法"><a href="#2-3-删除和替换算法" class="headerlink" title="2.3 删除和替换算法"></a>2.3 删除和替换算法</h4><p>删除和替换算法共15个，包含在<numeric>头文件中，这里只列出一部分算法：</numeric></p>
+<ul>
+<li>copy: 复制序列。</li>
+<li>copy_backward: 与copy相同，不过元素是以相反顺序被拷贝。</li>
+<li>remove: 删除指定范围内所有等于指定元素的元素。注意，该函数不是真正删除函数。内置函数不适合使用remove和remove_if函数。</li>
+<li>remove_copy: 将所有不匹配元素复制到一个制定容器，返回OutputIterator指向被拷贝的末元素的下一个位置。</li>
+<li>remove_if: 删除指定范围内输入操作结果为true的所有元素。</li>
+<li>remove_copy_if: 将所有不匹配元素拷贝到一个指定容器。</li>
+</ul>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdafx.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;functional&gt; //定义了greater&lt;int&gt;()</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;class T&gt;</span><br><span class="line">struct <span class="built_in">display</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="keyword">operator</span>()(<span class="keyword">const</span> T&amp;x) <span class="keyword">const</span></span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; x &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> iarr1[] = &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span> &#125;;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; iv1(iarr1, iarr1 + <span class="keyword">sizeof</span>(iarr1) / <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; iv2(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** copy: 复制序列 ***/</span></span><br><span class="line">    <span class="comment">// 原型： _OutIt copy(_InIt _First, _InIt _Last,_OutIt _Dest)</span></span><br><span class="line">    copy(iv1.<span class="built_in">begin</span>(), iv1.<span class="built_in">end</span>(), iv2.<span class="built_in">begin</span>());</span><br><span class="line">    cout &lt;&lt; <span class="string">"copy(iv2): "</span>;</span><br><span class="line">    for_each(iv2.<span class="built_in">begin</span>(), iv2.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** copy_backward: 与copy相同，不过元素是以相反顺序被拷贝。 ***/</span></span><br><span class="line">    <span class="comment">// 原型： _BidIt2 copy_backward(_BidIt1 _First, _BidIt1 _Last,_BidIt2 _Dest)</span></span><br><span class="line">    copy_backward(iv1.<span class="built_in">begin</span>(), iv1.<span class="built_in">end</span>(), iv2.rend());</span><br><span class="line">    cout &lt;&lt; <span class="string">"copy_backward(iv2): "</span>;</span><br><span class="line">    for_each(iv2.<span class="built_in">begin</span>(), iv2.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** remove: 删除指定范围内所有等于指定元素的元素。 ***/</span></span><br><span class="line">    <span class="comment">// 原型： _FwdIt remove(_FwdIt _First, _FwdIt _Last, const _Ty&amp; _Val)</span></span><br><span class="line">    <span class="built_in">remove</span>(iv1.<span class="built_in">begin</span>(), iv1.<span class="built_in">end</span>(), <span class="number">5</span>); <span class="comment">//删除元素5</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"remove(iv1): "</span>;</span><br><span class="line">    for_each(iv1.<span class="built_in">begin</span>(), iv1.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** remove_copy: 将所有不匹配元素复制到一个制定容器，返回OutputIterator指向被拷贝的末元素的下一个位置。 ***/</span></span><br><span class="line">    <span class="comment">// 原型：  _OutIt remove_copy(_InIt _First, _InIt _Last,_OutIt _Dest, const _Ty&amp; _Val)</span></span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; iv3(<span class="number">8</span>);</span><br><span class="line">    remove_copy(iv1.<span class="built_in">begin</span>(), iv1.<span class="built_in">end</span>(), iv3.<span class="built_in">begin</span>(), <span class="number">4</span>); <span class="comment">//去除4 然后将一个容器的元素复制到另一个容器</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"remove_copy(iv3): "</span>;</span><br><span class="line">    for_each(iv3.<span class="built_in">begin</span>(), iv3.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** remove_if: 删除指定范围内输入操作结果为true的所有元素。 ***/</span></span><br><span class="line">    <span class="comment">// 原型： _FwdIt remove_if(_FwdIt _First, _FwdIt _Last, _Pr _Pred)</span></span><br><span class="line">    remove_if(iv3.<span class="built_in">begin</span>(), iv3.<span class="built_in">end</span>(), bind2nd(less&lt;<span class="keyword">int</span>&gt;(), <span class="number">6</span>)); <span class="comment">// 将小于6的元素 "删除"</span></span><br><span class="line">    cout &lt;&lt; <span class="string">"remove_if(iv3): "</span>;</span><br><span class="line">    for_each(iv3.<span class="built_in">begin</span>(), iv3.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** remove_copy_if: 将所有不匹配元素拷贝到一个指定容器。 ***/</span></span><br><span class="line">    <span class="comment">//原型： _OutIt remove_copy_if(_InIt _First, _InIt _Last,_OutIt _Dest, _Pr _Pred)</span></span><br><span class="line">    <span class="comment">// 将iv1中小于6的元素 "删除"后，剩下的元素再复制给iv3</span></span><br><span class="line">    remove_copy_if(iv1.<span class="built_in">begin</span>(), iv1.<span class="built_in">end</span>(), iv2.<span class="built_in">begin</span>(), bind2nd(less&lt;<span class="keyword">int</span>&gt;(), <span class="number">4</span>));</span><br><span class="line">    cout &lt;&lt; <span class="string">"remove_if(iv2): "</span>;</span><br><span class="line">    for_each(iv2.<span class="built_in">begin</span>(), iv2.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>replace: 将指定范围内所有等于vold的元素都用vnew代替。</li>
+<li>replace_copy: 与replace类似，不过将结果写入另一个容器。</li>
+<li>replace_if: 将指定范围内所有操作结果为true的元素用新值代替。</li>
+<li>replace_copy_if: 与replace_if，不过将结果写入另一个容器。</li>
+<li>swap: 交换存储在两个对象中的值。</li>
+<li>swap_range: 将指定范围内的元素与另一个序列元素值进行交换。</li>
+<li>unique: 清除序列中重复元素，和remove类似，它也不能真正删除元素。重载版本使用自定义比较操作。</li>
+<li>unique_copy: 与unique类似，不过把结果输出到另一个容器。</li>
+</ul>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdafx.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;functional&gt; //定义了greater&lt;int&gt;()</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;class T&gt;</span><br><span class="line">struct <span class="built_in">display</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="keyword">operator</span>()(<span class="keyword">const</span> T&amp;x) <span class="keyword">const</span></span><br><span class="line">    &#123;</span><br><span class="line">        cout &lt;&lt; x &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> main(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">int</span> iarr[] = &#123; <span class="number">8</span>, <span class="number">10</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span> &#125;;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; iv(iarr, iarr + <span class="keyword">sizeof</span>(iarr) / <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** replace: 将指定范围内所有等于vold的元素都用vnew代替。 ***/</span></span><br><span class="line">    <span class="comment">// 原型： void replace(_FwdIt _First, _FwdIt _Last, const _Ty&amp; _Oldval, const _Ty&amp; _Newval)</span></span><br><span class="line">    <span class="comment">//将容器中6 替换为 3   </span></span><br><span class="line">    replace(iv.<span class="built_in">begin</span>(), iv.<span class="built_in">end</span>(), <span class="number">6</span>, <span class="number">3</span>);</span><br><span class="line">    cout &lt;&lt; <span class="string">"replace(iv): "</span>;</span><br><span class="line">    for_each(iv.<span class="built_in">begin</span>(), iv.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;()); <span class="comment">//由于_X是static 所以接着 增长</span></span><br><span class="line">    cout &lt;&lt; endl; <span class="comment">//iv:8 10 7 8 3 3 7 8 3 7 8   </span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** replace_copy: 与replace类似，不过将结果写入另一个容器。 ***/</span></span><br><span class="line">    <span class="comment">// 原型： _OutIt replace_copy(_InIt _First, _InIt _Last, _OutIt _Dest, const _Ty&amp; _Oldval, const _Ty&amp; _Newval)</span></span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; iv2(<span class="number">12</span>);</span><br><span class="line">    <span class="comment">//将容器中3 替换为 5，并将结果写入另一个容器。  </span></span><br><span class="line">    replace_copy(iv.<span class="built_in">begin</span>(), iv.<span class="built_in">end</span>(), iv2.<span class="built_in">begin</span>(), <span class="number">3</span>, <span class="number">5</span>);</span><br><span class="line">    cout &lt;&lt; <span class="string">"replace_copy(iv2): "</span>;</span><br><span class="line">    for_each(iv2.<span class="built_in">begin</span>(), iv2.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());  </span><br><span class="line">    cout &lt;&lt; endl; <span class="comment">//iv2:8 10 7 8 5 5 7 8 5 7 8 0（最后y一个残留元素）   </span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** replace_if: 将指定范围内所有操作结果为true的元素用新值代替。 ***/</span></span><br><span class="line">    <span class="comment">// 原型： void replace_if(_FwdIt _First, _FwdIt _Last, _Pr _Pred, const _Ty&amp; _Val)</span></span><br><span class="line">    <span class="comment">//将容器中小于 5 替换为 2   </span></span><br><span class="line">    replace_if(iv.<span class="built_in">begin</span>(), iv.<span class="built_in">end</span>(), bind2nd(less&lt;<span class="keyword">int</span>&gt;(), <span class="number">5</span>), <span class="number">2</span>);</span><br><span class="line">    cout &lt;&lt; <span class="string">"replace_copy(iv): "</span>;</span><br><span class="line">    for_each(iv.<span class="built_in">begin</span>(), iv.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());   </span><br><span class="line">    cout &lt;&lt; endl; <span class="comment">//iv:8 10 7 8 2 5 7 8 2 7 8   </span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** replace_copy_if: 与replace_if，不过将结果写入另一个容器。 ***/</span></span><br><span class="line">    <span class="comment">// 原型： _OutIt replace_copy_if(_InIt _First, _InIt _Last, _OutIt _Dest, _Pr _Pred, const _Ty&amp; _Val)</span></span><br><span class="line">    <span class="comment">//将容器中小于 5 替换为 2，并将结果写入另一个容器。  </span></span><br><span class="line">    replace_copy_if(iv.<span class="built_in">begin</span>(), iv.<span class="built_in">end</span>(), iv2.<span class="built_in">begin</span>(), bind2nd(equal_to&lt;<span class="keyword">int</span>&gt;(), <span class="number">8</span>), <span class="number">9</span>);</span><br><span class="line">    cout &lt;&lt; <span class="string">"replace_copy_if(iv2): "</span>;</span><br><span class="line">    for_each(iv2.<span class="built_in">begin</span>(), iv2.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;()); </span><br><span class="line">    cout &lt;&lt; endl; <span class="comment">//iv2:9 10 7 8 2 5 7 9 2 7 8 0(最后一个残留元素)</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> iarr3[] = &#123; <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, &#125;;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; iv3(iarr3, iarr3 + <span class="keyword">sizeof</span>(iarr3) / <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">    <span class="keyword">int</span> iarr4[] = &#123; <span class="number">8</span>, <span class="number">10</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">6</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">6</span>, &#125;;</span><br><span class="line">    vector&lt;<span class="keyword">int</span>&gt; iv4(iarr4, iarr4 + <span class="keyword">sizeof</span>(iarr4) / <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** swap: 交换存储在两个对象中的值。 ***/</span></span><br><span class="line">    <span class="comment">// 原型： _OutIt replace_copy_if(_InIt _First, _InIt _Last, _OutIt _Dest, _Pr _Pred, const _Ty&amp; _Val)</span></span><br><span class="line">    <span class="comment">//将两个容器中的第一个元素交换  </span></span><br><span class="line">    swap(*iv3.<span class="built_in">begin</span>(), *iv4.<span class="built_in">begin</span>());</span><br><span class="line">    cout &lt;&lt; <span class="string">"swap(iv3): "</span>;</span><br><span class="line">    for_each(iv3.<span class="built_in">begin</span>(), iv3.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());  </span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** swap_range: 将指定范围内的元素与另一个序列元素值进行交换。 ***/</span></span><br><span class="line">    <span class="comment">// 原型： _FwdIt2 swap_ranges(_FwdIt1 _First1, _FwdIt1 _Last1, _FwdIt2 _Dest)</span></span><br><span class="line">    <span class="comment">//将两个容器中的全部元素进行交换  </span></span><br><span class="line">    swap_ranges(iv4.<span class="built_in">begin</span>(), iv4.<span class="built_in">end</span>(), iv3.<span class="built_in">begin</span>());</span><br><span class="line">    cout &lt;&lt; <span class="string">"swap_range(iv3): "</span>;</span><br><span class="line">    for_each(iv3.<span class="built_in">begin</span>(), iv3.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** unique: 清除序列中相邻的重复元素，和remove类似，它也不能真正删除元素。 ***/</span></span><br><span class="line">    <span class="comment">// 原型： _FwdIt unique(_FwdIt _First, _FwdIt _Last, _Pr _Pred) </span></span><br><span class="line">    unique(iv3.<span class="built_in">begin</span>(), iv3.<span class="built_in">end</span>());</span><br><span class="line">    cout &lt;&lt; <span class="string">"unique(iv3): "</span>;</span><br><span class="line">    for_each(iv3.<span class="built_in">begin</span>(), iv3.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** unique_copy: 与unique类似，不过把结果输出到另一个容器。 ***/</span></span><br><span class="line">    <span class="comment">// 原型： _OutIt unique_copy(_InIt _First, _InIt _Last, _OutIt _Dest, _Pr _Pred)</span></span><br><span class="line">    unique_copy(iv3.<span class="built_in">begin</span>(), iv3.<span class="built_in">end</span>(), iv4.<span class="built_in">begin</span>());</span><br><span class="line">    cout &lt;&lt; <span class="string">"unique_copy(iv4): "</span>;</span><br><span class="line">    for_each(iv4.<span class="built_in">begin</span>(), iv4.<span class="built_in">end</span>(), <span class="built_in">display</span>&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-4-排列组合算法"><a href="#2-4-排列组合算法" class="headerlink" title="2.4 排列组合算法"></a>2.4 排列组合算法</h4><p>排列组合算法共2个，包含在<algorithm>头文件中，用来提供计算给定集合按一定顺序的所有可能排列组合，这里全部列出：</algorithm></p>
+<ul>
+<li>next_permutation: 取出当前范围内的排列，并重新排序为下一个字典序排列。重载版本使用自定义的比较操作。</li>
+<li>prev_permutation: 取出指定范围内的序列并将它重新排序为上一个字典序排列。如果不存在上一个序列则返回false。重载版本使用自定义的比较操作。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdafx.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br><span class="line"><span class="class"><span class="title">struct</span> <span class="title">display</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="keyword">const</span> T&amp;x)</span> <span class="keyword">const</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="built_in">cout</span> &lt;&lt; x &lt;&lt; <span class="string">" "</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> iarr[] = &#123; <span class="number">12</span>, <span class="number">17</span>, <span class="number">20</span>, <span class="number">22</span>, <span class="number">23</span>, <span class="number">30</span>, <span class="number">33</span>, <span class="number">40</span> &#125;;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; iv(iarr, iarr + <span class="keyword">sizeof</span>(iarr) / <span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** next_permutation: 取出当前范围内的排列，并重新排序为下一个字典序排列。***/</span></span><br><span class="line">    <span class="comment">// 原型： bool next_permutation(_BidIt _First, _BidIt _Last)</span></span><br><span class="line">    <span class="comment">//生成下一个排列组合（字典序）   </span></span><br><span class="line">    next_permutation(iv.begin(), iv.end());</span><br><span class="line">    for_each(iv.begin(), iv.end(), display&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*** prev_permutation: 取出指定范围内的序列并将它重新排序为上一个字典序排列。 ***/</span></span><br><span class="line">    <span class="comment">// 原型： bool prev_permutation(_BidIt _First, _BidIt _Last)</span></span><br><span class="line">    prev_permutation(iv.begin(), iv.end());</span><br><span class="line">    for_each(iv.begin(), iv.end(), display&lt;<span class="keyword">int</span>&gt;());</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-5-数值算法"><a href="#2-5-数值算法" class="headerlink" title="2.5 数值算法"></a>2.5 数值算法</h4><p>数值算法共4个，包含在<numeric>头文件中，分别是：</numeric></p>
+<ul>
+<li>accumulate: iterator对标识的序列段元素之和，加到一个由val指定的初始值上。重载版本不再做加法，而是传进来的二元操作符被应用到元素上。</li>
+<li>partial_sum: 创建一个新序列，其中每个元素值代表指定范围内该位置前所有元素之和。重载版本使用自定义操作代替加法。</li>
+<li>inner_product: 对两个序列做内积(对应元素相乘，再求和)并将内积加到一个输入的初始值上。重载版本使用用户定义的操作。</li>
+<li>adjacent_difference: 创建一个新序列，新序列中每个新值代表当前元素与上一个元素的差。重载版本用指定二元操作计算相邻元素的差。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"stdafx.h"</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;numeric&gt; //数值算法</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iterator&gt; //定义了ostream_iterator</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[])</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> arr[] = &#123; <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span> &#125;;</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; vec(arr, arr + <span class="number">5</span>);</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; vec2(arr, arr + <span class="number">5</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// accumulate: iterator对标识的序列段元素之和，加到一个由val指定的初始值上。</span></span><br><span class="line">    <span class="keyword">int</span> temp;</span><br><span class="line">    <span class="keyword">int</span> val = <span class="number">0</span>;</span><br><span class="line">    temp = accumulate(vec.begin(), vec.end(), val);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"accumulate(val = 0): "</span> &lt;&lt; temp &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    val = <span class="number">1</span>;</span><br><span class="line">    temp = accumulate(vec.begin(), vec.end(), val);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"accumulate(val = 1): "</span> &lt;&lt; temp &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//inner_product: 对两个序列做内积(对应元素相乘，再求和)并将内积加到一个输入的初始值上。</span></span><br><span class="line">    <span class="comment">//这里是：1*1 + 2*2 + 3*3 + 4*4 + 5*5</span></span><br><span class="line">    val = <span class="number">0</span>;</span><br><span class="line">    temp = inner_product(vec.begin(), vec.end(), vec2.begin(), val);</span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"inner_product(val = 0): "</span> &lt;&lt; temp &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//partial_sum: 创建一个新序列，其中每个元素值代表指定范围内该位置前所有元素之和。</span></span><br><span class="line">    <span class="comment">//第一次，1   第二次，1+2  第三次，1+2+3  第四次，1+2+3+4</span></span><br><span class="line">    ostream_iterator&lt;<span class="keyword">int</span>&gt; oit(<span class="built_in">cout</span>, <span class="string">" "</span>); <span class="comment">//迭代器绑定到cout上作为输出使用</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"ostream_iterator: "</span>;</span><br><span class="line">    partial_sum(vec.begin(), vec.end(), oit);<span class="comment">//依次输出前n个数的和</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="comment">//第一次，1   第二次，1-2  第三次，1-2-3  第四次，1-2-3-4</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"ostream_iterator(minus): "</span>;</span><br><span class="line">    partial_sum(vec.begin(), vec.end(), oit, minus&lt;<span class="keyword">int</span>&gt;());<span class="comment">//依次输出第一个数减去（除第一个数外到当前数的和）</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//adjacent_difference: 创建一个新序列，新序列中每个新值代表当前元素与上一个元素的差。</span></span><br><span class="line">    <span class="comment">//第一次，1-0   第二次，2-1  第三次，3-2  第四次，4-3</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"adjacent_difference: "</span>;</span><br><span class="line">    adjacent_difference(vec.begin(), vec.end(), oit); <span class="comment">//输出相邻元素差值 后面-前面</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line">    <span class="comment">//第一次，1+0   第二次，2+1  第三次，3+2  第四次，4+3</span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="string">"adjacent_difference(plus): "</span>;</span><br><span class="line">    adjacent_difference(vec.begin(), vec.end(), oit, plus&lt;<span class="keyword">int</span>&gt;()); <span class="comment">//输出相邻元素差值 后面-前面 </span></span><br><span class="line">    <span class="built_in">cout</span> &lt;&lt; <span class="built_in">endl</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3、几个算法的具体实现原理"><a href="#3、几个算法的具体实现原理" class="headerlink" title="3、几个算法的具体实现原理"></a>3、几个算法的具体实现原理</h3><h4 id="3-1-next-permutation-的实现"><a href="#3-1-next-permutation-的实现" class="headerlink" title="3.1 next_permutation()的实现"></a>3.1 next_permutation()的实现</h4><p>该算法用于求区间序列的<strong>下一个</strong>排列组合，在当前序列中，从尾端往前寻找两个相邻元素，前一个记为*i，后一个记为*ii，并且满足*i &lt; *ii。然后再从尾端寻找另一个元素*j，如果满足*i &lt; *j，即将第i个元素与第j个元素对调，并将第ii个元素之后（包括ii）的所有元素颠倒排序，即求出下一个序列了。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/23.png?raw=true" alt="image"></p>
+<p>代码实现：</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">template&lt;class BidirectionalIterator&gt;  </span><br><span class="line">bool next_permutation(BidirectionalIterator <span class="built_in">first</span>, BidirectionalIterator <span class="built_in">last</span>)</span><br><span class="line">&#123;  </span><br><span class="line">    <span class="keyword">if</span>(<span class="built_in">first</span> == <span class="built_in">last</span>)  <span class="built_in">return</span> <span class="literal">false</span>; //空序列  </span><br><span class="line">  </span><br><span class="line">    BidirectionalIterator i = <span class="built_in">first</span>;  </span><br><span class="line">    ++i;  </span><br><span class="line">    <span class="keyword">if</span>(i == <span class="built_in">last</span>)  <span class="built_in">return</span> <span class="literal">false</span>;  //一个元素，没有下一个序列了  </span><br><span class="line">      </span><br><span class="line">    i = <span class="built_in">last</span>;  </span><br><span class="line">    --i;  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">for</span>(;;) </span><br><span class="line">    &#123;  </span><br><span class="line">        BidirectionalIterator ii = i;  //不断往前移动</span><br><span class="line">        --i;  </span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span>(*i &lt; *ii) //满足条件</span><br><span class="line">        &#123;  </span><br><span class="line">            BidirectionalIterator j = <span class="built_in">last</span>;  </span><br><span class="line">            <span class="keyword">while</span>(!(*i &lt; *--j)); //找到*i&lt;*j的情况  </span><br><span class="line">            iter_swap(i, j);  //进行交换</span><br><span class="line">            <span class="built_in">reverse</span>(ii, <span class="built_in">last</span>);  </span><br><span class="line">            <span class="built_in">return</span> <span class="literal">true</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">          </span><br><span class="line">        <span class="keyword">if</span>(i == <span class="built_in">first</span>) </span><br><span class="line">        &#123;  </span><br><span class="line">            <span class="built_in">reverse</span>(<span class="built_in">first</span>, <span class="built_in">last</span>);  //全逆向，即为最小字典序列，如cba变为abc  </span><br><span class="line">            <span class="built_in">return</span> <span class="literal">false</span>;  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-2-pre-permutation-的实现原理"><a href="#3-2-pre-permutation-的实现原理" class="headerlink" title="3.2 pre_permutation()的实现原理"></a>3.2 pre_permutation()的实现原理</h4><p>该算法用于求区间序列的<strong>上一个</strong>排列组合，在当前序列中，从尾端往前寻找两个相邻元素，前一个记为*i，后一个记为*ii，直到满足*i &gt; *ii。然后再从尾端寻找另一个元素*j，如果满足*i &gt; *j，即将第i个元素与第j个元素对调，并将第ii个元素之后（包括ii）的所有元素颠倒排序，即求出上一个序列了。</p>
+<h4 id="3-3-sort-的实现原理"><a href="#3-3-sort-的实现原理" class="headerlink" title="3.3 sort()的实现原理"></a>3.3 sort()的实现原理</h4><p>STL中的sort并非只是普通的快速排序，<strong>除了对普通的快速排序进行优化，它还结合了插入排序和堆排序</strong>。根据不同的数量级别以及不同情况，能自动选用合适的排序方法。当数据量较大时采用快速排序，分段递归。一旦分段后的数据量小于某个阀值，为避免递归调用带来过大的额外负荷，便会改用插入排序。而如果递归层次过深，有出现最坏情况的倾</p>
+<p>Quick Sort中任何一个元素都可以被选做枢轴，比如随机选取，固定选取。但是划分的两端越均匀，执行效率越高；如果其中一段长度为0，那就出现了最坏情况。最理想的选取方法是选取头、尾和中间三个元素中大小处于中间的那个元素作为枢轴。这样可以避免出现最坏情况（<strong>三点中值法</strong>）。</p>
+<h4 id="3-4-partition-的实现原理"><a href="#3-4-partition-的实现原理" class="headerlink" title="3.4 partition()的实现原理"></a>3.4 partition()的实现原理</h4><p>对[first, last)元素进行处理，使得满足p的元素移到[first, last)前部，不满足的移到后部，返回第一个不满足p元素所在的迭代器，如果都满足的话返回last。一元谓词可以用lambda表达式等。<br><figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">template&lt; <span class="built_in">class</span> ForwardIt, <span class="built_in">class</span> UnaryPredicate &gt;</span><br><span class="line">ForwardIt partition( ForwardIt <span class="keyword">first</span>, ForwardIt <span class="keyword">last</span>, UnaryPredicate p );</span><br></pre></td></tr></table></figure></p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../../../21/操作系统/第9章 虚拟内存/" class="pre-post btn btn-default" title="第9章 虚拟内存">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">第9章 虚拟内存</span>
+        </a>
+    
+    
+        <a href="../../../19/c++基础/c++11列表初始化/" class="next-post btn btn-default" title="c++11特性之列表初始化">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">c++11特性之列表初始化</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、常见的算法种类"><span class="toc-text">1、常见的算法种类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、SGI-STL中的常见算法"><span class="toc-text">2、SGI STL中的常见算法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2-1-查找算法"><span class="toc-text">2.1 查找算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-2-排序和通用算法"><span class="toc-text">2.2 排序和通用算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-3-删除和替换算法"><span class="toc-text">2.3 删除和替换算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-4-排列组合算法"><span class="toc-text">2.4 排列组合算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-5-数值算法"><span class="toc-text">2.5 数值算法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、几个算法的具体实现原理"><span class="toc-text">3、几个算法的具体实现原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-next-permutation-的实现"><span class="toc-text">3.1 next_permutation()的实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-pre-permutation-的实现原理"><span class="toc-text">3.2 pre_permutation()的实现原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-sort-的实现原理"><span class="toc-text">3.3 sort()的实现原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-partition-的实现原理"><span class="toc-text">3.4 partition()的实现原理</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

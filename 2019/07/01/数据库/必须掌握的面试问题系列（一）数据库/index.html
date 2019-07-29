@@ -1,0 +1,507 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="技术,面试">
+
+
+    <meta name="description" content="本文主要是总结了一下常见的数据库问题，主要是对之前的知识进行回顾和复习。
+一、为什么用自增列作为主键？1、如果我们定义了主键(PRIMARY KEY)，那么InnoDB会选择主键作为聚集索引。如...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>必须掌握的面试问题系列（一）数据库（转） | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="必须掌握的面试问题系列（一）数据库（转）">
+            
+	            必须掌握的面试问题系列（一）数据库（转）
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/数据库/">数据库</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/技术/">技术</a> <a class="tag-link" href="../../../../../tags/面试/">面试</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/07/01</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>本文主要是总结了一下常见的数据库问题，主要是对之前的知识进行回顾和复习。<br><a id="more"></a></p>
+<h4 id="一、为什么用自增列作为主键？"><a href="#一、为什么用自增列作为主键？" class="headerlink" title="一、为什么用自增列作为主键？"></a>一、为什么用自增列作为主键？</h4><p>1、如果我们定义了主键(PRIMARY KEY)，那么InnoDB会选择主键作为<strong>聚集索引</strong>。如果没有显式定义主键，则InnoDB会选择第一个<strong>不包含有NULL值的唯一索引</strong>作为主键索引。</p>
+<p>如果也没有这样的唯一索引，则InnoDB会选择<strong>内置6字节长的ROWID作为隐含的聚集索引</strong>，并随着行记录的写入而递增，这个ROWID不像ORACLE的ROWID那样可引用，是隐含的。</p>
+<p>2、数据记录本身被存于主索引（一颗B+Tree）的叶子节点上，这就要求同一个叶子节点内的各条数据记录按主键顺序存放，因此每当有一条新的记录插入时，MySQL会根据其主键将其插入适当的节点和位置，如果页面达到装载因子（InnoDB默认为15/16），则开辟一个新的页（节点）。</p>
+<p>3、如果表使用自增主键，那么每次插入新的记录，记录就会顺序添加到当前索引节点的后续位置，当一页写满，就会自动开辟一个新的页。</p>
+<p>4、如果使用<strong>非自增主键</strong>（如果身份证号或学号等），由于每次插入主键的值近似于随机，因此每次新纪录都要被插到现有索引页得中间某个位置，此时MySQL不得不为了将新记录插到合适位置而移动数据，甚至目标页面可能已经被回写到磁盘上而从缓存中清掉，此时又要从磁盘上读回来，这增加了很多开销，同时频繁的移动、分页操作造成了大量的碎片，得到了不够紧凑的索引结构，后续不得不通过OPTIMIZE TABLE来重建表并优化填充页面。</p>
+<h4 id="二、为什么使用数据索引能提高效率？"><a href="#二、为什么使用数据索引能提高效率？" class="headerlink" title="二、为什么使用数据索引能提高效率？"></a>二、为什么使用数据索引能提高效率？</h4><p>数据索引的存储是有序的，在有序的情况下，通过索引查询一个数据是无需遍历索引记录的。极端情况下，数据索引的查询效率为二分法查询效率，趋近于log2(N)。</p>
+<h4 id="三、B-树索引和哈希索引的区别"><a href="#三、B-树索引和哈希索引的区别" class="headerlink" title="三、B+树索引和哈希索引的区别"></a>三、B+树索引和哈希索引的区别</h4><p><strong>B+树</strong>是一个平衡的多叉树，从根节点到每个叶子节点的高度差值不超过1，而且同层级的节点间有指针相互链接，是有序的。</p>
+<p><strong>哈希索引</strong>就是采用一定的哈希算法，把键值换算成新的哈希值，检索时不需要类似B+树那样从根节点到叶子节点逐级查找，只需一次哈希算法即可,是无序的。</p>
+<h4 id="四、哈希索引的优势："><a href="#四、哈希索引的优势：" class="headerlink" title="四、哈希索引的优势："></a>四、哈希索引的优势：</h4><p>等值查询，哈希索引具有绝对优势（前提是：没有大量重复键值，如果大量重复键值时，哈希索引的效率很低，因为存在所谓的哈希碰撞问题。）</p>
+<h4 id="五、哈希索引不适用的场景："><a href="#五、哈希索引不适用的场景：" class="headerlink" title="五、哈希索引不适用的场景："></a>五、哈希索引不适用的场景：</h4><ul>
+<li>不支持范围查询</li>
+<li>不支持索引完成排序</li>
+<li>不支持联合索引的最左前缀匹配规则</li>
+</ul>
+<p>通常，B+树索引结构适用于绝大多数场景，没有范围查询、没有排序的时候，特别适合采用哈希索引。</p>
+<h6 id="仅等值查询"><a href="#仅等值查询" class="headerlink" title="仅等值查询"></a>仅等值查询</h6><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="keyword">id</span>, <span class="keyword">name</span> <span class="keyword">from</span> <span class="keyword">table</span> <span class="keyword">where</span> <span class="keyword">name</span>=<span class="string">'李明'</span>;</span><br></pre></td></tr></table></figure>
+<p>而常用的InnoDB引擎中默认使用的是B+树索引，它会实时监控表上索引的使用情况。<strong>如果认为建立哈希索引可以提高查询效率</strong>，则自动在内存中的“自适应哈希索引缓冲区”建立哈希索引（在InnoDB中默认开启自适应哈希索引）。</p>
+<p>通过观察搜索模式，MySQL会利用index key的前缀建立哈希索引，如果一个表几乎大部分都在缓冲池中，那么建立一个哈希索引能够加快等值查询。</p>
+<p>注意：<strong>在某些工作负载下，通过哈希索引查找带来的性能提升远大于额外的监控索引搜索情况和保持这个哈希表结构所带来的开销</strong>。</p>
+<p>但某些时候，在负载高的情况下，自适应哈希索引中添加的read/write锁也会带来竞争，比如高并发的join操作。like操作和%的通配符操作也不适用于自适应哈希索引，可能要关闭自适应哈希索引。</p>
+<h4 id="六、B树和B-树的区别"><a href="#六、B树和B-树的区别" class="headerlink" title="六、B树和B+树的区别"></a>六、B树和B+树的区别</h4><p>1、B树，每个节点都存储key和data，所有节点组成这棵树，并且叶子节点指针为nul，叶子结点不包含任何关键字信息。</p>
+<p>2、B+树，所有的叶子结点中包含了全部关键字的信息，及指向含有这些关键字记录的指针，且叶子结点本身依关键字的大小自小而大的顺序链接，所有的非终端结点可以看成是索引部分，结点中仅含有其子树根结点中最大（或最小）关键字。</p>
+<h4 id="七、为什么说B-比B树更适合实际应用中操作系统的文件索引和数据库索引？"><a href="#七、为什么说B-比B树更适合实际应用中操作系统的文件索引和数据库索引？" class="headerlink" title="七、为什么说B+比B树更适合实际应用中操作系统的文件索引和数据库索引？"></a>七、为什么说B+比B树更适合实际应用中操作系统的文件索引和数据库索引？</h4><ul>
+<li><p>（1）B+的磁盘读写代价更低。<br>B+的内部结点并没有指向关键字具体信息的指针，因此其内部结点相对B树更小。<br>如果把所有同一内部结点的关键字存放在同一盘块中，那么盘块所能容纳的关键字数量也越多。一次性读入内存中的需要查找的关键字也就越多。相对来说IO读写次数也就降低了。</p>
+</li>
+<li><p>（2）B+-tree的查询效率更加稳定。<br>由于非终结点并不是最终指向文件内容的结点，而只是叶子结点中关键字的索引。所以任何关键字的查找必须走一条从根结点到叶子结点的路。所有关键字查询的路径长度相同，导致每一个数据的查询效率相当。</p>
+</li>
+</ul>
+<h4 id="八、MySQL联合索引"><a href="#八、MySQL联合索引" class="headerlink" title="八、MySQL联合索引"></a>八、MySQL联合索引</h4><ul>
+<li><p>（1）联合索引是两个或更多个列上的索引。<br>对于联合索引: Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index (a,b,c). 可以支持a 、 a,b 、 a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。</p>
+</li>
+<li><p>（2）利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引不同于使用两个单独的索引。</p>
+</li>
+</ul>
+<p>复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不知道姓，电话簿将没有用处。</p>
+<h4 id="九、什么情况下应不建或少建索引？"><a href="#九、什么情况下应不建或少建索引？" class="headerlink" title="九、什么情况下应不建或少建索引？"></a>九、什么情况下应不建或少建索引？</h4><ul>
+<li>1、表记录太少</li>
+<li>2、经常插入、删除、修改的表</li>
+<li>3、数据重复且分布平均的表字段，假如一个表有10万行记录，有一个字段A只有T和F两种值，且每个值的分布概率大约为50%，那么对这种表A字段建索引一般不会提高数据库的查询速度。</li>
+<li>4、经常和主字段一块查询但主字段索引值比较多的表字段</li>
+</ul>
+<h4 id="十、什么是表分区？"><a href="#十、什么是表分区？" class="headerlink" title="十、什么是表分区？"></a>十、什么是表分区？</h4><p>表分区，是指根据一定规则，将数据库中的一张表分解成多个更小的，容易管理的部分。从逻辑上看，只有一张表，但是底层却是由多个物理分区组成。</p>
+<h4 id="十一、表分区与分表的区别"><a href="#十一、表分区与分表的区别" class="headerlink" title="十一、表分区与分表的区别"></a>十一、表分区与分表的区别</h4><p>分表：指的是通过一定规则，将一张表分解成多张不同的表。比如将用户订单记录根据时间成多个表。</p>
+<p><strong>分表与分区的区别在于</strong>：分区从逻辑上来讲只有一张表，而分表则是将一张表分解成多张表。</p>
+<h4 id="十二、表分区有什么好处？"><a href="#十二、表分区有什么好处？" class="headerlink" title="十二、表分区有什么好处？"></a>十二、表分区有什么好处？</h4><ul>
+<li>1、存储更多数据。分区表的数据可以分布在不同的物理设备上，从而高效地利用多个硬件设备。和单个磁盘或者文件系统相比，可以存储更多数据。</li>
+<li>2、优化查询。在where语句中包含分区条件时，可以只扫描一个或多个分区表来提高查询效率；涉及sum和count语句时，也可以在多个分区上并行处理，最后汇总结果。</li>
+<li>3、分区表更容易维护。例如：想批量删除大量数据可以清除整个分区。</li>
+<li>4、避免某些特殊的瓶颈，例如InnoDB的单个索引的互斥访问，ext3问价你系统的inode锁竞争等。</li>
+</ul>
+<h4 id="十三、分区表的限制因素"><a href="#十三、分区表的限制因素" class="headerlink" title="十三、分区表的限制因素"></a>十三、分区表的限制因素</h4><ul>
+<li>一个表最多只能有1024个分区</li>
+<li>MySQL5.1中，分区表达式必须是整数，或者返回整数的表达式。在MySQL5.5中提供了非整数表达式分区的支持。</li>
+<li>如果分区字段中有主键或者唯一索引的列，那么多有主键列和唯一索引列都必须包含进来。即：分区字段要么不包含主键或者索引列，要么包含全部主键和索引列。</li>
+<li>分区表中无法使用外键约束</li>
+<li>MySQL的分区适用于一个表的所有数据和索引，不能只对表数据分区而不对索引分区，也不能只对索引分区而不对表分区，也不能只对表的一部分数据分区。</li>
+</ul>
+<h4 id="十四、如何判断当前MySQL是否支持分区？"><a href="#十四、如何判断当前MySQL是否支持分区？" class="headerlink" title="十四、如何判断当前MySQL是否支持分区？"></a>十四、如何判断当前MySQL是否支持分区？</h4><p>命令：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">show</span> <span class="keyword">variables</span> <span class="keyword">like</span> <span class="string">'%partition%'</span></span><br></pre></td></tr></table></figure></p>
+<p>运行结果:<br><figure class="highlight coq"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like '%partition%';</span><br><span class="line">+-------------------+-------+| <span class="type">Variable_name</span> | <span class="type">Value</span> |<span class="type">+-------------------+-------+| have_partitioning</span> | <span class="type">YES</span> |<span class="type">+-------------------+-------+1</span> row <span class="built_in">in</span> <span class="built_in">set</span> (<span class="number">0.00</span> sec)</span><br></pre></td></tr></table></figure></p>
+<p>have_partintioning 的值为YES，表示支持分区。</p>
+<h4 id="十五、MySQL支持的分区类型有哪些？"><a href="#十五、MySQL支持的分区类型有哪些？" class="headerlink" title="十五、MySQL支持的分区类型有哪些？"></a>十五、MySQL支持的分区类型有哪些？</h4><ul>
+<li>RANGE分区：这种模式允许将数据划分不同范围。例如可以将一个表通过年份划分成若干个分区</li>
+<li>LIST分区：这种模式允许系统通过预定义的列表的值来对数据进行分割。按照List中的值分区，与RANGE的区别是，range分区的区间范围值是连续的。</li>
+<li>HASH分区 ：这中模式允许通过对表的一个或多个列的Hash Key进行计算，最后通过这个Hash码不同数值对应的数据区域进行分区。例如可以建立一个对表主键进行分区的表。</li>
+<li>KEY分区 ：上面Hash模式的一种延伸，这里的Hash Key是MySQL系统产生的。</li>
+</ul>
+<h4 id="十六、四种隔离级别"><a href="#十六、四种隔离级别" class="headerlink" title="十六、四种隔离级别"></a>十六、四种隔离级别</h4><ul>
+<li>Serializable (串行化)：可避免脏读、不可重复读、幻读的发生。</li>
+<li>Repeatable read (可重复读)：可避免脏读、不可重复读的发生。</li>
+<li>Read committed (读已提交)：可避免脏读的发生。</li>
+<li>Read uncommitted (读未提交)：最低级别，任何情况都无法保证。</li>
+</ul>
+<h4 id="十七、关于MVCC，怎么实现的？MVCC有什么用？"><a href="#十七、关于MVCC，怎么实现的？MVCC有什么用？" class="headerlink" title="十七、关于MVCC，怎么实现的？MVCC有什么用？"></a>十七、关于MVCC，怎么实现的？MVCC有什么用？</h4><p>MySQL InnoDB存储引擎，实现的是基于多版本的并发控制协议——MVCC (Multi-Version Concurrency Control) </p>
+<blockquote>
+<p>注：与MVCC相对的，是基于锁的并发控制LBCC，Lock-Based Concurrency Control</p>
+</blockquote>
+<p><strong>MVCC最大的好处</strong>：读不加锁，读写不冲突。在读多写少的OLTP应用中，读写不冲突是非常重要的，极大的增加了系统的并发性能，现阶段几乎所有的RDBMS，都支持了MVCC。</p>
+<p>纯粹基于锁的并发机制并发量低，MVCC是在基于锁的并发控制上的改进，主要是在读操作上提高了并发量。</p>
+<blockquote>
+<p>其实现主要是通过增加两个隐藏的列，用来记录修改版本号和删除版本号，版本号有数据库支持。</p>
+</blockquote>
+<h4 id="十八、在MVCC并发控制中，读操作可以分成两类："><a href="#十八、在MVCC并发控制中，读操作可以分成两类：" class="headerlink" title="十八、在MVCC并发控制中，读操作可以分成两类："></a>十八、在MVCC并发控制中，读操作可以分成两类：</h4><ul>
+<li>快照读 (snapshot read)：读取的是记录的可见版本 (有可能是历史版本)，不用加锁（共享读锁s锁也不加，所以不会阻塞其他事务的写）。</li>
+<li>当前读 (current read)：读取的是记录的最新版本，并且，当前读返回的记录，都会加上锁，保证其他事务不会再并发修改这条记录。</li>
+</ul>
+<h4 id="十九、行级锁定的优点："><a href="#十九、行级锁定的优点：" class="headerlink" title="十九、行级锁定的优点："></a>十九、行级锁定的优点：</h4><ul>
+<li>1、当在许多线程中访问不同的行时只存在少量锁定冲突。</li>
+<li>2、回滚时只有少量的更改</li>
+<li>3、可以长时间锁定单一的行。</li>
+</ul>
+<h4 id="二十、行级锁定的缺点："><a href="#二十、行级锁定的缺点：" class="headerlink" title="二十、行级锁定的缺点："></a>二十、行级锁定的缺点：</h4><ul>
+<li>比页级或表级锁定占用更多的内存。</li>
+<li><strong>当在表的大部分中使用时，比页级或表级锁定速度慢，因为你必须获取更多的锁</strong>。</li>
+<li>如果你在大部分数据上经常进行GROUP BY操作或者必须经常扫描整个表，比其它锁定明显慢很多。</li>
+<li>用高级别锁定，通过支持不同的类型锁定，你也可以很容易地调节应用程序，因为其锁成本小于行级锁定。</li>
+</ul>
+<h4 id="二十一、MySQL优化"><a href="#二十一、MySQL优化" class="headerlink" title="二十一、MySQL优化"></a>二十一、MySQL优化</h4><ul>
+<li><p>开启查询缓存，优化查询<br>explain你的select查询，这可以帮你分析你的查询语句或是表结构的性能瓶颈。EXPLAIN 的查询结果还会告诉你你的索引主键被如何利用的，你的数据表是如何被搜索和排序的</p>
+<p>当只要一行数据时使用limit 1，MySQL数据库引擎会在找到一条数据后停止搜索，而不是继续往后查少下一条符合记录的数据</p>
+</li>
+<li>为搜索字段建索引</li>
+<li><p>使用 ENUM 而不是 VARCHAR。如果你有一个字段，比如“性别”，“国家”，“民族”，“状态”或“部门”，你知道这些字段的取值是有限而且固定的，那么，你应该使用 ENUM 而不是VARCHAR</p>
+</li>
+<li><p>Prepared StatementsPrepared    Statements很像存储过程，是一种运行在后台的SQL语句集合，我们可以从使用 prepared statements 获得很多好处，无论是性能问题还是安全问题。</p>
+<p>Prepared Statements 可以检查一些你绑定好的变量，这样可以保护你的程序不会受到“SQL注入式”攻击</p>
+</li>
+<li>垂直分表</li>
+<li>选择正确的存储引擎</li>
+</ul>
+<h4 id="二十二、key和index的区别"><a href="#二十二、key和index的区别" class="headerlink" title="二十二、key和index的区别"></a>二十二、key和index的区别</h4><p>key是数据库的物理结构，它包含两层意义和作用，一是约束（偏重于约束和规范数据库的结构完整性），二是索引（辅助查询用的）。包括primary key, unique key, foreign key 等</p>
+<p>index是数据库的物理结构，它只是辅助查询的，它创建时会在另外的表空间（mysql中的innodb表空间）以一个类似目录的结构存储。索引要分类的话，分为前缀索引、全文本索引等；</p>
+<h4 id="二十三、Mysql-中-MyISAM-和-InnoDB-的区别有哪些？"><a href="#二十三、Mysql-中-MyISAM-和-InnoDB-的区别有哪些？" class="headerlink" title="二十三、Mysql 中 MyISAM 和 InnoDB 的区别有哪些？"></a>二十三、Mysql 中 MyISAM 和 InnoDB 的区别有哪些？</h4><p>区别：</p>
+<ul>
+<li>（1）InnoDB支持事务，MyISAM不支持<br>对于InnoDB每一条SQL语言都默认封装成事务，自动提交，这样会影响速度，所以最好把多条SQL语言放在begin和commit之间，组成一个事务；</li>
+<li>（2）InnoDB支持外键，而MyISAM不支持。对一个包含外键的InnoDB表转为MYISAM会失败；</li>
+<li>（3）<strong>InnoDB是聚集索引</strong>，数据文件是和索引绑在一起的，必须要有主键，通过主键索引效率很高。但是<strong>辅助索引</strong>需要两次查询，先查询到主键，然后再通过主键查询到数据。因此主键不应该过大，因为主键太大，其他索引也都会很大。<br>而<strong>MyISAM是非聚集索引</strong>，数据文件是分离的，索引保存的是数据文件的指针。主键索引和辅助索引是独立的。</li>
+<li>（4）InnoDB不保存表的具体行数，执行select count(*) from table时需要全表扫描。而MyISAM用一个变量保存了整个表的行数，执行上述语句时只需要读出该变量即可，速度很快；</li>
+<li>（5）Innodb不支持全文索引，而MyISAM支持全文索引，查询效率上MyISAM要高；</li>
+</ul>
+<p>如何选择：</p>
+<ul>
+<li>是否要支持事务，如果要请选择innodb，如果不需要可以考虑MyISAM；</li>
+<li>如果表中绝大多数都只是读查询，可以考虑MyISAM，如果既有读写也挺频繁，请使用InnoDB</li>
+<li>系统奔溃后，MyISAM恢复起来更困难，能否接受；</li>
+<li>MySQL5.5版本开始Innodb已经成为Mysql的默认引擎(之前是MyISAM)，说明其优势是有目共睹的，如果你不知道用什么，那就用InnoDB，至少不会差。</li>
+</ul>
+<h4 id="二十四、数据库表创建注意事项"><a href="#二十四、数据库表创建注意事项" class="headerlink" title="二十四、数据库表创建注意事项"></a>二十四、数据库表创建注意事项</h4><p>（1）字段名及字段配制合理性   </p>
+<ul>
+<li>剔除关系不密切的字段；   </li>
+<li>字段命名要有规则及相对应的含义（不要一部分英文，一部分拼音，还有类似a.b.c这样不明含义的字段）；</li>
+<li>字段命名尽量不要使用缩写（大多数缩写都不能明确字段含义）；</li>
+<li>字段不要大小写混用（想要具有可读性，多个英文单词可使用下划线形式连接）；</li>
+<li>字段名不要使用保留字或者关键字；</li>
+<li>保持字段名和类型的一致性；</li>
+<li>慎重选择数字类型；</li>
+<li>给文本字段留足余量；</li>
+</ul>
+<p>（2）系统特殊字段处理及建成后建议</p>
+<ul>
+<li>添加<strong>删除标记</strong>（例如操作人、删除时间）；</li>
+<li>建立版本机制；</li>
+</ul>
+<p>（3）表结构合理性配置</p>
+<ul>
+<li>多型字段的处理，就是表中是否存在字段能够分解成更小独立的几部分（例如：人可以分为男人和女人）；</li>
+<li>多值字段的处理，可以将表分为三张表，这样使得检索和排序更加有调理，且保证数据的完整性！</li>
+</ul>
+<p>（4）其它建议</p>
+<ul>
+<li>对于大数据字段，独立表进行存储，以便影响性能（例如：简介字段）；</li>
+<li>使用varchar类型代替char，因为varchar会动态分配长度，char指定长度是固定的；</li>
+<li>给表创建主键，对于没有主键的表，在查询和索引定义上有一定的影响；</li>
+<li>避免表字段运行为null，建议设置默认值（例如：int类型设置默认值为0）在索引查询上，效率立显；</li>
+<li>建立索引，最好建立在唯一和非空的字段上，建立太多的索引对后期插入、更新都存在一定的影响（考虑实际情况来创建）；</li>
+</ul>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+    
+        <a href="../../../../06/30/c++基础/C++基础之元编程与constexpr/" class="next-post btn btn-default" title="C++基础之元编程与constexpr">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">C++基础之元编程与constexpr</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#一、为什么用自增列作为主键？"><span class="toc-text">一、为什么用自增列作为主键？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二、为什么使用数据索引能提高效率？"><span class="toc-text">二、为什么使用数据索引能提高效率？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#三、B-树索引和哈希索引的区别"><span class="toc-text">三、B+树索引和哈希索引的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#四、哈希索引的优势："><span class="toc-text">四、哈希索引的优势：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#五、哈希索引不适用的场景："><span class="toc-text">五、哈希索引不适用的场景：</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#仅等值查询"><span class="toc-text">仅等值查询</span></a></li></ol></li></ol><li class="toc-item toc-level-4"><a class="toc-link" href="#六、B树和B-树的区别"><span class="toc-text">六、B树和B+树的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#七、为什么说B-比B树更适合实际应用中操作系统的文件索引和数据库索引？"><span class="toc-text">七、为什么说B+比B树更适合实际应用中操作系统的文件索引和数据库索引？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#八、MySQL联合索引"><span class="toc-text">八、MySQL联合索引</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#九、什么情况下应不建或少建索引？"><span class="toc-text">九、什么情况下应不建或少建索引？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十、什么是表分区？"><span class="toc-text">十、什么是表分区？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十一、表分区与分表的区别"><span class="toc-text">十一、表分区与分表的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十二、表分区有什么好处？"><span class="toc-text">十二、表分区有什么好处？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十三、分区表的限制因素"><span class="toc-text">十三、分区表的限制因素</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十四、如何判断当前MySQL是否支持分区？"><span class="toc-text">十四、如何判断当前MySQL是否支持分区？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十五、MySQL支持的分区类型有哪些？"><span class="toc-text">十五、MySQL支持的分区类型有哪些？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十六、四种隔离级别"><span class="toc-text">十六、四种隔离级别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十七、关于MVCC，怎么实现的？MVCC有什么用？"><span class="toc-text">十七、关于MVCC，怎么实现的？MVCC有什么用？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十八、在MVCC并发控制中，读操作可以分成两类："><span class="toc-text">十八、在MVCC并发控制中，读操作可以分成两类：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#十九、行级锁定的优点："><span class="toc-text">十九、行级锁定的优点：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二十、行级锁定的缺点："><span class="toc-text">二十、行级锁定的缺点：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二十一、MySQL优化"><span class="toc-text">二十一、MySQL优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二十二、key和index的区别"><span class="toc-text">二十二、key和index的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二十三、Mysql-中-MyISAM-和-InnoDB-的区别有哪些？"><span class="toc-text">二十三、Mysql 中 MyISAM 和 InnoDB 的区别有哪些？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#二十四、数据库表创建注意事项"><span class="toc-text">二十四、数据库表创建注意事项</span></a></li>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

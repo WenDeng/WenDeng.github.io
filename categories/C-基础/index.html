@@ -1,0 +1,590 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="野渡">
+
+
+    <meta name="description" content="而世之奇伟、瑰怪、非常之观，常在于险远，而人之所罕至焉，故非有志者不能至也。">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>分类: C++基础 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content ">
+                    <ol class="breadcrumb">
+    
+    
+        <li>
+            C++基础
+        </li>
+    
+
+</ol>
+
+
+    <article class="post">
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/06/30/c++基础/C++基础之元编程与constexpr/">C++基础之元编程与constexpr</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年06月30日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    元编程（metaprogramming）是一个典型的复合词，他由前缀 meta- 和词根 programming 复合而成，有“对一个程序进行编程”的意思。换句话说，编译器先编译你的代码，得到一份新的代码，然后再编译新的代码来解决问题。
+模板元编程技术，即把一些可以在编译时完成的求值计算，通过模板特化的技术绑定到具体的实例化代码上，从而减少不必要的代码量，提升代码的运行效率。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/23/c++基础/《STL源码剖析》常见问题总结/">《STL源码剖析》常见问题总结</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月23日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    《STL源码剖析》在学习完了之后也总结完了，但是感觉还是有些不太明白的地方，查了一些资料，总结了一下别人面试常遇到的问题，算是复习巩固，也是为了之后的找工作准备。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/22/c++基础/《STL源码剖析》第7章 仿函数（函数对象）和配接器/">《STL源码剖析》第7章 仿函数（函数对象）和配接器</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月22日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    所谓的仿函数(functor)，是通过重载()运算符模拟函数形为的类。因此，这里需要明确两点：
+
+1 仿函数不是函数，它是个类； 
+2 仿函数重载了()运算符，使得它的对你可以像函数那样子调用。 
+
+《Design Patterns》一书提到23个最普及的设计模式，其中对adapter样式的定义如下：将一个class的接口转换为另一个class 的接口，使原本因接口不兼容而不能合作的classes，可以一起运作。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+            <div class="post-media">
+                <a href="../../2019/05/20/c++基础/《STL源码剖析》第6章 算法/">
+                    <img class="img-ajax" src="../../img/loading.gif" data-src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/23.png?raw=true" alt="《STL源码剖析》第6章 算法">
+                </a>
+            </div>
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/20/c++基础/《STL源码剖析》第6章 算法/">《STL源码剖析》第6章 算法</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月20日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    STL算法部分主要由头文件,,组成。要使用 STL中的算法函数必须包含头文件，对于数值算法须包含，中则定义了一些模板类，用来声明函数对象。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/19/c++基础/c++11列表初始化/">c++11特性之列表初始化</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月19日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    最近注意到c++11的列表初始化特性，发现还是挺方便的，这里总结一下，以便之后进行使用。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+            <div class="post-media">
+                <a href="../../2019/05/18/c++基础/《STL源码剖析》第5章 关联式容器/">
+                    <img class="img-ajax" src="../../img/loading.gif" data-src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/18.png?raw=true" alt="《STL源码剖析》第5章 关联式容器">
+                </a>
+            </div>
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/18/c++基础/《STL源码剖析》第5章 关联式容器/">《STL源码剖析》第5章 关联式容器</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月18日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    所谓关联式容器，观念上类似于关联式数据库，每个元素都有一个键值key和一个实值value。当向容器插入元素时，容器根据其key值将实值放到适当的位置。关联式容器没有头尾的概念，所以也不会有push_front()，push_back()等操作函数。
+STL关联容器分为set（集合）和map（映射表）两大类，及其衍生体multiset和multimap。这些容器的底层机制均以RB-tree（红黑树）实现。RB-tree也是一个独立容器，但并不开放使用。
+SGI STL还提供一个不在标准规格的关联式容器 hash_table（散列表），以及以 hash_table 为底层机制而完成的 hash_set散列集合、hash_map散列映射表、hash_multiset散列多键集合、hash_multimap散列多键映射表。
+本章我们将主要学习各种容器对应的底层实现原理和应该注意的地方。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+            <div class="post-media">
+                <a href="../../2019/05/16/c++基础/《STL源码剖析》第4章 序列式容器/">
+                    <img class="img-ajax" src="../../img/loading.gif" data-src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/8.png?raw=true" alt="《STL源码剖析》第4章 序列式容器">
+                </a>
+            </div>
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/16/c++基础/《STL源码剖析》第4章 序列式容器/">《STL源码剖析》第4章 序列式容器</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月16日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    所谓序列式容器，其中的元素都可序，但未必有序，C++语言本身提供了一个序列式容器array，STL另外再提供vector、list、deque、stack、queue、priority-queue等序列容器。其中stack和queue由于只是将deque改头换面而成，技术上被归类为一种配接器。
+本文将主要总结各种序列式容器的实现和用法。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+            <div class="post-media">
+                <a href="../../2019/05/15/c++基础/《STL源码剖析》第3章 迭代器与traits编程技法/">
+                    <img class="img-ajax" src="../../img/loading.gif" data-src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/STL%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/7.png?raw=true" alt="《STL源码剖析》第3章 迭代器与traits编程技法">
+                </a>
+            </div>
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/15/c++基础/《STL源码剖析》第3章 迭代器与traits编程技法/">《STL源码剖析》第3章 迭代器与traits编程技法</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月15日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    本节主要介绍迭代器和traits编程技法。
+迭代器是一种模板class，迭代器在STL中得到了广泛的应用，通过迭代器，容器和算法可以有机的粘合在一起，只要对算法给予不同的迭代器，就可以对不同容器进行相同的操作。此外，迭代器本身也是一种设计模式，其设计思想也值得我们仔细体会。
+traits编程技法主要是通过模板的类型推导和class内嵌类型定义从而获取并使用迭代器的所指对象的真正类型，比如作为返回值等。…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/14/c++基础/c++11move和forword/">c++11特性之move和forward应用与区别</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月14日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    move和forward有他们各自的应用场景，学习并合理区别他们的用法很重要。最近刚好把它们俩梳理了一遍, 来写写move和forward为什么会出现, 他们能解决什么痛点.…
+                
+            </p>
+        </div>
+    </article>
+ 
+    <article class="post">
+        
+        <div class="post-content">
+            <div class="post-head home-post-head">
+                <h1 class="post-title">
+                    <a href="../../2019/05/14/c++基础/c++11std-move使用与原理/">c++11特性之std-move的使用和原理</a>
+                </h1>
+                <div class="post-meta">  &bull;
+                    <time class="post-date" datetime title>
+                        2019年05月14日
+                    </time>
+                </div>
+            </div>
+            <p class="brief">
+                
+                    面试经常遇到std::move，同时也确实存在一些知识点需要整理，在这里总结一下。…
+                
+            </p>
+        </div>
+    </article>
+ 
+
+
+    <nav class="pagination" role="navigation">
+        <div id="page-nav">
+            <span class="page-number current">1</span><a class="page-number" href="page/2/">2</a><a class="extend next" rel="next" href="page/2/"><i class="fa fa-angle-right"></i></a>
+        </div>
+    </nav>
+
+
+
+
+
+
+
+
+                </main>
+                
+                    
+    <aside class="col-md-4 sidebar">
+        
+        
+    <div class="widget">
+        <h3 class="title">搜索</h3>
+        <div id="search-form">
+            <div id="result-mask" class="hide"></div>
+            <div class="search-area">
+                
+                    <input id="search-key" type="search" autocomplete="off" placeholder="搜点什么呢？">
+                    <button type="button" class="search-form-submit" id="search-local">站内搜索</button>
+                
+                
+            </div>
+            <div id="result-wrap" class="hide">
+                <div id="search-result"></div>
+            </div>
+            <div class="hide">
+                <template id="search-tpl">
+                    <div class="item">
+                        <a href="/{path}" title="{title}">
+                            <div class="title">{title}</div>
+                            <div class="content">{content}</div>
+                        </a>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+        
+        
+    <div class="widget">
+        <h3 class="title">分类</h3>
+        <ul class="category-list"><li class="category-list-item"><a class="category-list-link current" href><i class="fa" aria-hidden="true">C++基础</i></a><span class="category-list-count">18</span></li><li class="category-list-item"><a class="category-list-link" href="../体会生活/"><i class="fa" aria-hidden="true">体会生活</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="../操作系统/"><i class="fa" aria-hidden="true">操作系统</i></a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="../数据库/"><i class="fa" aria-hidden="true">数据库</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="../服务端编程/"><i class="fa" aria-hidden="true">服务端编程</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="../算法与数据结构/"><i class="fa" aria-hidden="true">算法与数据结构</i></a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="../网络协议/"><i class="fa" aria-hidden="true">网络协议</i></a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="../设计模式/"><i class="fa" aria-hidden="true">设计模式</i></a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="../项目工具/"><i class="fa" aria-hidden="true">项目工具</i></a><span class="category-list-count">4</span></li></ul>
+    </div>
+
+
+        
+        
+  <div class="widget">
+    <h3 class="title">标签云</h3>
+    <div class="content tag-cloud">
+        
+            <canvas width="300" height="300" id="tag-cloud-3d">
+                <a href="../../tags/C-11特性/" style="font-size: 16px;">C++11特性</a> <a href="../../tags/C-基础/" style="font-size: 18px;">C++基础</a> <a href="../../tags/IO-multiplexing/" style="font-size: 10px;">IO multiplexing</a> <a href="../../tags/Iptabls/" style="font-size: 12px;">Iptabls</a> <a href="../../tags/Netfilter/" style="font-size: 12px;">Netfilter</a> <a href="../../tags/STL源码/" style="font-size: 18px;">STL源码</a> <a href="../../tags/TCP-IP协议/" style="font-size: 16px;">TCP/IP协议</a> <a href="../../tags/epoll原理/" style="font-size: 10px;">epoll原理</a> <a href="../../tags/git使用/" style="font-size: 14px;">git使用</a> <a href="../../tags/traits编程技法/" style="font-size: 10px;">traits编程技法</a> <a href="../../tags/trie树/" style="font-size: 12px;">trie树</a> <a href="../../tags/二叉树/" style="font-size: 10px;">二叉树</a> <a href="../../tags/动态规划/" style="font-size: 12px;">动态规划</a> <a href="../../tags/字典树/" style="font-size: 12px;">字典树</a> <a href="../../tags/字符串/" style="font-size: 10px;">字符串</a> <a href="../../tags/思维扩散/" style="font-size: 10px;">思维扩散</a> <a href="../../tags/技术/" style="font-size: 20px;">技术</a> <a href="../../tags/操作系统/" style="font-size: 16px;">操作系统</a> <a href="../../tags/数组/" style="font-size: 10px;">数组</a> <a href="../../tags/模板特化/" style="font-size: 10px;">模板特化</a> <a href="../../tags/生活/" style="font-size: 10px;">生活</a> <a href="../../tags/约瑟夫环问题/" style="font-size: 10px;">约瑟夫环问题</a> <a href="../../tags/设计模式/" style="font-size: 10px;">设计模式</a> <a href="../../tags/面试/" style="font-size: 12px;">面试</a>
+            </canvas>
+        
+    </div>
+  </div>
+
+
+        
+        
+    <div class="widget">
+        <h3 class="title">归档</h3>
+        <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2019/07/"><i class="fa" aria-hidden="true">2019年07月</i></a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2019/06/"><i class="fa" aria-hidden="true">2019年06月</i></a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2019/05/"><i class="fa" aria-hidden="true">2019年05月</i></a><span class="archive-list-count">22</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2019/03/"><i class="fa" aria-hidden="true">2019年03月</i></a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2018/12/"><i class="fa" aria-hidden="true">2018年12月</i></a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2018/11/"><i class="fa" aria-hidden="true">2018年11月</i></a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="../../archives/2018/06/"><i class="fa" aria-hidden="true">2018年06月</i></a><span class="archive-list-count">4</span></li></ul>
+    </div>
+
+
+        
+        
+    <div class="widget">
+        <h3 class="title">友情链接</h3>
+        <div class="notification">
+            <p>
+    凡的博客：<a href="https://antfaiz5z.github.io/" title="fork me" target="_blank">https://antfaiz5z.github.io/</a> <br>
+    GitHub：<a href="https://github.com/WenDeng" title target="_blank">https://github.com/WenDeng</a> <br>
+    简书：<a href="https://www.jianshu.com/u/d98271abb2b1">https://www.jianshu.com/u/d98271abb2b1</a> <br>
+    我的CSDN：<a href="https://blog.csdn.net/qq_22567225">https://blog.csdn.net/qq_22567225</a>
+</p>
+        </div>
+    </div>
+
+        
+    </aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+	<script src="../../js/search.js?rev=@@hash"></script>
+
+
+
+    <script src="../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>

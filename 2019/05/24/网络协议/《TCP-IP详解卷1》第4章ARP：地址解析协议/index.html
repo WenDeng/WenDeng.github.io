@@ -1,0 +1,416 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="野渡 的博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="theme-version" content="1.2.1">
+    <meta name="root" content="/">
+    <link rel="dns-prefetch" href="http://WenDeng.github.io">
+    <!--SEO-->
+
+    <meta name="keywords" content="技术,TCP/IP协议">
+
+
+    <meta name="description" content="数据链路如以太网或令牌环网都有自己的寻址机制（常常为48 bit地址），这是使用数据链路的任何网络层都必须遵从的。一个网络如以太网可以同时被不同的网络层使用。
+当一台主机把以太网数据帧发送到位于...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>《TCP-IP详解卷1》第4章ARP：地址解析协议 | 野渡 的博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="野渡 的博客" type="application/atom+xml">
+
+
+    
+
+
+
+<link rel="stylesheet" href="../../../../../css/bootstrap.min.css?rev=3.3.7">
+<link rel="stylesheet" href="../../../../../css/font-awesome.min.css?rev=4.5.0">
+<link rel="stylesheet" href="../../../../../css/style.css?rev=@@hash">
+
+
+
+
+    
+	<div class="hide">
+		<script type="text/javascript">
+			var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan class='cnzz_stat_icon_1263868967 hide' %3E%3Cscript%20src%3D%22https%3A%2F%2Fs95.cnzz.com%2Fz_stat.php%3Fweb_id%3D1272564536%22%3E%3C%2Fscript%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s19.cnzz.com/z_stat.php%3Fid%3D1263868967%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+	</div>
+
+
+
+
+
+	<script>
+		(function(i, s, o, g, r, a, m) {
+		    i['GoogleAnalyticsObject'] = r;
+		    i[r] = i[r] || function() {
+		        (i[r].q = i[r].q || []).push(arguments)
+		    }, i[r].l = 1 * new Date();
+		    a = s.createElement(o),
+		    m = s.getElementsByTagName(o)[0];
+		    a.async = 1;
+		    a.src = g;
+		    m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		ga('create', 'UA-140405612-1', 'auto');
+		ga('send', 'pageview');
+	</script>
+
+
+    
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(../../../../../banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="野渡">
+            <img src="../../../../../img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,野渡 的博客</h2>-->
+            
+                <h2> 野渡&#39;s小小知识乐园 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="http://WenDeng.github.io">野渡 的博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/技术/"><i class="fa "></i>技术</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/tags/生活/"><i class="fa "></i>生活</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/bookandmovie/"><i class="fa "></i>书与电影</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="《TCP-IP详解卷1》第4章ARP：地址解析协议">
+            
+	            《TCP-IP详解卷1》第4章ARP：地址解析协议
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="../../../../../categories/网络协议/">网络协议</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="../../../../../tags/TCP-IP协议/">TCP/IP协议</a> <a class="tag-link" href="../../../../../tags/技术/">技术</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/24</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <p>数据链路如以太网或令牌环网都有自己的寻址机制（常常为48 bit地址），这是使用数据链路的任何网络层都必须遵从的。一个网络如以太网可以同时被不同的网络层使用。</p>
+<p>当一台主机把以太网数据帧发送到位于同一局域网上的另一台主机时，是根据48bit的以太网地址来确定目的接口的。<strong>设备驱动程序从不检查IP数据报中的目的IP地址</strong>。</p>
+<p>地址解析为这两种不同的地址形式提供映射：32 bit的IP地址和数据链路层使用的任何类型的地址。ARP（地址解析协议）和RAR P（逆地址解析协议）就是这样的两个映射协议。</p>
+<p>ARP为IP地址到对应的硬件地址之间提供动态映射。我们之所以用动态这个词是因为这个过程是自动完成的，一般应用程序用户或系统管理员不必关心。</p>
+<a id="more"></a>
+<h3 id="1、从一个实例入手"><a href="#1、从一个实例入手" class="headerlink" title="1、从一个实例入手"></a>1、从一个实例入手</h3><p>当我们敲下以下命令：ftp bsdi，实际发生的过程如下。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/41.png?raw=true" alt="image"></p>
+<ul>
+<li>（1）应用程序FTP客户端调用函数gethostbyname(3)把主机名（bsdi）转换成32 bit的IP地址。这个转换过程或者使用DNS，或者在较小网络中使用一个静态的主机文件（/etc/host s）。</li>
+<li>（2）FTP客户端请求TCP用得到的IP地址建立连接。</li>
+<li>（3）TCP发送一个连接请求分段到远端的主机，即用上述IP地址发送一份IP数据报。</li>
+<li>（4）如果目的主机在本地网络上，那么IP数据报可以直接送到目的主机上。如果目的主机在一个远程网络上，那么就通过IP选路函数来确定位于本地网络上的下一站路由器地址，并让它转发IP数据报。</li>
+<li>（5）假定是一个以太网，那么发送端主机必须把32bit的IP地址变换成48bit的以太网地址。逻辑Internet地址到对应的物理硬件地址需要进行翻译。这就是ARP的功能。</li>
+<li>（6）ARP发送一份称作ARP请求的以太网数据帧给以太网上的每个主机。这个过程称作广播，ARP请求数据帧中包含目的主机的IP地址（主机名为bsdi），其意思是“如果你是这个IP地址的拥有者，请回答你的硬件地址。”</li>
+<li>（7）目的主机的ARP层收到这份广播报文后，识别出这是发送端在寻问它的IP地址，于是发送一个ARP应答。这个ARP应答包含IP地址及对应的硬件地址。</li>
+<li>（8）收到ARP应答后，使ARP进行请求—应答交换的IP数据报现在就可以传送了。</li>
+<li>（9）发送IP数据报到目的主机。</li>
+</ul>
+<p>在ARP背后有一个基本概念，那就是网络接口有一个硬件地址。<strong>在硬件层次上进行的数据帧交换必须有正确的接口地址</strong>。知道主机的IP地址并不能让内核发送一帧数据给主机。<strong>内核（如以太网驱动程序）必须知道目的端的硬件地址才能发送数据</strong>。ARP的功能是在32 bit的IP地址和采用不同网络技术的硬件地址之间提供动态映射。</p>
+<h3 id="2、ARP高速缓存"><a href="#2、ARP高速缓存" class="headerlink" title="2、ARP高速缓存"></a>2、ARP高速缓存</h3><p>ARP高效运行的关键是由于每个主机上都有一个ARP高速缓存。这个高速缓存存放了最近Internet地址到硬件地址之间的映射记录。我们可以用arp(8)命令来检查ARP高速缓存。参数-a的意思是显示高速缓存中所有的内容。</p>
+<h3 id="3、ARP的分组格式"><a href="#3、ARP的分组格式" class="headerlink" title="3、ARP的分组格式"></a>3、ARP的分组格式</h3><p>ARP的分组格式如下（42Byte: 28字节的ARP数据,14字节的以太网帧头）：</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/42.png?raw=true" alt="image"></p>
+<ul>
+<li>（1）以太网报头中的前两个字段是以太网的源地址和目的地址<strong>。目的地址为全1的特殊地址是广播地址。电缆上的所有以太网接口都要接收广播的数据帧</strong>。</li>
+<li>（2）以太网帧类型表示后面数据的类型。对于ARP请求或应答来说，该字段的值为0x0806。</li>
+<li>（3）硬件类型字段表示硬件地址的类型。它的值为1即表示以太网地址。</li>
+<li>（4）协议类型字段表示要映射的协议地址类型。它的值为0x0800即表示IP地址。<strong>它的值与包含IP数据报的以太网数据帧中的类型字段的值相同</strong>，这是有意设计的。</li>
+<li>（5）两个1字节的字段分别指出硬件地址和协议地址的长度，以字节为单位。对于以太网上IP地址的ARP请求或应答来说，它们的值分别为6和4。</li>
+<li>（6）操作字段指出四种操作类型，它们是ARP请求（值为1）、ARP应答（值为2）、RAR P请求（值为3）和RARP应答（值为4）。这个字段必需的，因为ARP请求和ARP应答的帧类型字段值是相同的。</li>
+<li>（7）接下来的四个字段是发送端的硬件地址、发送端的协议地址、目的端的硬件地址和目的端的协议地址。<strong>注意，这里有一些重复信息：在以太网的数据帧报头中和ARP请求数据帧中都有发送端的硬件地址</strong>。</li>
+</ul>
+<p>对于一个ARP请求来说，除目的端硬件地址外的所有其他的字段都有填充值。<strong>当系统收到一份目的端为本机的ARP请求报文后，它就把硬件地址填进去，然后用两个目的端地址分别替换两个发送端地址，并把操作字段置为2，最后把它发送回去</strong>。</p>
+<h3 id="4、分析ARP实例"><a href="#4、分析ARP实例" class="headerlink" title="4、分析ARP实例"></a>4、分析ARP实例</h3><p>现在通过tcpdump获得一个TCP连接请求产生的ARP请求和应答，我们来看一下它的含义：</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/43.png?raw=true" alt="image"></p>
+<p>在第1行中，源端主机的硬件地址是0:0:c0:6f:2d:40。目的端主机的硬件地址是ff:ff:ff:ff:ff:ff，这是一个以太网广播地址。紧接着的一个输出字段是arp，表明帧类型字段的值是0x0806，说明此数据帧是一个ARP请求或回答。在每行中，单词arp或ip后面的值60指的是以太网数据帧的最小长度,可以看出需要填充。第1行中的arp who-has字段表示作为ARP请求的这个数据帧中，目的IP地址是svr4的地址，发送端的IP地址是bsdi的地址。</p>
+<p>从第2行中可以看到，尽管ARP请求是广播的，但是ARP应答的目的地址却是bsd（0:0:c0:6f:2d:40）。</p>
+<p>第3行是第一个请求建立连接的TCP段。它的目的硬件地址是目的主机(svr4)。</p>
+<h3 id="5、如果ARP请求的主机不存在会发生什么？"><a href="#5、如果ARP请求的主机不存在会发生什么？" class="headerlink" title="5、如果ARP请求的主机不存在会发生什么？"></a>5、如果ARP请求的主机不存在会发生什么？</h3><p>如果查询的主机已关机或不存在会发生什么情况呢？用telnet 140.254.13.36发起连接，然后用tcpdump来查看状态，结果如下图：</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/44.png?raw=true" alt="image"></p>
+<p>令人感兴趣的是看到多次进行ARP请求：第1次请求发生后5.5秒进行第2次请求，在24秒之后又进行第3次请求。注意，在线路上始终看不到TCP的报文段。我们能看到的是ARP请求。直到ARP回答返回时，TCP报文段才可以被发送，因为硬件地址到这时才可能知道。如果我们用过滤模式运行tcpdump命令，只查看TCP数据，那么将没有任何输出。</p>
+<h3 id="6、ARP代理"><a href="#6、ARP代理" class="headerlink" title="6、ARP代理"></a>6、ARP代理</h3><p>如果ARP请求是从一个网络的主机发往另一个网络上的主机，那么连接这两个网络的路由器就可以回答该请求，这个过程称作委托ARP或<strong>ARP代理</strong>。路由器的功能相当于目的主机的代理，把分组从其他主机转发给它。<strong>一种攻击就是欺骗发起ARP请求的发送端，使它误以为路由器就是目的主机</strong>。</p>
+<p><img src="https://github.com/WenDeng/Picture_markdown/blob/master/picture/TCP-IP%E8%AF%A6%E8%A7%A3%E5%8D%B71/45.png?raw=true" alt="image"></p>
+<p>如图,当子网140.252.1（称作gemini）上的其他主机有一份IP数据报要传给地址为140.252.1.29的sun时，gemini比较网络号140.252和子网号1，因为它们都是相同的，所以在以太网中转发IP地址140.252.1.29的ARP请求。路由器netb识别出该IP地址属于它的一个拔号主机，于是把它的以太网接口地址140.252.1作为硬件地址来回答。主机gemini通过以太网发送IP数据报到netb，netb通过拨号SLIP链路把数据报转发到sun。这个过程对于所有140.252.1子网上的主机来说都是透明的，主机sun实际上是在路由器netb后面进行配置的。<strong>在这个过程中路由器会对arp结果进行缓存，以提高下一次查询效率</strong>。</p>
+<p><strong>为什么在拨号SLIP链路的两端只拥有一个IP地址，而在bsdi和slip之间的两端却分别有一个IP地址</strong>？<br>这是因为NetBlazer不需要知道拨号SLIP链路每一端的IP地址，相反，它通过分组到达的串行线路接口来确定发送分组的拨号主机，因此对于连接到路由器的每个拨号主机不需要用唯一的I P地址。所有的拨号主机使用同一个IP地址140.252.1.183作为SLIP链路的目的地址。</p>
+<p><strong>ARP代理可以把数据报传送到路由器sun上，但是子网140.252.13上的其他主机是如何处理的呢</strong>？<br>选路必须使数据报能到达其他主机。这里需要特殊处理，选路表中的表项必须在网络140.252的某个地方制定，使所有数据报的目的端要么是子网140.252.13，要么是子网上的某个主机，这样都指向路由器netb。而路由器netb知道如何把数据报传到最终的目的端，即通过路由器sun。</p>
+<h3 id="7、免费ARP"><a href="#7、免费ARP" class="headerlink" title="7、免费ARP"></a>7、免费ARP</h3><p>我们可以看到的另一个ARP特性称作<strong>免费ARP</strong>。它是指主机发送ARP查找自己的IP地址。通常，它发生在系统引导期间进行接口配置的时候。</p>
+<p>免费ARP可以有两个方面的作用：</p>
+<ul>
+<li>(1) 一个主机可以通过它来确定另一个主机是否设置了相同的IP地址。主机bsdi并不希望对此请求有一个回答。但是，如果收到一个回答，那么就会在终端日志上产生一个错误消息“以太网地址：a:b:c:d:e:f发送来重复的IP地址”。这样就可以警告系统管理员，某个系统有不正确的设置。</li>
+<li>(2) 如果发送免费ARP的主机正好改变了硬件地址（很可能是主机关机了，并换了一块接口卡，然后重新启动），那么这个分组就可以使其他主机高速缓存中旧的硬件地址进行相应的更新。</li>
+</ul>
+<h3 id="8、arp命令"><a href="#8、arp命令" class="headerlink" title="8、arp命令"></a>8、arp命令</h3><p>arp命令及几个常用的参数如下：</p>
+<ul>
+<li>-a：用来显示ARP高速缓存中的所有内容。</li>
+<li>-d：用来删除ARP高速缓存中的某一项内容。</li>
+<li>-s：用来增加高速缓存中的内容，这个参数需要IP和对应的以太网地址。</li>
+<li>关键字pub和-s选项一起，可以使系统起着主机ARP代理的作用。系统将回答与主机名对应的IP地址的ARP请求，并以指定的以太网地址作为应答。</li>
+</ul>
+<h3 id="9、小结"><a href="#9、小结" class="headerlink" title="9、小结"></a>9、小结</h3><p>在大多数的TCP/IP实现中，ARP是一个基础协议，但是它的运行对于应用程序或系统管理员来说一般是透明的。ARP高速缓存在它的运行过程中非常关键，我们可以用arp命令对高速缓存进行检查和操作。高速缓存中的每一项内容都有一个定时器，根据它来删除不完整和完整的表项。arp命令可以显示和修改ARP高速缓存中的内容。</p>
+<p>我们介绍了ARP的一般操作，同时也介绍了一些特殊的功能：委托ARP（当路由器对来自于另一个路由器接口的ARP请求进行应答时）和免费ARP（发送自己IP地址的ARP请求，一般发生在引导过程中）。</p>
+
+    </div>
+    
+    <div class="post-footer">
+        <div>
+            
+                转载声明：商业转载请联系作者获得授权,非商业转载请注明出处 © <a href target="_blank">野渡</a>
+            
+        </div>
+        <div>
+            
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="../../../27/操作系统/第9章 虚拟内存之C程序中常见的内存相关错误/" class="pre-post btn btn-default" title="第9章 虚拟内存之C程序中常见的内存相关错误">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">第9章 虚拟内存之C程序中常见的内存相关错误</span>
+        </a>
+    
+    
+        <a href="../../../23/操作系统/第9章 虚拟内存之动态内存分配与垃圾收集/" class="next-post btn btn-default" title="第9章 虚拟内存之动态内存分配与垃圾收集">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">第9章 虚拟内存之动态内存分配与垃圾收集</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+    <div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="../../../../../assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'xOKV9J4UeQAtVkvnJC7Kq2Jn-gzGzoHsz',
+            appKey: 'erIpQac4azoCmgfBB7Dl9maa',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+    </div>
+
+
+
+
+
+                </main>
+                
+                    <aside id="article-toc" role="navigation" class="col-md-4">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、从一个实例入手"><span class="toc-text">1、从一个实例入手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、ARP高速缓存"><span class="toc-text">2、ARP高速缓存</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、ARP的分组格式"><span class="toc-text">3、ARP的分组格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4、分析ARP实例"><span class="toc-text">4、分析ARP实例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5、如果ARP请求的主机不存在会发生什么？"><span class="toc-text">5、如果ARP请求的主机不存在会发生什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6、ARP代理"><span class="toc-text">6、ARP代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7、免费ARP"><span class="toc-text">7、免费ARP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8、arp命令"><span class="toc-text">8、arp命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9、小结"><span class="toc-text">9、小结</span></a></li></ol>
+        
+    </div>
+</aside>
+
+                
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+        访问量:
+        <strong id="busuanzi_value_site_pv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+        &nbsp; | &nbsp;
+        访客数:
+        <strong id="busuanzi_value_site_uv">
+            <i class="fa fa-spinner fa-spin"></i>
+        </strong>
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2017
+                </span> |
+                <span>
+                    Powered by <a href="//hexo.io" class="copyright-links" target="_blank" rel="nofollow">Hexo</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <script src="../../../../../assets/tagcanvas.min.js?rev=2.9"></script>
+    <script>
+        var tagOption = {
+            textColour: '#444', // 字体颜色
+            outlineMethod: 'block', // 选中模式
+            outlineColour: '#FFDAB9', // 选中模式的颜色
+            interval: 30 || 30, // 动画帧之间的时间间隔，值越大，转动幅度越大
+            textHeight: 13,
+            outlineRadius: 3,
+            freezeActive: true || '', // 选中的标签是否继续滚动
+            frontSelect: true || '', // 不选标签云后部的标签
+            initial: [0.1, -0.1],
+            depth: 0.5,
+            decel: 0.95,
+            maxSpeed: 0.03,
+            reverse: true || '', // 是否反向触发
+            fadeIn: 500, // 进入动画时间
+            wheelZoom: false || '' // 是否启用鼠标滚轮
+        }
+        TagCanvas.Start('tag-cloud-3d','',tagOption);
+    </script>
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="../../../../../js/app.js?rev=@@hash"></script>
+
+</body>
+</html>
